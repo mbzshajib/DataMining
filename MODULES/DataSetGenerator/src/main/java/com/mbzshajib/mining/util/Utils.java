@@ -1,4 +1,4 @@
-package com.mbzshajib.mining;
+package com.mbzshajib.mining.util;
 
 /**
  * *****************************************************************
