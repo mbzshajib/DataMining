@@ -1,6 +1,9 @@
 package com.mbzshajib.mining;
 
+import com.mbzshajib.mining.util.Configurations;
+
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 /**
  * *****************************************************************
@@ -15,7 +18,9 @@ import java.io.IOException;
      
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, URISyntaxException {
         Initializer.initialize();
+        Configurations configurations = Initializer.getConfigurations();
+        System.out.println(configurations.getAuthorName());
     }
 }

@@ -2,7 +2,6 @@ package com.mbzshajib.mining;
 
 import com.mbzshajib.mining.util.Configurations;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -29,14 +28,21 @@ public class Initializer {
 
     private static void loadProperties() throws IOException {
 //        URL defaultPropertiesLocation = ClassLoader.getSystemClassLoader().getResource(Configurations.F_DATA_SET_GENERATOR_PROPERTIES);
-        URL defaultPropertiesLocation = Initializer.class.getResource(Configurations.F_DATA_SET_GENERATOR_PROPERTIES);
-        File file = new File(String.valueOf(defaultPropertiesLocation));
+        URL defaultPropertiesLocation = ClassLoader.getSystemResource(Configurations.F_DATA_SET_GENERATOR_PROPERTIES);
 
-        FileInputStream fileInputStream = new FileInputStream(file);
+
+        FileInputStream fileInputStream = new FileInputStream(defaultPropertiesLocation.getFile());
         Properties properties = new Properties();
         configuration = new Configurations();
         properties.load(fileInputStream);
         String authorName = properties.getProperty(Configurations.K_author_name);
         configuration.setAuthorName(authorName);
+    }
+
+    public static Configurations getConfigurations() {
+        if (configuration == null) {
+            throw new NullPointerException("Configuration is null. could not configure properly.");
+        }
+        return configuration;
     }
 }
