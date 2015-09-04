@@ -1,11 +1,11 @@
-allprojects{
+allprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'maven'
 }
 ext.repositoryUrl = {
-
 }
 ext.version = {
-
+}
+ext.libraries = {
 }
