@@ -1,5 +1,7 @@
 rootProject.name = 'DataMining'
 
 include(':DataSetGenerator')
+include(':Utility')
 
 project(':DataSetGenerator').projectDir = "$rootDir/MODULES/DataSetGenerator" as File
+project(':Utility').projectDir = "$rootDir/MODULES/Utility" as File

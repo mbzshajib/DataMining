@@ -1,3 +1,6 @@
 version = '1.0'
-buildscript{
+buildscript {
+}
+dependencies {
+    compile project(':Utility')
 }
