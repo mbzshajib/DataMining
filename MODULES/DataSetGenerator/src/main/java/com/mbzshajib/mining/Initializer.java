@@ -35,8 +35,12 @@ public class Initializer {
         Properties properties = new Properties();
         configuration = new Configurations();
         properties.load(fileInputStream);
-        String authorName = properties.getProperty(Configurations.K_author_name);
+        String authorName = properties.getProperty(Configurations.K_AUTHOR_NAME);
+        String runningMode = properties.getProperty(Configurations.K_RUNNING_MODE);
+        String randomDataSetGeneratorPropertiesFileName = properties.getProperty(Configurations.K_RANDOM_DATA_GENERATOR);
         configuration.setAuthorName(authorName);
+        configuration.setRunningMode(runningMode);
+        configuration.setRandomDataSetGeneratorInpuFile(randomDataSetGeneratorPropertiesFileName);
     }
 
     public static Configurations getConfigurations() {

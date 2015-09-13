@@ -22,5 +22,7 @@ public class Main {
         Initializer.initialize();
         Configurations configurations = Initializer.getConfigurations();
         System.out.println(configurations.getAuthorName());
+        System.out.println(configurations.getRunningMode());
+        System.out.println(configurations.getRandomDataSetGeneratorInpuFile());
     }
 }
