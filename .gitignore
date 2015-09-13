@@ -12,7 +12,7 @@ tmp/
 local.properties
 .settings/
 .loadpath
-
+OUTPUT/
 # Eclipse Core
 .project
 
