@@ -5,8 +5,10 @@ import com.mbzshajib.mining.processor.randomdata.generator.RandomGeneratorInput;
 import com.mbzshajib.mining.processor.randomdata.generator.RandomGeneratorOutput;
 import com.mbzshajib.mining.processor.randomdata.generator.RandomGeneratorUtils;
 import com.mbzshajib.mining.util.Configurations;
+import com.mbzshajib.utility.file.FileUtility;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * *****************************************************************
@@ -37,6 +39,12 @@ public class MainRandomGenerator {
         RandomGeneratorInput input = RandomGeneratorUtils.getFileInput("INPUT/" + configurations.getRandomDataSetGeneratorInpuFile());
         RandomGeneratorOutput output = RandomGeneratorUtils.simulate(input);
         RandomGeneratorUtils.print(input, output);
+        FileUtility.writeDoublesToFile("OUTPUT/output.txt", output.getAllValues());
+        double[] tmp = FileUtility.readDoublesFromFile("OUTPUT/output.txt");
+        System.out.println(Arrays.equals(tmp,output.getAllValues()));
+
+
     }
+
 
 }
