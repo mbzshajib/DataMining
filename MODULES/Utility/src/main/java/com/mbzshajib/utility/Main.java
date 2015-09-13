@@ -20,7 +20,7 @@ public class Main {
     }
 
     private static void checkRandomGenerationInRange() {
-        double[] result = RandomUtility.getRandom(.2, .22, 5, 30);
+        double[] result = RandomUtility.getRandoms(.2, .22, 5, (byte) 30);
         for(double tmp : result){
             System.out.println(tmp);
         }

@@ -16,17 +16,24 @@ import java.util.Random;
 
 
 public final class RandomUtility {
-    public static final double[] getRandom(double minValue, double maxValue, int count, int precision) {
+    public static final double getRandom(double minValue, double maxValue, int precision) {
         if (minValue >= maxValue) {
             throw new IllegalArgumentException("maxValue must be greater than minValue. maxValue is : " + maxValue + " minValue is : " + minValue);
         }
-        double result[] = new double[count];
+        double result;
         Random random = new Random();
+        double range = maxValue - minValue;
+        double tmp = random.nextDouble();
+        double tmpDouble = minValue + range * tmp;
+        result = new BigDecimal(tmpDouble).setScale(precision, BigDecimal.ROUND_CEILING).doubleValue();
+        return result;
+
+    }
+
+    public static final double[] getRandoms(double minValue, double maxValue, int count, byte precision) {
+        double result[] = new double[count];
         for (int i = 0; i < count; i++) {
-            double range = maxValue - minValue;
-            double tmp = random.nextDouble();
-            double tmpDouble = minValue + range * tmp;
-            result[i] = new BigDecimal(tmpDouble).setScale(precision, BigDecimal.ROUND_CEILING).doubleValue();
+            result[i] = getRandom(minValue, maxValue, precision)                ;
         }
         return result;
 
