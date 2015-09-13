@@ -1,5 +1,7 @@
 package com.mbzshajib.mining.util;
 
+import com.mbzshajib.mining.Initializer;
+
 /**
  * *****************************************************************
  * Copyright  2015.
@@ -13,5 +15,14 @@ package com.mbzshajib.mining.util;
      
 
 public class Utils {
+    private static String mode = "DEBUG";
+
+    public static void log(String tag, String message) {
+        Configurations configurations = Initializer.getConfigurations();
+        String programMode = configurations.getRunningMode();
+        if (programMode.equals(mode)) {
+            System.out.println( tag + "\t\t->\t\t" + message);
+        }
+    }
 
 }
