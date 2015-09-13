@@ -1,7 +1,6 @@
-package com.mbzshajib.mining.processor.input;
+package com.mbzshajib.mining.processor.fileinput;
 
-import com.mbzshajib.utility.model.Input;
-import com.mbzshajib.utility.model.Output;
+import com.mbzshajib.utility.model.Processor;
 
 /**
  * *****************************************************************
@@ -15,9 +14,9 @@ import com.mbzshajib.utility.model.Output;
  */
      
 
-public class FileInputProcessor implements InputProcessor {
+public class FileInputProcessor implements Processor<FileInput,FileOutput> {
     @Override
-    public Output process(Input input) {
+    public FileOutput process(FileInput fileInput) {
         return null;
     }
 }

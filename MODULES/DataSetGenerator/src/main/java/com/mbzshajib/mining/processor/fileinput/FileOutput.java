@@ -1,6 +1,6 @@
-package com.mbzshajib.mining.processor.input;
+package com.mbzshajib.mining.processor.fileinput;
 
-import com.mbzshajib.utility.model.Input;
+import com.mbzshajib.utility.model.Output;
 
 /**
  * *****************************************************************
@@ -14,5 +14,5 @@ import com.mbzshajib.utility.model.Input;
  */
      
 
-public class FileInput implements Input {
+public class FileOutput implements Output {
 }
