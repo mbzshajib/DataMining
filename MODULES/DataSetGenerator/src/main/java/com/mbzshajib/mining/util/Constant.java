@@ -14,4 +14,6 @@ package com.mbzshajib.mining.util;
 
 public class Constant {
 
+    public static final String DIR_INPUT = "INPUT/";
+    public static final String DIR_OUTPUT = "OUTPUT/";
 }
