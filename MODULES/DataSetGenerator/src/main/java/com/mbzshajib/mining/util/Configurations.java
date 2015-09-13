@@ -14,9 +14,13 @@ package com.mbzshajib.mining.util;
 
 public class Configurations {
     public static final String F_DATA_SET_GENERATOR_PROPERTIES = "data_set_generator.properties";
-    public static final String K_author_name = "author_name";
+    public static final String K_AUTHOR_NAME = "author_name";
+    public static final String K_RUNNING_MODE = "running_mode";
+    public static final String K_RANDOM_DATA_GENERATOR = "random_data_generator";
 
-    private String authorName ;
+    private String authorName;
+    private String runningMode;
+    private String randomDataSetGeneratorInpuFile;
 
     public String getAuthorName() {
         return authorName;
@@ -24,5 +28,21 @@ public class Configurations {
 
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
+    }
+
+    public String getRunningMode() {
+        return runningMode;
+    }
+
+    public void setRunningMode(String runningMode) {
+        this.runningMode = runningMode;
+    }
+
+    public String getRandomDataSetGeneratorInpuFile() {
+        return randomDataSetGeneratorInpuFile;
+    }
+
+    public void setRandomDataSetGeneratorInpuFile(String randomDataSetGeneratorInpuFile) {
+        this.randomDataSetGeneratorInpuFile = randomDataSetGeneratorInpuFile;
     }
 }
