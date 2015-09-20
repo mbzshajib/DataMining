@@ -59,7 +59,7 @@ public class FileUtility {
             String[] tokensizedItem = line.split(" ");
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < tokensizedItem.length; i++) {
-                tokensizedItem[i] = tokensizedItem[i] + "(" + (probabilityValue[count++]) + ")";
+                tokensizedItem[i] = tokensizedItem[i] + "-" + (probabilityValue[count++]);
                 stringBuilder.append(tokensizedItem[i]);
                 stringBuilder.append(" ");
             }

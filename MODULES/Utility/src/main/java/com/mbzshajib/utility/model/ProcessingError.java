@@ -6,12 +6,13 @@ package com.mbzshajib.utility.model;
  * Author - Md. Badi-Uz-Zaman Shajib
  * Email  - mbzshajib@gmail.com
  * GitHub - https://github.com/mbzshajib
- * date: 9/4/2015
- * time: 4:49 PM
+ * date: 9/20/2015
+ * time: 11:14 PM
  * ****************************************************************
  */
 
-
-public interface Processor<I extends Input, O extends Output> {
-    O process(I i) throws ProcessingError;
+public class ProcessingError extends Throwable {
+    public ProcessingError(Throwable throwable) {
+        super(throwable);
+    }
 }

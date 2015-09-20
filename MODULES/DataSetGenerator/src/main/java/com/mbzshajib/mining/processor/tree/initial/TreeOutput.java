@@ -1,17 +1,17 @@
-package com.mbzshajib.utility.model;
+package com.mbzshajib.mining.processor.tree.initial;
+
+import com.mbzshajib.utility.model.Output;
 
 /**
  * *****************************************************************
  * Copyright  2015.
  * Author - Md. Badi-Uz-Zaman Shajib
  * Email  - mbzshajib@gmail.com
- * GitHub - https://github.com/mbzshajib
- * date: 9/4/2015
- * time: 4:49 PM
+ * GitHub - https://github.com/mbzshajib 
+ * date: 9/20/2015
+ * time: 11:03 PM
  * ****************************************************************
- */
+ */    
 
-
-public interface Processor<I extends Input, O extends Output> {
-    O process(I i) throws ProcessingError;
+public class TreeOutput implements Output {
 }
