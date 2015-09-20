@@ -46,4 +46,26 @@ public class FileUtility {
         dataInputStream.close();
         return result;
     }
+
+    public static void createUncertainDataSetAndWrite(String certainDataSetLocation, String probabilityLocation, String outputLocation) throws IOException {
+        File certDataFile = new File(certainDataSetLocation);
+        FileReader fileReader = new FileReader(certDataFile);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputLocation));
+        double[] probabilityValue = readDoublesFromFile(probabilityLocation);
+        String line;
+        int count = 0;
+        while ((line = bufferedReader.readLine()) != null) {
+            String[] tokensizedItem = line.split(" ");
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < tokensizedItem.length; i++) {
+                tokensizedItem[i] = tokensizedItem[i] + "(" + (probabilityValue[count++]) + ")";
+                stringBuilder.append(tokensizedItem[i]);
+                stringBuilder.append(" ");
+            }
+            stringBuilder.append("\n");
+            bufferedWriter.write(stringBuilder.toString());
+        }
+
+    }
 }
