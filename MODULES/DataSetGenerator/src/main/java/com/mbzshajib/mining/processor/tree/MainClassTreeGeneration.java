@@ -35,7 +35,7 @@ public class MainClassTreeGeneration {
     private static TreeInput getTreeInput() {
         TreeInput treeInput = new TreeInput();
         treeInput.setInputFilePath("INPUT/uncertain_mushrooms_20092015.txt");
-        treeInput.setFrameSize(5);
+        treeInput.setFrameSize(2);
         treeInput.setWindowSize(3);
         return treeInput;
     }
