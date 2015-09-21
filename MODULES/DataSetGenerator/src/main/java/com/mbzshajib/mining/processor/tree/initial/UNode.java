@@ -20,7 +20,8 @@ public class UNode {
     private int nodeCount;
     private UNode parentNode;
     private List<UNode> childNodeList;
-    private double pValue;
+    private double itemProbability;
+    private double prefixValue;
     private String id;
 
     /**
@@ -34,7 +35,7 @@ public class UNode {
         }
         this.id = splitedVals[0];
         try {
-            this.pValue = Double.parseDouble(splitedVals[1]);
+            this.itemProbability = Double.parseDouble(splitedVals[1]);
         } catch (NumberFormatException e) {
             throw new DataNotValidException(e);
         }
@@ -65,12 +66,12 @@ public class UNode {
         this.id = id;
     }
 
-    public double getpValue() {
-        return pValue;
+    public double getItemProbability() {
+        return itemProbability;
     }
 
-    public void setpValue(double pValue) {
-        this.pValue = pValue;
+    public void setItemProbability(double itemProbability) {
+        this.itemProbability = itemProbability;
     }
 
     public void addChild(UNode node) {
@@ -93,5 +94,11 @@ public class UNode {
         this.nodeCount = nodeCount;
     }
 
+    public double getPrefixValue() {
+        return prefixValue;
+    }
 
+    public void setPrefixValue(double prefixValue) {
+        this.prefixValue = prefixValue;
+    }
 }

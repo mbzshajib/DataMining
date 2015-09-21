@@ -1,7 +1,6 @@
 package com.mbzshajib.mining.processor.tree.initial;
 
 import com.mbzshajib.mining.exception.DataNotValidException;
-import com.mbzshajib.mining.util.Utils;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
 
@@ -22,38 +21,40 @@ import java.util.List;
 
 public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
     private static final String TAG = TreeGenerator.class.getCanonicalName();
-    private int TRANSACTION_NO = 1;
     private BufferedReader bufferedReader;
     private TreeInput treeInput;
-    private UNode ROOT_NODE = null;
+
+    private static UNode ROOT_NODE;
+    private static HeaderTable HEADER_TABLE;
 
     @Override
     public TreeOutput process(TreeInput treeInput) throws ProcessingError {
-
-        initialize(treeInput);
-        String[] cTransactionData;
+        this.treeInput = treeInput;
         try {
-            while ((cTransactionData = getATransactionData()) != null) {
-                Utils.log(TAG, "Transaction No " + TRANSACTION_NO++);
-                List<UNode> currentTransactionList = new ArrayList<UNode>();
-                for (String s : cTransactionData) {
-                    UNode tmpUNode;
-                    try {
-                        tmpUNode = new UNode(s);
-                    } catch (DataNotValidException e) {
-                        throw new ProcessingError(e);
-
-                    }
-                    currentTransactionList.add(tmpUNode);
-                }
-                updateTree(currentTransactionList);
-
+            INITIALIZE();
+            List<UNode> list;
+            while ((list = getTransaction()) != null) {
+                addToTree(list);
             }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (DataNotValidException e) {
+            e.printStackTrace();
         } catch (IOException e) {
-            throw new ProcessingError(e);
+            e.printStackTrace();
         }
-
         return null;
+    }
+
+    private void addToTree(List<UNode> list) {
+        List<UNode> childList = ROOT_NODE.getChildNodeList();
+    }
+
+    private void INITIALIZE() throws ProcessingError, FileNotFoundException, DataNotValidException {
+        bufferedReader = new BufferedReader(new FileReader(new File(treeInput.getInputFilePath())));
+        ROOT_NODE = new UNode("0-0");
+        ROOT_NODE.setParentNode(null);
+        HEADER_TABLE = new HeaderTable();
     }
 
     private void updateTree(List<UNode> currentTransactionList) {
@@ -81,27 +82,33 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
     }
 
 
-    private void initialize(TreeInput treeInput) throws ProcessingError {
-        this.treeInput = treeInput;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(new File(treeInput.getInputFilePath())));
-        } catch (FileNotFoundException e) {
-            throw new ProcessingError(e);
-        }
-        try {
-            ROOT_NODE = new UNode("0-0");
-            ROOT_NODE.setParentNode(null);
-        } catch (DataNotValidException e) {
-            throw new ProcessingError(e);
-        }
-    }
-
-    private String[] getATransactionData() throws IOException {
+    private List<UNode> getTransaction() throws IOException, DataNotValidException {
         String line = bufferedReader.readLine();
         if (line == null) {
             return null;
         }
-        return line.split(" ");
+        String[] readedTransactionItems = line.split(" ");
+        List<UNode> uNodeList = new ArrayList<UNode>();
+        for (String string : readedTransactionItems) {
+            UNode uNode = new UNode(string);
+            uNodeList.add(uNode);
+        }
+        assignPrefixValueToTransactionList(uNodeList);
+        return uNodeList;
+    }
+
+    private void assignPrefixValueToTransactionList(List<UNode> uNodeList) {
+        double prefixValue = uNodeList.get(0).getItemProbability();
+        uNodeList.get(0).setPrefixValue(prefixValue);
+        double maxPrefixValue = prefixValue;
+        for (int i = 1; i < uNodeList.size(); i++) {
+            UNode uNode = uNodeList.get(i);
+            uNode.setPrefixValue(uNode.getItemProbability() * maxPrefixValue);
+            if (maxPrefixValue < uNode.getItemProbability()) {
+                maxPrefixValue = uNode.getItemProbability();
+            }
+            uNodeList.set(i, uNode);
+        }
     }
 
 }
