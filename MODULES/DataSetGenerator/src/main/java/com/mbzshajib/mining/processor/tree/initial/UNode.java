@@ -104,19 +104,17 @@ public class UNode {
     }
 
     public String travase() {
-        StringBuilder stringBuilder = new StringBuilder()
-                .append(id);
-        if (childNodeList.size() != 0) {
-            stringBuilder
-                    .append("\t")
-                    .append("CH->[");
-            for (UNode node : childNodeList) {
-                stringBuilder.append(node.travase());
-            }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("PARENT->" + id).append("#CHILDS#[");
+        for (UNode node : childNodeList) {
+            stringBuilder.append("(").append(node.getId()).append(")");
+        }
+        stringBuilder.append("]\n");
+        for (UNode node : childNodeList) {
+            stringBuilder.append(node.travase());
         }
 
 
-        stringBuilder.append("]");
         return stringBuilder.toString();
     }
 
