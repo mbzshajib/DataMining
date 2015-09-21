@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 public class UNode {
-    private int nodeCount;
+    private int frameNumber;
     private UNode parentNode;
     private List<UNode> childNodeList;
     private double itemProbability;
@@ -86,12 +86,12 @@ public class UNode {
         return (this.id.equals(node.getId()));
     }
 
-    public int getNodeCount() {
-        return nodeCount;
+    public int getFrameNumber() {
+        return frameNumber;
     }
 
-    public void setNodeCount(int nodeCount) {
-        this.nodeCount = nodeCount;
+    public void setFrameNumber(int frameNumber) {
+        this.frameNumber = frameNumber;
     }
 
     public double getPrefixValue() {

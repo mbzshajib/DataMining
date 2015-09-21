@@ -33,9 +33,14 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
         try {
             INITIALIZE();
             List<UNode> list;
-            while ((list = getTransaction()) != null) {
-                addToTree(list);
-            }
+            int frameSize = treeInput.getFrameSize();
+            int windowSize = treeInput.getWindowSize();
+           for (int i =0;i<windowSize;i++){
+               for(int j =0;j<frameSize;j++){
+                   list = getTransaction(i);
+                   updateTree(list);
+               }
+           }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (DataNotValidException e) {
@@ -78,11 +83,11 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
     }
 
     private void updateSameNode(UNode child, UNode tmpNode) {
-        child.setNodeCount(child.getChildNodeCount() + 1);
+        child.setFrameNumber(child.getChildNodeCount() + 1);
     }
 
 
-    private List<UNode> getTransaction() throws IOException, DataNotValidException {
+    private List<UNode> getTransaction(int frameNo) throws IOException, DataNotValidException {
         String line = bufferedReader.readLine();
         if (line == null) {
             return null;
@@ -93,17 +98,18 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
             UNode uNode = new UNode(string);
             uNodeList.add(uNode);
         }
-        assignPrefixValueToTransactionList(uNodeList);
+        assignPrefixValueToTransactionList(uNodeList, frameNo);
         return uNodeList;
     }
 
-    private void assignPrefixValueToTransactionList(List<UNode> uNodeList) {
+    private void assignPrefixValueToTransactionList(List<UNode> uNodeList, int frameNo) {
         double prefixValue = uNodeList.get(0).getItemProbability();
         uNodeList.get(0).setPrefixValue(prefixValue);
         double maxPrefixValue = prefixValue;
         for (int i = 1; i < uNodeList.size(); i++) {
             UNode uNode = uNodeList.get(i);
             uNode.setPrefixValue(uNode.getItemProbability() * maxPrefixValue);
+            uNode.setFrameNumber(frameNo);
             if (maxPrefixValue < uNode.getItemProbability()) {
                 maxPrefixValue = uNode.getItemProbability();
             }
