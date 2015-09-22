@@ -105,9 +105,9 @@ public class UNode {
 
     public String travase() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("PARENT->" + id).append("#CHILDS#[");
+        stringBuilder.append("PARENT->" + toString()).append("\t#CHILDS#[");
         for (UNode node : childNodeList) {
-            stringBuilder.append("(").append(node.getId()).append(")");
+            stringBuilder.append("(").append(node.toString()).append(")");
         }
         stringBuilder.append("]\n");
         for (UNode node : childNodeList) {
@@ -120,6 +120,11 @@ public class UNode {
 
     @Override
     public String toString() {
-        return id;
+        return "UNode{" +
+                "frameNo=" + frameNo +
+                ", totalChild=" + childNodeList.size() +
+                ", prefixValue=" + prefixValue +
+                ", id='" + id + '\'' +
+                '}';
     }
 }
