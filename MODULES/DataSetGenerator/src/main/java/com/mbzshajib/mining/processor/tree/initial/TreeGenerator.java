@@ -1,6 +1,7 @@
 package com.mbzshajib.mining.processor.tree.initial;
 
 import com.mbzshajib.mining.exception.DataNotValidException;
+import com.mbzshajib.mining.util.Utils;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
 
@@ -24,7 +25,7 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
     private BufferedReader bufferedReader;
     private TreeInput treeInput;
 
-    private static UNode ROOT_NODE;
+    private UNode ROOT_NODE;
     private static HeaderTable HEADER_TABLE;
 
     @Override
@@ -32,15 +33,22 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
         this.treeInput = treeInput;
         try {
             INITIALIZE();
+            UNode currentNode = ROOT_NODE;
             List<UNode> list;
-            int frameSize = treeInput.getFrameSize();
             int windowSize = treeInput.getWindowSize();
-           for (int i =0;i<windowSize;i++){
-               for(int j =0;j<frameSize;j++){
-                   list = getTransaction(i);
-                   updateTree(list);
-               }
-           }
+            int frameSize = treeInput.getFrameSize();
+            for (int i = 0; i < windowSize; i++) {
+                for (int j = 0; j < frameSize; j++) {
+                    list = getTransaction(i);
+                    for (UNode node : list) {
+                        currentNode = addNode(node, currentNode);
+                    }
+                    currentNode=ROOT_NODE;
+
+                }
+            }
+            Utils.log(TAG,ROOT_NODE.travase());
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (DataNotValidException e) {
@@ -51,8 +59,23 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
         return null;
     }
 
-    private void addToTree(List<UNode> list) {
-        List<UNode> childList = ROOT_NODE.getChildNodeList();
+    private UNode addNode(UNode node, UNode currentNode) {
+        int foundIndex = -1;
+        for (int i = 0; i < currentNode.getChildNodeList().size(); i++) {
+            if (currentNode.getChildNodeList().get(i).isSameID(node)) {
+                foundIndex = i;
+            }
+        }
+        if (foundIndex == -1) {
+            currentNode.addChild(node);
+            return node;
+        } else {
+            UNode tmpNode = currentNode.getChildNodeList().get(foundIndex);
+            tmpNode.setPrefixValue(tmpNode.getPrefixValue() + node.getPrefixValue());
+            currentNode.getChildNodeList().set(foundIndex, tmpNode);
+            return currentNode.getChildNodeList().get(foundIndex);
+        }
+
     }
 
     private void INITIALIZE() throws ProcessingError, FileNotFoundException, DataNotValidException {
@@ -62,28 +85,9 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
         HEADER_TABLE = new HeaderTable();
     }
 
-    private void updateTree(List<UNode> currentTransactionList) {
-        UNode currentPointer = ROOT_NODE;
-        for (UNode tmpNode : currentTransactionList) {
-            List<UNode> childList = currentPointer.getChildNodeList();
-            boolean sameNode = false;
-            for (UNode child : childList) {
-                if (child.isSameID(tmpNode)) {
-                    sameNode = true;
-                    updateSameNode(child, tmpNode);
-                }
-            }
-            if (sameNode == false) {
-                currentPointer.addChild(tmpNode);
-                tmpNode.setParentNode(currentPointer);
-            }
-            currentPointer = tmpNode;
-        }
-        System.out.println(ROOT_NODE.toString());
-    }
 
     private void updateSameNode(UNode child, UNode tmpNode) {
-        child.setFrameNumber(child.getChildNodeCount() + 1);
+        child.setFrameNo(child.getChildNodeCount() + 1);
     }
 
 
@@ -109,7 +113,7 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
         for (int i = 1; i < uNodeList.size(); i++) {
             UNode uNode = uNodeList.get(i);
             uNode.setPrefixValue(uNode.getItemProbability() * maxPrefixValue);
-            uNode.setFrameNumber(frameNo);
+            uNode.setFrameNo(frameNo);
             if (maxPrefixValue < uNode.getItemProbability()) {
                 maxPrefixValue = uNode.getItemProbability();
             }

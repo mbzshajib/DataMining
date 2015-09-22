@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 public class UNode {
-    private int frameNumber;
+    private int frameNo;
     private UNode parentNode;
     private List<UNode> childNodeList;
     private double itemProbability;
@@ -75,6 +75,7 @@ public class UNode {
     }
 
     public void addChild(UNode node) {
+        node.setParentNode(this);
         childNodeList.add(node);
     }
 
@@ -86,12 +87,12 @@ public class UNode {
         return (this.id.equals(node.getId()));
     }
 
-    public int getFrameNumber() {
-        return frameNumber;
+    public int getFrameNo() {
+        return frameNo;
     }
 
-    public void setFrameNumber(int frameNumber) {
-        this.frameNumber = frameNumber;
+    public void setFrameNo(int frameNo) {
+        this.frameNo = frameNo;
     }
 
     public double getPrefixValue() {
@@ -100,5 +101,25 @@ public class UNode {
 
     public void setPrefixValue(double prefixValue) {
         this.prefixValue = prefixValue;
+    }
+
+    public String travase() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("PARENT->" + id).append("#CHILDS#[");
+        for (UNode node : childNodeList) {
+            stringBuilder.append("(").append(node.getId()).append(")");
+        }
+        stringBuilder.append("]\n");
+        for (UNode node : childNodeList) {
+            stringBuilder.append(node.travase());
+        }
+
+
+        return stringBuilder.toString();
+    }
+
+    @Override
+    public String toString() {
+        return id;
     }
 }
