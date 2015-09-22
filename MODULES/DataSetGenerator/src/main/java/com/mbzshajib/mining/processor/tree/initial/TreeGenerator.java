@@ -40,17 +40,18 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
             for (int i = 0; i < windowSize; i++) {
                 for (int j = 0; j < frameSize; j++) {
                     list = getTransaction(i);
-                    if(list==null){
+                    if (list == null) {
                         break;
                     }
                     for (UNode node : list) {
                         currentNode = addNode(node, currentNode);
                     }
-                    currentNode=ROOT_NODE;
-
+                    currentNode = ROOT_NODE;
                 }
             }
-            Utils.log(TAG,"\n\n\n"+ROOT_NODE.traverse());
+            Utils.log(TAG, "\n\n\n" + ROOT_NODE.traverse());
+            slideFrame(ROOT_NODE);
+            Utils.log(TAG, "\n\n\n" + ROOT_NODE.traverse());
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -60,6 +61,26 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void slideFrame(UNode node) {
+        assignNewFrameNo(node);
+        for (int i = 0; i < node.getChildNodeCount(); i++) {
+            UNode tmpNode = node.getChildNodeList().get(i);
+            if (tmpNode.getFrameNo() == -1) {
+                node.getChildNodeList().remove(tmpNode);
+            }
+        }
+
+    }
+
+    private void assignNewFrameNo(UNode node) {
+        for (int i = 0; i < node.getChildNodeCount(); i++) {
+            UNode tmpNode = node.getChildNodeList().get(i);
+            tmpNode.setFrameNo(tmpNode.getFrameNo() - 1);
+            node.getChildNodeList().set(i, tmpNode);
+            slideFrame(tmpNode);
+        }
     }
 
     private UNode addNode(UNode node, UNode currentNode) {
@@ -86,11 +107,6 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
         ROOT_NODE = new UNode("0-0");
         ROOT_NODE.setParentNode(null);
         HEADER_TABLE = new HeaderTable();
-    }
-
-
-    private void updateSameNode(UNode child, UNode tmpNode) {
-        child.setFrameNo(child.getChildNodeCount() + 1);
     }
 
 
