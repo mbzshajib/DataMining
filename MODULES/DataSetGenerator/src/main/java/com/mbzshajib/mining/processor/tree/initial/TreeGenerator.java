@@ -40,6 +40,9 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
             for (int i = 0; i < windowSize; i++) {
                 for (int j = 0; j < frameSize; j++) {
                     list = getTransaction(i);
+                    if(list==null){
+                        break;
+                    }
                     for (UNode node : list) {
                         currentNode = addNode(node, currentNode);
                     }
@@ -47,7 +50,7 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
 
                 }
             }
-            Utils.log(TAG,ROOT_NODE.travase());
+            Utils.log(TAG,"\n\n\n"+ROOT_NODE.traverse());
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -109,6 +112,7 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
     private void assignPrefixValueToTransactionList(List<UNode> uNodeList, int frameNo) {
         double prefixValue = uNodeList.get(0).getItemProbability();
         uNodeList.get(0).setPrefixValue(prefixValue);
+        uNodeList.get(0).setFrameNo(frameNo);
         double maxPrefixValue = prefixValue;
         for (int i = 1; i < uNodeList.size(); i++) {
             UNode uNode = uNodeList.get(i);

@@ -84,7 +84,7 @@ public class UNode {
     }
 
     public boolean isSameID(UNode node) {
-        return (this.id.equals(node.getId()));
+        return (this.id.equals(node.getId()) && (this.frameNo == node.getFrameNo()));
     }
 
     public int getFrameNo() {
@@ -103,20 +103,29 @@ public class UNode {
         this.prefixValue = prefixValue;
     }
 
-    public String travase() {
+    public String traverse() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("PARENT->" + toString()).append("\t#CHILDS#[");
+        stringBuilder.append("PARENT->ID-" + id + ":F-" + frameNo).append("\t#CHILDS#[");
         for (UNode node : childNodeList) {
-            stringBuilder.append("(").append(node.toString()).append(")");
+            stringBuilder.append("(").append("ID-"+node.getId() + ":F-" + node.getFrameNo()).append(")");
         }
         stringBuilder.append("]\n");
         for (UNode node : childNodeList) {
-            stringBuilder.append(node.travase());
+            stringBuilder.append(node.traverse());
         }
 
 
         return stringBuilder.toString();
     }
+
+    /*public String traverseLevelWise(int levelNo) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("L-" + levelNo + "-ID:").append(id).append("\n");
+        for(UNode node:childNodeList){
+            stringBuilder.append(node.traverseLevelWise(levelNo++));
+        }
+        return stringBuilder.toString();
+    }*/
 
     @Override
     public String toString() {
