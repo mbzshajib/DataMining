@@ -1,5 +1,6 @@
 package com.mbzshajib.mining.processor.tree.initial;
 
+import com.mbzshajib.mining.exception.CompletedTreeException;
 import com.mbzshajib.mining.exception.DataNotValidException;
 import com.mbzshajib.mining.util.Utils;
 import com.mbzshajib.utility.model.ProcessingError;
@@ -7,6 +8,7 @@ import com.mbzshajib.utility.model.Processor;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -33,25 +35,14 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
         this.treeInput = treeInput;
         try {
             INITIALIZE();
-            UNode currentNode = ROOT_NODE;
-            List<UNode> list;
-            int windowSize = treeInput.getWindowSize();
-            int frameSize = treeInput.getFrameSize();
-            for (int i = 0; i < windowSize; i++) {
-                for (int j = 0; j < frameSize; j++) {
-                    list = getTransaction(i);
-                    if (list == null) {
-                        break;
-                    }
-                    for (UNode node : list) {
-                        currentNode = addNode(node, currentNode);
-                    }
-                    currentNode = ROOT_NODE;
-                }
+            prepareInitialTree(treeInput.getWindowSize(), treeInput.getFrameSize());
+            Utils.log(TAG, "\n\n\n" + ROOT_NODE.traverse());
+            while (true) {
+                slideFrame(ROOT_NODE);
+                addTransactionFrame(treeInput.getFrameSize(), ROOT_NODE, treeInput.getWindowSize() - 1);
+                Utils.log(TAG, "\n\n\n" + ROOT_NODE.traverse());
             }
-            Utils.log(TAG, "\n\n\n" + ROOT_NODE.traverse());
-            slideFrame(ROOT_NODE);
-            Utils.log(TAG, "\n\n\n" + ROOT_NODE.traverse());
+
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -59,8 +50,35 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (CompletedTreeException e) {
+            e.printStackTrace();
         }
-        return null;
+        TreeOutput treeOutput = new TreeOutput();
+        treeOutput.setRootNode(ROOT_NODE);
+        return treeOutput;
+    }
+
+    private void prepareInitialTree(int windowSize, int frameSize) throws IOException, DataNotValidException, CompletedTreeException {
+        UNode currentNode = ROOT_NODE;
+        List<UNode> list;
+        for (int i = 0; i < windowSize; i++) {
+            currentNode = addTransactionFrame(frameSize, currentNode, i);
+        }
+    }
+
+    private UNode addTransactionFrame(int frameSize, UNode currentNode, int frameNo) throws IOException, DataNotValidException, CompletedTreeException {
+        List<UNode> list;
+        for (int j = 0; j < frameSize; j++) {
+            list = getTransaction(frameNo);
+            if (!list.isEmpty()) {
+                throw new CompletedTreeException();
+            }
+            for (UNode node : list) {
+                currentNode = addNode(node, currentNode);
+            }
+            currentNode = ROOT_NODE;
+        }
+        return currentNode;
     }
 
     private void slideFrame(UNode node) {
@@ -113,7 +131,7 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
     private List<UNode> getTransaction(int frameNo) throws IOException, DataNotValidException {
         String line = bufferedReader.readLine();
         if (line == null) {
-            return null;
+            return Collections.emptyList();
         }
         String[] readedTransactionItems = line.split(" ");
         List<UNode> uNodeList = new ArrayList<UNode>();

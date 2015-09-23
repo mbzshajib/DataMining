@@ -14,4 +14,13 @@ import com.mbzshajib.utility.model.Output;
  */    
 
 public class TreeOutput implements Output {
+    UNode rootNode;
+
+    public UNode getRootNode() {
+        return rootNode;
+    }
+
+    public void setRootNode(UNode rootNode) {
+        this.rootNode = rootNode;
+    }
 }
