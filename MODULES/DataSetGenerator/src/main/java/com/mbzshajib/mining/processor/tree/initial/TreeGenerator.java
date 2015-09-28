@@ -51,7 +51,7 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (CompletedTreeException e) {
-            e.printStackTrace();
+            Utils.log(TAG,"Tree construction completed.");
         }
         TreeOutput treeOutput = new TreeOutput();
         treeOutput.setRootNode(ROOT_NODE);
@@ -60,7 +60,6 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
 
     private void prepareInitialTree(int windowSize, int frameSize) throws IOException, DataNotValidException, CompletedTreeException {
         UNode currentNode = ROOT_NODE;
-        List<UNode> list;
         for (int i = 0; i < windowSize; i++) {
             currentNode = addTransactionFrame(frameSize, currentNode, i);
         }
@@ -70,7 +69,7 @@ public class TreeGenerator implements Processor<TreeInput, TreeOutput> {
         List<UNode> list;
         for (int j = 0; j < frameSize; j++) {
             list = getTransaction(frameNo);
-            if (!list.isEmpty()) {
+            if (list.isEmpty()) {
                 throw new CompletedTreeException();
             }
             for (UNode node : list) {
