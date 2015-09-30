@@ -85,6 +85,15 @@ public class HeaderTableItem {
         List<UNode> getNodes() {
             return nodes;
         }
+
     }
 
+    @Override
+    public String toString() {
+        return "HeaderTableItem{" +
+                "itemId='" + itemId + '\'' +
+                ", windowSize=" + windowSize +
+                ", headerDataList=" + headerDataList +
+                '}';
+    }
 }
