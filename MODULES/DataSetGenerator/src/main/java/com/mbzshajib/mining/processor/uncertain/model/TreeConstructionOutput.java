@@ -14,13 +14,31 @@ import com.mbzshajib.utility.model.Output;
  */    
 
 public class TreeConstructionOutput implements Output {
-    UNode rootNode;
+    private UncertainTree uncertainTree;
+    private long endTime;
+    private long startTime;
 
-    public UNode getRootNode() {
-        return rootNode;
+    public UncertainTree getUncertainTree() {
+        return uncertainTree;
     }
 
-    public void setRootNode(UNode rootNode) {
-        this.rootNode = rootNode;
+    public void setUncertainTree(UncertainTree uncertainTree) {
+        this.uncertainTree = uncertainTree;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
     }
 }
