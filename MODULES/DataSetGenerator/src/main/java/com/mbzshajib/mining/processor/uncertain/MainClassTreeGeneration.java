@@ -1,9 +1,9 @@
 package com.mbzshajib.mining.processor.uncertain;
 
 import com.mbzshajib.mining.Initializer;
-import com.mbzshajib.mining.processor.uncertain.model.TreeConstructionOutput;
+import com.mbzshajib.mining.processor.uncertain.tree.TreeConstructionOutput;
 import com.mbzshajib.mining.processor.uncertain.tree.TreeGenerator;
-import com.mbzshajib.mining.processor.uncertain.model.TreeConstructionInput;
+import com.mbzshajib.mining.processor.uncertain.tree.TreeConstructionInput;
 import com.mbzshajib.mining.util.Utils;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;

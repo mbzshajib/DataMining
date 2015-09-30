@@ -1,5 +1,6 @@
-package com.mbzshajib.mining.processor.uncertain.model;
+package com.mbzshajib.mining.processor.uncertain.tree;
 
+import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
 import com.mbzshajib.utility.model.Output;
 
 /**

@@ -1,8 +1,6 @@
 package com.mbzshajib.mining.processor.uncertain.tree;
 
 import com.mbzshajib.mining.exception.DataNotValidException;
-import com.mbzshajib.mining.processor.uncertain.model.TreeConstructionInput;
-import com.mbzshajib.mining.processor.uncertain.model.TreeConstructionOutput;
 import com.mbzshajib.mining.processor.uncertain.model.UNode;
 import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
 import com.mbzshajib.utility.model.ProcessingError;
