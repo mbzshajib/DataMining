@@ -4,6 +4,7 @@ import com.mbzshajib.mining.exception.DataNotValidException;
 import com.mbzshajib.mining.util.Constant;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -72,6 +73,36 @@ public class HeaderTable {
                     .append(Constant.NEW_LINE);
         }
         return stringBuilder.toString();
+    }
+
+    public List<UNode> getAllNodesById(String id) {
+        List<UNode> nodes = null;
+        for (HeaderTableItem item : headerTableItems) {
+            if (item.getItemId().equalsIgnoreCase(id)) {
+                nodes = item.getAllNodes();
+            }
+        }
+        if (nodes == null) {
+            return Collections.emptyList();
+        } else {
+            return nodes;
+        }
+    }
+
+    public List<HeaderInfo> getNotEmptyItems() {
+        ArrayList<HeaderInfo> headerInfoList = new ArrayList<HeaderInfo>();
+        for (HeaderTableItem item : headerTableItems) {
+            HeaderInfo headerInfo = item.getHeaderInfo();
+            headerInfoList.add(headerInfo);
+        }
+        for (int i = 0; i < headerInfoList.size(); i++) {
+            HeaderInfo info = headerInfoList.get(i);
+            if (info.getPrefixValue() == 0 || info.getSupportValue() == 0) {
+                headerInfoList.remove(info);
+                i = -1;
+            }
+        }
+        return headerInfoList;
     }
 
     @Override

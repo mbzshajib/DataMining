@@ -95,6 +95,33 @@ public class HeaderTableItem {
         return stringBuilder.toString();
     }
 
+    public HeaderInfo getHeaderInfo() {
+        String id = this.itemId;
+        double support = 0;
+        double prefixValue = 0;
+        for (HeaderData data : headerDataList) {
+            for (UNode node : data.getNodes()) {
+                support = support + node.getItemProbability();
+                prefixValue = prefixValue + node.getPrefixValue();
+            }
+        }
+        HeaderInfo info = new HeaderInfo();
+        info.setId(id);
+        info.setSupportValue(support);
+        info.setPrefixValue(prefixValue);
+        return info;
+
+    }
+
+    public List<UNode> getAllNodes() {
+        List<UNode> result = new ArrayList<UNode>();
+        for (HeaderData data : headerDataList) {
+            for (UNode uNode : data.getNodes()) {
+                result.add(uNode);
+            }
+        }
+        return result;
+    }
 
     private class HeaderData {
         List<UNode> nodes;
@@ -119,6 +146,17 @@ public class HeaderTableItem {
             return stringBuilder.toString();
         }
 
+    }
+
+    public boolean isEmpty() {
+        boolean isEmpty = true;
+        for (HeaderData data : headerDataList) {
+            if (data.getNodes().size() > 0) {
+                isEmpty = false;
+                break;
+            }
+        }
+        return isEmpty;
     }
 
     @Override
