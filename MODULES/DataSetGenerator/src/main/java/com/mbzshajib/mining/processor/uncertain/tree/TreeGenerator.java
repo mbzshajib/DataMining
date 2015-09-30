@@ -1,11 +1,10 @@
 package com.mbzshajib.mining.processor.uncertain.tree;
 
-import com.mbzshajib.mining.exception.CompletedTreeException;
 import com.mbzshajib.mining.exception.DataNotValidException;
-import com.mbzshajib.mining.processor.uncertain.model.HeaderTable;
 import com.mbzshajib.mining.processor.uncertain.model.TreeConstructionInput;
 import com.mbzshajib.mining.processor.uncertain.model.TreeConstructionOutput;
 import com.mbzshajib.mining.processor.uncertain.model.UNode;
+import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
 import com.mbzshajib.mining.util.Utils;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
@@ -30,104 +29,68 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
     private static final String TAG = TreeGenerator.class.getCanonicalName();
     private BufferedReader bufferedReader;
     private TreeConstructionInput treeConstructionInput;
-
-    private UNode ROOT_NODE;
-    private static HeaderTable HEADER_TABLE;
-
     @Override
     public TreeConstructionOutput process(TreeConstructionInput treeConstructionInput) throws ProcessingError {
         this.treeConstructionInput = treeConstructionInput;
+        UncertainTree uncertainTree = null;
         try {
-            INITIALIZE();
-            prepareInitialTree(treeConstructionInput.getWindowSize(), treeConstructionInput.getFrameSize());
-            Utils.log(TAG, "\n\n\n" + ROOT_NODE.traverse());
-            while (true) {
-                slideFrame(ROOT_NODE);
-                addTransactionFrame(treeConstructionInput.getFrameSize(), ROOT_NODE, treeConstructionInput.getWindowSize() - 1);
-                Utils.log(TAG, "\n\n\n" + ROOT_NODE.traverse());
+//            1-0.52 5-0.39 12-0.51 21-0.31 23-0.46 25-0.48 36-0.54 39-0.54 42-0.33
+//            1-0.44 2-0.5 12-0.57 21-0.4 23-0.33 25-0.56 36-0.44 39-0.6 42-0.48
+//            2-0.45 5-0.61 12-0.53 21-0.37 23-0.41 25-0.47 36-0.42 39-0.57 42-0.39
+//            2-0.64 5-0.52 12-0.61 21-0.48 23-0.31 25-0.65 36-0.41 39-0.63 42-0.57
+//            1-0.55 5-0.65 12-0.4 21-0.44 23-0.51 25-0.38 36-0.39 39-0.5 42-0.38
+//            1-0.53 5-0.59 12-0.55 21-0.65 23-0.58 25-0.64 36-0.65 39-0.57 42-0.41
+//            1-0.47 5-0.51 12-0.42 21-0.55 23-0.59 26-0.32 36-0.47 39-0.58 42-0.48
+//            1-0.43 5-0.56 12-0.38 21-0.37 22-0.42 26-0.65 36-0.52 39-0.48 42-0.34
+//            1-0.51 5-0.46 12-0.65 21-0.42 23-0.44 26-0.62 36-0.49 39-0.47 42-0.41
+//            1-0.61 5-0.38 12-0.55 21-0.35 23-0.33 26-0.42 36-0.56 39-0.49 42-0.43
+//            1-0.6 5-0.55 12-0.33 21-0.6 23-0.54 26-0.52 36-0.41 39-0.42 42-0.59
+//            1-0.65 5-0.37 7-0.53 21-0.59 23-0.6 26-0.35 36-0.44 39-0.33 42-0.48
+//            1-0.58 5-0.37 7-0.43 22-0.33 23-0.33 25-0.4 36-0.35 39-0.54 42-0.36
+//            1-0.55 5-0.37 7-0.59 22-0.48 23-0.56 25-0.38 36-0.51 39-0.56 42-0.48
+//            1-0.43 5-0.33 7-0.37 22-0.54 23-0.48 25-0.33 36-0.61 39-0.62 42-0.63
+//            1-0.42 5-0.48 12-0.58 22-0.35 23-0.46 25-0.37 36-0.41 39-0.34 42-0.55
+//            1-0.37 5-0.45 12-0.37 22-0.46 23-0.51 25-0.41 36-0.65 39-0.38 42-0.48
+//            1-0.64 5-0.41 12-0.41 22-0.42 23-0.47 25-0.38 36-0.49 39-0.62 42-0.36
+            initialize();
+            uncertainTree = new UncertainTree(treeConstructionInput.getFrameSize(), treeConstructionInput.getWindowSize());
+            for (int frameNo = 0; frameNo < treeConstructionInput.getWindowSize(); frameNo++) {
+                for (int i = 0; i < treeConstructionInput.getFrameSize(); i++) {
+                    List<UNode> nodes = getTransaction(frameNo);
+                    uncertainTree.addTransactionToTree(nodes);
+                }
+                Utils.log(TAG, "FRAME NO " + frameNo + " has been added ");
+                Utils.log(TAG, uncertainTree.getTraversedString());
             }
-
-
+            uncertainTree.slideWindowAndUpdateTree();
+            List<UNode> nodes = null;
+            int frameCounter = 0;
+            while (!(nodes = getTransaction(treeConstructionInput.getWindowSize() - 1)).isEmpty()) {
+                uncertainTree.addTransactionToTree(nodes);
+                frameCounter++;
+                if (!(frameCounter < treeConstructionInput.getWindowSize())) {
+                    Utils.log(TAG, "FRAME NO " + (treeConstructionInput.getWindowSize() - 1) + " has been added ");
+                    Utils.log(TAG, uncertainTree.getTraversedString());
+                    frameCounter = 0;
+                    uncertainTree.slideWindowAndUpdateTree();
+                }
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (DataNotValidException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (CompletedTreeException e) {
-            Utils.log(TAG,"Tree construction completed.");
         }
+
         TreeConstructionOutput treeConstructionOutput = new TreeConstructionOutput();
-        treeConstructionOutput.setRootNode(ROOT_NODE);
+        treeConstructionOutput.setRootNode(uncertainTree.getRootNode());
         return treeConstructionOutput;
     }
 
-    private void prepareInitialTree(int windowSize, int frameSize) throws IOException, DataNotValidException, CompletedTreeException {
-        UNode currentNode = ROOT_NODE;
-        for (int i = 0; i < windowSize; i++) {
-            currentNode = addTransactionFrame(frameSize, currentNode, i);
-        }
-    }
 
-    private UNode addTransactionFrame(int frameSize, UNode currentNode, int frameNo) throws IOException, DataNotValidException, CompletedTreeException {
-        List<UNode> list;
-        for (int j = 0; j < frameSize; j++) {
-            list = getTransaction(frameNo);
-            if (list.isEmpty()) {
-                throw new CompletedTreeException();
-            }
-            for (UNode node : list) {
-                currentNode = addNode(node, currentNode);
-            }
-            currentNode = ROOT_NODE;
-        }
-        return currentNode;
-    }
-
-    private void slideFrame(UNode node) {
-        assignNewFrameNo(node);
-        for (int i = 0; i < node.getChildNodeCount(); i++) {
-            UNode tmpNode = node.getChildNodeList().get(i);
-            if (tmpNode.getFrameNo() == -1) {
-                node.getChildNodeList().remove(tmpNode);
-            }
-        }
-
-    }
-
-    private void assignNewFrameNo(UNode node) {
-        for (int i = 0; i < node.getChildNodeCount(); i++) {
-            UNode tmpNode = node.getChildNodeList().get(i);
-            tmpNode.setFrameNo(tmpNode.getFrameNo() - 1);
-            node.getChildNodeList().set(i, tmpNode);
-            slideFrame(tmpNode);
-        }
-    }
-
-    private UNode addNode(UNode node, UNode currentNode) {
-        int foundIndex = -1;
-        for (int i = 0; i < currentNode.getChildNodeList().size(); i++) {
-            if (currentNode.getChildNodeList().get(i).isSameID(node)) {
-                foundIndex = i;
-            }
-        }
-        if (foundIndex == -1) {
-            currentNode.addChild(node);
-            return node;
-        } else {
-            UNode tmpNode = currentNode.getChildNodeList().get(foundIndex);
-            tmpNode.setPrefixValue(tmpNode.getPrefixValue() + node.getPrefixValue());
-            currentNode.getChildNodeList().set(foundIndex, tmpNode);
-            return currentNode.getChildNodeList().get(foundIndex);
-        }
-
-    }
-
-    private void INITIALIZE() throws ProcessingError, FileNotFoundException, DataNotValidException {
+    private void initialize() throws ProcessingError, FileNotFoundException, DataNotValidException {
         bufferedReader = new BufferedReader(new FileReader(new File(treeConstructionInput.getInputFilePath())));
-        ROOT_NODE = new UNode("0-0");
-        ROOT_NODE.setParentNode(null);
-        HEADER_TABLE = new HeaderTable();
     }
 
 
@@ -136,30 +99,25 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
         if (line == null) {
             return Collections.emptyList();
         }
-        String[] readedTransactionItems = line.split(" ");
+
         List<UNode> uNodeList = new ArrayList<UNode>();
-        for (String string : readedTransactionItems) {
-            UNode uNode = new UNode(string);
+
+        String[] transactionItems = line.split(" ");
+        UNode firstNode = new UNode(transactionItems[0]);
+        double maxProbability = firstNode.getItemProbability();
+        firstNode.setPrefixValue(maxProbability);
+        firstNode.setFrameNo(frameNo);
+        uNodeList.add(firstNode);
+        for (int i = 1; i < transactionItems.length; i++) {
+            UNode uNode = new UNode(transactionItems[i]);
+            uNode.setFrameNo(frameNo);
+            double prefixValueToBeAssigned = maxProbability * uNode.getItemProbability();
+            uNode.setPrefixValue(prefixValueToBeAssigned);
             uNodeList.add(uNode);
+            if (maxProbability < uNode.getItemProbability()) {
+                maxProbability = uNode.getItemProbability();
+            }
         }
-        assignPrefixValueToTransactionList(uNodeList, frameNo);
         return uNodeList;
     }
-
-    private void assignPrefixValueToTransactionList(List<UNode> uNodeList, int frameNo) {
-        double prefixValue = uNodeList.get(0).getItemProbability();
-        uNodeList.get(0).setPrefixValue(prefixValue);
-        uNodeList.get(0).setFrameNo(frameNo);
-        double maxPrefixValue = prefixValue;
-        for (int i = 1; i < uNodeList.size(); i++) {
-            UNode uNode = uNodeList.get(i);
-            uNode.setPrefixValue(uNode.getItemProbability() * maxPrefixValue);
-            uNode.setFrameNo(frameNo);
-            if (maxPrefixValue < uNode.getItemProbability()) {
-                maxPrefixValue = uNode.getItemProbability();
-            }
-            uNodeList.set(i, uNode);
-        }
-    }
-
 }
