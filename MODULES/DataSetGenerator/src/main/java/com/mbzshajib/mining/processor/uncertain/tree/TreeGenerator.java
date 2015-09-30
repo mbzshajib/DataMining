@@ -1,10 +1,8 @@
 package com.mbzshajib.mining.processor.uncertain.tree;
 
 import com.mbzshajib.mining.exception.DataNotValidException;
-import com.mbzshajib.mining.processor.uncertain.model.TreeConstructionInput;
-import com.mbzshajib.mining.processor.uncertain.model.TreeConstructionOutput;
-import com.mbzshajib.mining.processor.uncertain.model.UNode;
-import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
+import com.mbzshajib.mining.processor.uncertain.model.*;
+import com.mbzshajib.mining.util.Utils;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
 
@@ -40,23 +38,20 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
             uncertainTree = new UncertainTree(treeConstructionInput.getFrameSize(), treeConstructionInput.getWindowSize());
             for (int frameNo = 0; frameNo < treeConstructionInput.getWindowSize(); frameNo++) {
                 for (int i = 0; i < treeConstructionInput.getFrameSize(); i++) {
-                    List<UNode> nodes = getTransaction(frameNo);
-                    uncertainTree.addTransactionToTree(nodes);
+                    List<UInputData> nodes = getTransaction();
+                    uncertainTree.addTransactionToTree(nodes, frameNo);
                 }
-//                Utils.log(TAG, "FRAME NO " + frameNo + " has been added ");
-//                Utils.log(TAG, uncertainTree.getTraversedString());
+                Utils.log(TAG, uncertainTree.getTraversedString());
             }
             uncertainTree.slideWindowAndUpdateTree();
-            List<UNode> nodes = null;
+            List<UInputData> nodes = null;
             int frameCounter = 0;
-            while (!(nodes = getTransaction(treeConstructionInput.getWindowSize() - 1)).isEmpty()) {
+            while (!(nodes = getTransaction()).isEmpty()) {
                 if (!(frameCounter < treeConstructionInput.getWindowSize())) {
-//                    Utils.log(TAG, "FRAME NO " + (treeConstructionInput.getWindowSize() - 1) + " has been added ");
-//                    Utils.log(TAG, uncertainTree.getTraversedString());
                     frameCounter = 0;
                     uncertainTree.slideWindowAndUpdateTree();
                 }
-                uncertainTree.addTransactionToTree(nodes);
+                uncertainTree.addTransactionToTree(nodes, treeConstructionInput.getWindowSize() - 1);
                 frameCounter++;
 
             }
@@ -87,29 +82,31 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
     }
 
 
-    private List<UNode> getTransaction(int frameNo) throws IOException, DataNotValidException {
+    private List<UInputData> getTransaction() throws IOException, DataNotValidException {
         String line = bufferedReader.readLine();
         if (line == null) {
             bufferedReader.close();
             return Collections.emptyList();
         }
 
-        List<UNode> uNodeList = new ArrayList<UNode>();
+        List<UInputData> uNodeList = new ArrayList<UInputData>();
 
         String[] transactionItems = line.split(" ");
-        UNode firstNode = new UNode(transactionItems[0]);
-        double maxProbability = firstNode.getItemProbability();
+        String id = transactionItems[0].split("-")[0];
+        double probability = Double.parseDouble(transactionItems[0].split("-")[1]);
+        UInputData firstNode = new UInputData(id, probability);
+        double maxProbability = firstNode.getItemPValue();
         firstNode.setPrefixValue(maxProbability);
-        firstNode.setFrameNo(frameNo);
         uNodeList.add(firstNode);
         for (int i = 1; i < transactionItems.length; i++) {
-            UNode uNode = new UNode(transactionItems[i]);
-            uNode.setFrameNo(frameNo);
-            double prefixValueToBeAssigned = maxProbability * uNode.getItemProbability();
-            uNode.setPrefixValue(prefixValueToBeAssigned);
-            uNodeList.add(uNode);
-            if (maxProbability < uNode.getItemProbability()) {
-                maxProbability = uNode.getItemProbability();
+            String tmpId = transactionItems[i].split("-")[0];
+            double tmpPValue = Double.parseDouble(transactionItems[i].split("-")[1]);
+            UInputData data = new UInputData(tmpId, tmpPValue);
+            double prefixValueToBeAssigned = maxProbability * data.getItemPValue();
+            data.setPrefixValue(prefixValueToBeAssigned);
+            uNodeList.add(data);
+            if (maxProbability < data.getItemPValue()) {
+                maxProbability = data.getItemPValue();
             }
         }
         return uNodeList;

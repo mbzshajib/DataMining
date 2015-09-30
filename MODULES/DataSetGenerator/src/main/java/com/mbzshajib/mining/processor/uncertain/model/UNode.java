@@ -1,6 +1,7 @@
 package com.mbzshajib.mining.processor.uncertain.model;
 
 import com.mbzshajib.mining.exception.DataNotValidException;
+import com.mbzshajib.mining.util.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,45 +18,37 @@ import java.util.List;
  */
 
 public class UNode {
-    private int frameNo;
+
+    private String id;
+    private int frameSize;
     private UNode parentNode;
     private List<UNode> childNodeList;
-    private double itemProbability;
-    private double prefixValue;
-    private String id;
 
-    /**
-     * Must be in following formate
-     * ID-pVal
-     */
-    public UNode(String uNodeValueInString) throws DataNotValidException {
-        String[] splitedVals = uNodeValueInString.split("-");
-        if (splitedVals.length != 2) {
-            throw new DataNotValidException("Each node value must be in \'ID-pVal\' found value is " + uNodeValueInString);
-        }
-        this.id = splitedVals[0];
-        try {
-            this.itemProbability = Double.parseDouble(splitedVals[1]);
-        } catch (NumberFormatException e) {
-            throw new DataNotValidException(e);
-        }
+    private List<UData> uncertainDataList;
+
+    public UNode(String id, int frameSize) {
+        this.id = id;
+        this.frameSize = frameSize;
         childNodeList = new ArrayList<UNode>();
+        uncertainDataList = new ArrayList<UData>(frameSize);
+        for (int i = 0; i < frameSize; i++) {
+            UData uData = new UData(0, 0);
+            uncertainDataList.add(i, uData);
+        }
     }
 
-    public UNode getParentNode() {
-        return parentNode;
+    public void addUData(int frameNo, UData dataToBeAdded) throws DataNotValidException {
+        if (frameNo >= frameSize) {
+            throw new DataNotValidException("Frame no " + frameNo + " must be less than frame size " + frameSize + ".");
+        }
+        UData uData = uncertainDataList.get(frameNo);
+        uData.setPrefixValue(uData.getPrefixValue() + dataToBeAdded.getPrefixValue());
+        uData.setItemProbability(uData.getItemProbability() + dataToBeAdded.getItemProbability());
     }
 
-    public List<UNode> getChildNodeList() {
-        return childNodeList;
-    }
-
-    public void setChildNodeList(List<UNode> childNodeList) {
-        this.childNodeList = childNodeList;
-    }
-
-    public void setParentNode(UNode parentNode) {
-        this.parentNode = parentNode;
+    public void addChild(UNode childNode) {
+        childNode.setParentNode(this);
+        childNodeList.add(childNode);
     }
 
     public String getId() {
@@ -66,74 +59,65 @@ public class UNode {
         this.id = id;
     }
 
-    public double getItemProbability() {
-        return itemProbability;
+    public UNode getParentNode() {
+        return parentNode;
     }
 
-    public void setItemProbability(double itemProbability) {
-        this.itemProbability = itemProbability;
+    public void setParentNode(UNode parentNode) {
+        this.parentNode = parentNode;
     }
 
-    public void addChild(UNode node) {
-        node.setParentNode(this);
-        childNodeList.add(node);
+    public List<UNode> getChildNodeList() {
+        return childNodeList;
     }
 
-    public int getChildNodeCount() {
-        return childNodeList.size();
-    }
-
-    public boolean isSameIdAndFrameNo(UNode node) {
-        return (this.id.equals(node.getId()) && (this.frameNo == node.getFrameNo()));
-    }
-
-    public int getFrameNo() {
-        return frameNo;
-    }
-
-    public void setFrameNo(int frameNo) {
-        this.frameNo = frameNo;
-    }
-
-    public double getPrefixValue() {
-        return prefixValue;
-    }
-
-    public void setPrefixValue(double prefixValue) {
-        this.prefixValue = prefixValue;
+    public void setChildNodeList(List<UNode> childNodeList) {
+        this.childNodeList = childNodeList;
     }
 
     public String traverse() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("PARENT->ID-" + id + ":F-" + frameNo).append("\t#CHILDS#[");
+        stringBuilder.append(Constant.NEW_LINE)
+                .append(Constant.HASH).append(Constant.HASH)
+                .append("Parent " )
+                .append("ID:" ).append(Constant.HASH).append(id);
+        stringBuilder.append(Constant.TABBED_HASH)
+                .append(Constant.HASH)
+                .append("Child")
+                .append(Constant.TABBED_HASH)
+                .append("[ ");
         for (UNode node : childNodeList) {
-            stringBuilder.append("(").append("ID-"+node.getId() + ":F-" + node.getFrameNo()).append(")");
+            stringBuilder
+                    .append(Constant.TABBED_HASH)
+                    .append(node.getId());
         }
-        stringBuilder.append("]\n");
+        stringBuilder.append(" ]");
         for (UNode node : childNodeList) {
             stringBuilder.append(node.traverse());
         }
+//        for (int i = 0; i < uncertainDataList.size(); i++) {
+//            stringBuilder.append(Constant.HASH).append("F-" + i+" ")
+//                    .append(uncertainDataList.get(i).toString());
+//        }
 
 
         return stringBuilder.toString();
     }
 
-    /*public String traverseLevelWise(int levelNo) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("L-" + levelNo + "-ID:").append(id).append("\n");
-        for(UNode node:childNodeList){
-            stringBuilder.append(node.traverseLevelWise(levelNo++));
-        }
-        return stringBuilder.toString();
-    }*/
+    public boolean isSameId(String id) {
+        return id.equalsIgnoreCase(this.id);
+    }
+
+    public void slide() {
+        this.uncertainDataList.remove(this.uncertainDataList.get(0));
+        this.uncertainDataList.add(new UData(0, 0));
+    }
 
     @Override
     public String toString() {
         return "UNode{" +
-                "frameNo=" + frameNo +
-                ", totalChild=" + childNodeList.size() +
-                ", prefixValue=" + prefixValue +
-                ", id='" + id + '\'' +
+                "id='" + id + '\'' +
+                ", parentNode=" + parentNode +
                 '}';
     }
 }

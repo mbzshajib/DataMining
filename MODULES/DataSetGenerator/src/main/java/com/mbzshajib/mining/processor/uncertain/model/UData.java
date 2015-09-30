@@ -1,0 +1,46 @@
+package com.mbzshajib.mining.processor.uncertain.model;
+
+/**
+ * *****************************************************************
+ * Copyright  2015.
+ * Author - Md. Badi-Uz-Zaman Shajib
+ * Email  - mbzshajib@gmail.com
+ * GitHub - https://github.com/mbzshajib
+ * date: 9/30/2015
+ * time: 6:50 PM
+ * ****************************************************************
+ */
+
+public class UData {
+    private double itemProbability;
+    private double prefixValue;
+
+    public UData(double itemProbability,double prefixValue) {
+        this.itemProbability = itemProbability;
+        this.prefixValue = prefixValue;
+    }
+
+    public double getItemProbability() {
+        return itemProbability;
+    }
+
+    public void setItemProbability(double itemProbability) {
+        this.itemProbability = itemProbability;
+    }
+
+    public double getPrefixValue() {
+        return prefixValue;
+    }
+
+    public void setPrefixValue(double prefixValue) {
+        this.prefixValue = prefixValue;
+    }
+
+    @Override
+    public String toString() {
+        return "UData{" +
+                "itemProbability=" + itemProbability +
+                ", prefixValue=" + prefixValue +
+                '}';
+    }
+}

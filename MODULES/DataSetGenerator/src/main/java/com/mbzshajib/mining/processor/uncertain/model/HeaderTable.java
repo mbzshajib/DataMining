@@ -40,7 +40,7 @@ public class HeaderTable {
     }
 
     private void addNewTableItem(String id) {
-        HeaderTableItem headerTableItem = new HeaderTableItem(id, windowSize);
+        HeaderTableItem headerTableItem = new HeaderTableItem(id);
         headerTableItems.add(headerTableItem);
     }
 
@@ -54,31 +54,16 @@ public class HeaderTable {
         return result;
     }
 
-    public void slideWindowAndUpdateTable() {
-        for (HeaderTableItem item : headerTableItems) {
-            item.slideWindowAndUpdateItem();
-        }
-    }
-
     public String traverse() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(Constant.NEW_LINE)
-                .append("HeaderTabel")
-                .append(Constant.NEW_LINE)
-                .append(Constant.NEW_LINE);
+        stringBuilder.append(Constant.NEW_LINE);
+        stringBuilder.append("HEADER TABLE");
+        stringBuilder.append(Constant.NEW_LINE);
         for (HeaderTableItem item : headerTableItems) {
-
-            stringBuilder.append(item.traverse())
-                    .append(Constant.NEW_LINE);
+            stringBuilder.append(item.traverse());
+            stringBuilder.append(Constant.NEW_LINE);
         }
         return stringBuilder.toString();
     }
 
-    @Override
-    public String toString() {
-        return "HeaderTable{" +
-                "windowSize=" + windowSize +
-                ", headerTableItems=" + headerTableItems +
-                '}';
-    }
 }

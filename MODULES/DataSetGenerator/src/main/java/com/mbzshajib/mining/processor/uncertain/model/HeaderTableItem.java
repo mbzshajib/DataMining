@@ -1,6 +1,5 @@
 package com.mbzshajib.mining.processor.uncertain.model;
 
-import com.mbzshajib.mining.exception.DataNotValidException;
 import com.mbzshajib.mining.util.Constant;
 
 import java.util.ArrayList;
@@ -20,113 +19,57 @@ import java.util.List;
 
 public class HeaderTableItem {
     private String itemId;
-    private int windowSize;
-    private List<HeaderData> headerDataList;
+    private List<UNode> nodeList;
 
-    public HeaderTableItem(String itemId, int windowSize) {
+    public HeaderTableItem(String itemId) {
         this.itemId = itemId;
-        this.windowSize = windowSize;
-        this.headerDataList = new ArrayList<HeaderData>();
-        for (int i = 0; i < windowSize; i++) {
-            HeaderData data = new HeaderData();
-            headerDataList.add(i, data);
-        }
+        nodeList = new ArrayList<UNode>();
+    }
+
+
+    public void updateHeaderData(UNode uNode) {
+        nodeList.add(uNode);
     }
 
     public String getItemId() {
         return itemId;
     }
 
-    public void updateHeaderData(UNode uNode) throws DataNotValidException {
-        if (windowSize < uNode.getFrameNo()) {
-            throw new DataNotValidException("Node Frame no is " + uNode.getFrameNo() + " it should less than window size " + windowSize);
-        }
-        HeaderData headerData = headerDataList.get(uNode.getFrameNo());
-        headerData.addNewNode(uNode);
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
-    public void slideWindowAndUpdateItem() {
-        HeaderData headerData = headerDataList.get(0);
-        headerDataList.remove(headerData);
-        headerDataList.add(new HeaderData());
+    public List<UNode> getNodeList() {
+        return nodeList;
     }
 
-    public double getTotalSupport() {
-        double totalSupport = 0;
-        for (HeaderData headerData : headerDataList) {
-            for (UNode node : headerData.getNodes()) {
-                totalSupport += node.getItemProbability();
-            }
-        }
-        return totalSupport;
-    }
-
-    public double getTotalPrefixValue() {
-        double totalPrefixValue = 0;
-        for (HeaderData headerData : headerDataList) {
-            for (UNode node : headerData.getNodes()) {
-                totalPrefixValue += node.getPrefixValue();
-            }
-        }
-        return totalPrefixValue;
+    public void setNodeList(List<UNode> nodeList) {
+        this.nodeList = nodeList;
     }
 
     public String traverse() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(Constant.TABBED_HASH)
-                .append("Item ID : ")
-                .append(itemId);
-        if (itemId.length() == 1) {
-            stringBuilder.append("  ");
-        } else if (itemId.length() == 2) {
-            stringBuilder.append(" ");
-        }
-
-        stringBuilder.append(Constant.TABBED_HASH)
-                .append("Window Size : ")
-                .append(windowSize)
+        stringBuilder.append("ID ")
+                .append(Constant.HASH)
+                .append(itemId)
                 .append(Constant.TABBED_HASH)
-                .append("Header Data -> (");
+                .append("Nodes : { ").append(Constant.TAB);
 
-        for (HeaderData data : headerDataList) {
-            stringBuilder.append(data.traverse());
+        int index = 0;
+        for (UNode node : nodeList) {
+            stringBuilder.append(Constant.HASH)
+                    .append(toString()).append(Constant.TAB);
+            index++;
         }
-        stringBuilder.append(")");
+        stringBuilder.append(" }");
         return stringBuilder.toString();
-    }
-
-
-    private class HeaderData {
-        List<UNode> nodes;
-
-        HeaderData() {
-            nodes = new ArrayList<UNode>();
-        }
-
-        void addNewNode(UNode uNode) {
-            nodes.add(uNode);
-        }
-
-        List<UNode> getNodes() {
-            return nodes;
-        }
-
-        String traverse() {
-            StringBuilder stringBuilder = new StringBuilder();
-            for (UNode node : nodes) {
-                stringBuilder.append(node.toString());
-            }
-            return stringBuilder.toString();
-        }
-
     }
 
     @Override
     public String toString() {
         return "HeaderTableItem{" +
                 "itemId='" + itemId + '\'' +
-                ", windowSize=" + windowSize +
-                ", headerDataList=" + headerDataList +
+                ", nodeCount=" + nodeList.size() +
                 '}';
     }
 }
