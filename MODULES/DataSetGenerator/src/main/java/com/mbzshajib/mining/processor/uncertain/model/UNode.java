@@ -83,7 +83,7 @@ public class UNode {
         return childNodeList.size();
     }
 
-    public boolean isSameID(UNode node) {
+    public boolean isSameIdAndFrameNo(UNode node) {
         return (this.id.equals(node.getId()) && (this.frameNo == node.getFrameNo()));
     }
 
