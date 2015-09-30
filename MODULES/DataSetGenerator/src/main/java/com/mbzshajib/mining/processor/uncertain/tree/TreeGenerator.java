@@ -97,6 +97,7 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
     private List<UNode> getTransaction(int frameNo) throws IOException, DataNotValidException {
         String line = bufferedReader.readLine();
         if (line == null) {
+            bufferedReader.close();
             return Collections.emptyList();
         }
 
