@@ -38,6 +38,28 @@ public class HeaderTable {
             item.updateHeaderData(uNode);
         }
     }
+    public void slideHeaderTable() {
+        for (HeaderTableItem item : headerTableItems) {
+            List<UNode> nodes = item.getNodeList();
+            int counter = nodes.size();
+            for (int i = 0; i < counter; i++) {
+                UNode node = nodes.get(i);
+                boolean isEmpty = true;
+                for (UData data : node.getUncertainDataList()) {
+                    if (data.getItemProbability() > 0) {
+                        isEmpty = false;
+                        break;
+                    }
+                }
+                if (isEmpty) {
+                    nodes.remove(node);
+                    counter = counter - 1;
+                    i = -1;
+
+                }
+            }
+        }
+    }
 
     private void addNewTableItem(String id) {
         HeaderTableItem headerTableItem = new HeaderTableItem(id);

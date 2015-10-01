@@ -128,7 +128,6 @@ public class UNode {
 
         }
         if (isEmpty) {
-            System.out.printf("Removing Node ID " + id);
             parentNode.getChildNodeList().remove(this);
             return true;
         } else {

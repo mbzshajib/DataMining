@@ -50,6 +50,7 @@ public class UncertainTree {
 
     public void slideWindowAndUpdateTree() {
         removeOneFrameOldestData(rootNode);
+        headerTable.slideHeaderTable();
     }
 
     private void removeOneFrameOldestData(UNode node) {
