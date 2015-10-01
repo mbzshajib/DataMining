@@ -41,6 +41,7 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
                     List<UInputData> nodes = getTransaction();
                     uncertainTree.addTransactionToTree(nodes, frameNo);
                 }
+                treeConstructionInput.getWindowCompletionCallback().windowCompleteUpdate(null);
                 Utils.log(TAG, uncertainTree.getTraversedString());
             }
             uncertainTree.slideWindowAndUpdateTree();
@@ -49,6 +50,7 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
             while (!(nodes = getTransaction()).isEmpty()) {
                 if (!(frameCounter < treeConstructionInput.getWindowSize())) {
                     frameCounter = 0;
+                    treeConstructionInput.getWindowCompletionCallback().windowCompleteUpdate(null);
                     uncertainTree.slideWindowAndUpdateTree();
                 }
                 uncertainTree.addTransactionToTree(nodes, treeConstructionInput.getWindowSize() - 1);

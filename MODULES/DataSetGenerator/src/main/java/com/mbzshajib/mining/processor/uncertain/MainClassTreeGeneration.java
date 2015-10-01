@@ -4,6 +4,7 @@ import com.mbzshajib.mining.Initializer;
 import com.mbzshajib.mining.processor.uncertain.model.TreeConstructionInput;
 import com.mbzshajib.mining.processor.uncertain.model.TreeConstructionOutput;
 import com.mbzshajib.mining.processor.uncertain.tree.TreeGenerator;
+import com.mbzshajib.mining.processor.uncertain.tree.WindowCompletionCallback;
 import com.mbzshajib.mining.util.Utils;
 import com.mbzshajib.utility.model.ProcessingError;
 
@@ -22,6 +23,7 @@ import java.io.IOException;
 
 public class MainClassTreeGeneration {
     public static final String TAG = MainClassTreeGeneration.class.getCanonicalName();
+    private static int windowNumber = 1;
 
     public static void main(String[] args) throws ProcessingError, IOException {
         Initializer.initialize();
@@ -43,6 +45,15 @@ public class MainClassTreeGeneration {
         treeConstructionInput.setInputFilePath("INPUT/test_data_22092015.txt");
         treeConstructionInput.setFrameSize(2);
         treeConstructionInput.setWindowSize(3);
+        treeConstructionInput.setWindowCompletionCallback(new WindowCompletionCallback() {
+            @Override
+            public void windowCompleteUpdate(TreeConstructionOutput treeConstructionOutput) {
+                System.out.println("A window has been completed " + windowNumber);
+                windowNumber++;
+            }
+        });
         return treeConstructionInput;
     }
+
+
 }

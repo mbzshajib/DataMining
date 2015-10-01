@@ -1,5 +1,6 @@
 package com.mbzshajib.mining.processor.uncertain.model;
 
+import com.mbzshajib.mining.processor.uncertain.tree.WindowCompletionCallback;
 import com.mbzshajib.utility.model.Input;
 
 /**
@@ -17,6 +18,7 @@ public class TreeConstructionInput implements Input {
     private String inputFilePath;
     private int windowSize;
     private int frameSize;
+    private WindowCompletionCallback windowCompletionCallback;
 
     public String getInputFilePath() {
         return inputFilePath;
@@ -40,6 +42,14 @@ public class TreeConstructionInput implements Input {
 
     public void setFrameSize(int frameSize) {
         this.frameSize = frameSize;
+    }
+
+    public WindowCompletionCallback getWindowCompletionCallback() {
+        return windowCompletionCallback;
+    }
+
+    public void setWindowCompletionCallback(WindowCompletionCallback windowCompletionCallback) {
+        this.windowCompletionCallback = windowCompletionCallback;
     }
 
     @Override
