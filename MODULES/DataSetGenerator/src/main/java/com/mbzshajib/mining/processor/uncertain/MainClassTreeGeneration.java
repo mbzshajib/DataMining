@@ -41,14 +41,14 @@ public class MainClassTreeGeneration {
     }
 
     private static TreeConstructionInput getTreeInput() {
-        TreeConstructionInput treeConstructionInput = new TreeConstructionInput();
+        final TreeConstructionInput treeConstructionInput = new TreeConstructionInput();
         treeConstructionInput.setInputFilePath("INPUT/test_data_01102015.txt");
         treeConstructionInput.setFrameSize(2);
         treeConstructionInput.setWindowSize(3);
         treeConstructionInput.setWindowCompletionCallback(new WindowCompletionCallback() {
             @Override
-            public void windowCompleteUpdate(TreeConstructionOutput treeConstructionOutput) {
-                System.out.println("A window has been completed " + windowNumber);
+            public void sendUpdate(TreeConstructionOutput treeConstructionOutput) {
+                System.out.println("NEW UPDATE HAS COME + " + treeConstructionOutput.getUncertainTree().getTraversedString());
                 windowNumber++;
             }
         });

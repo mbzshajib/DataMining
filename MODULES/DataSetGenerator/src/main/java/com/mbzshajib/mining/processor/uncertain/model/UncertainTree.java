@@ -99,4 +99,7 @@ public class UncertainTree {
             return tmpNode;
         }
     }
+    public UncertainTree copy(){
+        return this   ;
+    }
 }

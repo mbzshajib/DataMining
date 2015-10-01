@@ -15,5 +15,5 @@ import com.mbzshajib.mining.processor.uncertain.model.TreeConstructionOutput;
 
 
 public interface WindowCompletionCallback {
-    void windowCompleteUpdate(TreeConstructionOutput treeConstructionOutput);
+    void sendUpdate(TreeConstructionOutput treeConstructionOutput);
 }

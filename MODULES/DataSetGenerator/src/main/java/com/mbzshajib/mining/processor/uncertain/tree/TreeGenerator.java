@@ -27,6 +27,7 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
     private BufferedReader bufferedReader;
     private TreeConstructionInput treeConstructionInput;
     private long endTime;
+    private long globalStartTime;
     private long startTime;
 
     @Override
@@ -41,7 +42,7 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
                     List<UInputData> nodes = getTransaction();
                     uncertainTree.addTransactionToTree(nodes, frameNo);
                 }
-                treeConstructionInput.getWindowCompletionCallback().windowCompleteUpdate(null);
+                treeConstructionInput.getWindowCompletionCallback().sendUpdate(createUpdate(uncertainTree));
                 Utils.log(TAG, uncertainTree.getTraversedString());
             }
             uncertainTree.slideWindowAndUpdateTree();
@@ -50,7 +51,7 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
             while (!(nodes = getTransaction()).isEmpty()) {
                 if (!(frameCounter < treeConstructionInput.getWindowSize())) {
                     frameCounter = 0;
-                    treeConstructionInput.getWindowCompletionCallback().windowCompleteUpdate(null);
+                    treeConstructionInput.getWindowCompletionCallback().sendUpdate(createUpdate(uncertainTree));
                     uncertainTree.slideWindowAndUpdateTree();
                 }
                 uncertainTree.addTransactionToTree(nodes, treeConstructionInput.getWindowSize() - 1);
@@ -73,12 +74,22 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
         return treeConstructionOutput;
     }
 
+    private TreeConstructionOutput createUpdate(UncertainTree uncertainTree) {
+        TreeConstructionOutput treeConstructionOutput = new TreeConstructionOutput();
+        treeConstructionOutput.setStartTime(startTime);
+        startTime = System.currentTimeMillis();
+        treeConstructionOutput.setEndTime(System.currentTimeMillis());
+        treeConstructionOutput.setUncertainTree(uncertainTree.copy());
+        return treeConstructionOutput;
+    }
+
     private void finish() {
         endTime = System.currentTimeMillis();
     }
 
 
     private void initialize() throws ProcessingError, FileNotFoundException, DataNotValidException {
+        globalStartTime = System.currentTimeMillis();
         startTime = System.currentTimeMillis();
         bufferedReader = new BufferedReader(new FileReader(new File(treeConstructionInput.getInputFilePath())));
     }
