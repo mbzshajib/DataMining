@@ -42,7 +42,7 @@ public class MainClassTreeGeneration {
 
     private static TreeConstructionInput getTreeInput() {
         TreeConstructionInput treeConstructionInput = new TreeConstructionInput();
-        treeConstructionInput.setInputFilePath("INPUT/test_data_22092015.txt");
+        treeConstructionInput.setInputFilePath("INPUT/test_data_01102015.txt");
         treeConstructionInput.setFrameSize(2);
         treeConstructionInput.setWindowSize(3);
         treeConstructionInput.setWindowCompletionCallback(new WindowCompletionCallback() {

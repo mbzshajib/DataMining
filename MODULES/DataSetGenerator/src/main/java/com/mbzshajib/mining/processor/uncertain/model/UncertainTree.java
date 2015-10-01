@@ -57,6 +57,24 @@ public class UncertainTree {
             UNode tmpNode = node.getChildNodeList().get(i);
             tmpNode.slide();
         }
+        removeEmptyChildNodes(node);
+    }
+
+    private void removeEmptyChildNodes(UNode node) {
+//        Iterator<UNode> iterator = node.getChildNodeList().iterator();
+
+        int loopCounter = node.getChildNodeList().size();
+        for (int i = 0; i < loopCounter; i++) {
+            UNode tmpNode = node.getChildNodeList().get(i);
+            boolean isDeleted = tmpNode.removeNodeIfEmpty();
+            if (isDeleted) {
+                loopCounter = loopCounter - 1;
+                i = -1;
+            } else {
+                removeEmptyChildNodes(tmpNode);
+
+            }
+        }
     }
 
     private UNode addNode(UInputData uInputData, UNode parentNode, int frameNo) throws DataNotValidException {

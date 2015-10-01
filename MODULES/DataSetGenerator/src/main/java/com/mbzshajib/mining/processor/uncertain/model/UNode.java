@@ -79,28 +79,29 @@ public class UNode {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(Constant.NEW_LINE)
                 .append(Constant.HASH).append(Constant.HASH)
-                .append("Parent " )
-                .append("ID:" ).append(Constant.HASH).append(id);
+                .append("Parent ")
+                .append("ID:").append(Constant.HASH).append(id);
         stringBuilder.append(Constant.TABBED_HASH)
                 .append(Constant.HASH)
-                .append("Child")
+                .append("Child ").append(childNodeList.size())
                 .append(Constant.TABBED_HASH)
                 .append("[ ");
         for (UNode node : childNodeList) {
             stringBuilder
                     .append(Constant.TABBED_HASH)
-                    .append(node.getId());
+                    .append(node.getId())
+                    .append("[");
+            for (UData uData : node.getUncertainDataList()) {
+                stringBuilder.append("{")
+                        .append("S-").append(uData.getItemProbability())
+                        .append("}");
+            }
+            stringBuilder.append("]");
         }
         stringBuilder.append(" ]");
         for (UNode node : childNodeList) {
             stringBuilder.append(node.traverse());
         }
-//        for (int i = 0; i < uncertainDataList.size(); i++) {
-//            stringBuilder.append(Constant.HASH).append("F-" + i+" ")
-//                    .append(uncertainDataList.get(i).toString());
-//        }
-
-
         return stringBuilder.toString();
     }
 
@@ -111,6 +112,33 @@ public class UNode {
     public void slide() {
         this.uncertainDataList.remove(this.uncertainDataList.get(0));
         this.uncertainDataList.add(new UData(0, 0));
+
+        for (UNode node : childNodeList) {
+            node.slide();
+        }
+    }
+
+    public boolean removeNodeIfEmpty() {
+        boolean isEmpty = true;
+        for (UData data : uncertainDataList) {
+            if (data.getPrefixValue() > 0) {
+                isEmpty = false;
+                break;
+            }
+
+        }
+        if (isEmpty) {
+            System.out.printf("Removing Node ID " + id);
+            parentNode.getChildNodeList().remove(this);
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public List<UData> getUncertainDataList() {
+        return uncertainDataList;
     }
 
     @Override
