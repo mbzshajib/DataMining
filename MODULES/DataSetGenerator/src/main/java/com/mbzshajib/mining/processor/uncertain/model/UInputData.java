@@ -2,11 +2,11 @@ package com.mbzshajib.mining.processor.uncertain.model;
  /**
  * *****************************************************************
  * Copyright  2015.
- * Author - Md. Badi-Uz-Zaman Shajib
- * Email  - mbzshajib@gmail.com
- * GitHub - https://github.com/mbzshajib 
- * date: 9/30/2015
- * time: 7:17 PM
+ * @author - Md. Badi-Uz-Zaman Shajib
+ * @email  - mbzshajib@gmail.com
+ * @gitHub - https://github.com/mbzshajib
+ * @date: 9/30/2015
+ * @time: 7:17 PM
  * ****************************************************************
  */    
 

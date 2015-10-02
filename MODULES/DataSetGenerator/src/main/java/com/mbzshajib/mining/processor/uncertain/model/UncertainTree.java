@@ -7,11 +7,11 @@ import java.util.List;
 /**
  * *****************************************************************
  * Copyright  2015.
- * Author - Md. Badi-Uz-Zaman Shajib
- * Email  - mbzshajib@gmail.com
- * GitHub - https://github.com/mbzshajib
- * date: 9/28/2015
- * time: 8:41 PM
+ * @author - Md. Badi-Uz-Zaman Shajib
+ * @email  - mbzshajib@gmail.com
+ * @gitHub - https://github.com/mbzshajib
+ * @date: 9/28/2015
+ * @time: 8:41 PM
  * ****************************************************************
  */
 

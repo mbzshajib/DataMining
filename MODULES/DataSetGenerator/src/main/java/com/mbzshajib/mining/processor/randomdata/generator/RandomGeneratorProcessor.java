@@ -6,11 +6,11 @@ import com.mbzshajib.utility.random.RandomUtility;
 /**
  * *****************************************************************
  * Copyright  2015.
- * Author - Md. Badi-Uz-Zaman Shajib
- * Email  - mbzshajib@gmail.com
- * GitHub - https://github.com/mbzshajib
- * date: 9/13/2015
- * time: 7:57 PM
+ * @author - Md. Badi-Uz-Zaman Shajib
+ * @email  - mbzshajib@gmail.com
+ * @gitHub - https://github.com/mbzshajib
+ * @date: 9/13/2015
+ * @time: 7:57 PM
  * ****************************************************************
  */
 

@@ -3,12 +3,12 @@ package com.mbzshajib.mining.demo;
 /**
  * *****************************************************************
  * Copyright  2015.
- * Author - Md. Badi-Uz-Zaman Shajib
- * Email  - mbzshajib@gmail.com
- * GitHub - https://github.com/mbzshajib 
- * date: 9/4/2015
- * time: 3:52 PM
- * time: 3:52 PM
+ * @author - Md. Badi-Uz-Zaman Shajib
+ * @email  - mbzshajib@gmail.com
+ * @gitHub - https://github.com/mbzshajib
+ * @date: 9/4/2015
+ * @time: 3:52 PM
+ * @time: 3:52 PM
  * ****************************************************************
  */
      
