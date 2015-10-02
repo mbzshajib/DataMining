@@ -1,6 +1,5 @@
-package com.mbzshajib.mining.processor.uncertain.model;
+package com.mbzshajib.mining.processor.uncertain.uncertaintree;
 
-import com.mbzshajib.mining.processor.uncertain.tree.WindowCompletionCallback;
 import com.mbzshajib.utility.model.Input;
 
 /**

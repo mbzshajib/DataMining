@@ -1,4 +1,4 @@
-package com.mbzshajib.mining.processor.uncertain.tree;
+package com.mbzshajib.mining.processor.uncertain.uncertaintree;
 
 import com.mbzshajib.mining.exception.DataNotValidException;
 import com.mbzshajib.mining.processor.uncertain.model.*;

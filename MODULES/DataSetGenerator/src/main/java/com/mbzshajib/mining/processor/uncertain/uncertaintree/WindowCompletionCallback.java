@@ -1,6 +1,4 @@
-package com.mbzshajib.mining.processor.uncertain.tree;
-
-import com.mbzshajib.mining.processor.uncertain.model.TreeConstructionOutput;
+package com.mbzshajib.mining.processor.uncertain.uncertaintree;
 
 /**
  * *****************************************************************

@@ -1,10 +1,10 @@
 package com.mbzshajib.mining.processor.uncertain;
 
 import com.mbzshajib.mining.Initializer;
-import com.mbzshajib.mining.processor.uncertain.model.TreeConstructionInput;
-import com.mbzshajib.mining.processor.uncertain.model.TreeConstructionOutput;
-import com.mbzshajib.mining.processor.uncertain.tree.TreeGenerator;
-import com.mbzshajib.mining.processor.uncertain.tree.WindowCompletionCallback;
+import com.mbzshajib.mining.processor.uncertain.uncertaintree.TreeConstructionInput;
+import com.mbzshajib.mining.processor.uncertain.uncertaintree.TreeConstructionOutput;
+import com.mbzshajib.mining.processor.uncertain.uncertaintree.TreeGenerator;
+import com.mbzshajib.mining.processor.uncertain.uncertaintree.WindowCompletionCallback;
 import com.mbzshajib.mining.util.Utils;
 import com.mbzshajib.utility.model.ProcessingError;
 

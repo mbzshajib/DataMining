@@ -18,33 +18,33 @@ import java.util.List;
  */
 
 
-public class HeaderTableItem {
+class HeaderTableItem {
     private String itemId;
     private List<UNode> nodeList;
 
-    public HeaderTableItem(String itemId) {
+     HeaderTableItem(String itemId) {
         this.itemId = itemId;
         nodeList = new ArrayList<UNode>();
     }
 
 
-    public void updateHeaderData(UNode uNode) {
+     void updateHeaderData(UNode uNode) {
         nodeList.add(uNode);
     }
 
-    public String getItemId() {
+     String getItemId() {
         return itemId;
     }
 
-    public void setItemId(String itemId) {
+     void setItemId(String itemId) {
         this.itemId = itemId;
     }
 
-    public List<UNode> getNodeList() {
+     List<UNode> getNodeList() {
         return nodeList;
     }
 
-    public double getItemPrefixValue() {
+     double getItemPrefixValue() {
         double result = 0;
         for (UNode node : nodeList) {
             node.getNodePrefixValue();
@@ -52,7 +52,7 @@ public class HeaderTableItem {
         return result;
     }
 
-    public double getItemProbabilityValue() {
+     double getItemProbabilityValue() {
         double result = 0;
         for (UNode node : nodeList) {
             node.getItemProbabilityValue();
@@ -60,11 +60,11 @@ public class HeaderTableItem {
         return result;
     }
 
-    public void setNodeList(List<UNode> nodeList) {
+     void setNodeList(List<UNode> nodeList) {
         this.nodeList = nodeList;
     }
 
-    public String traverse() {
+     String traverse() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(Constant.HASH)
                 .append("ID ")
@@ -83,7 +83,7 @@ public class HeaderTableItem {
     }
 
     @Override
-    public String toString() {
+     public String toString() {
         return "HeaderTableItem{" +
                 "itemId='" + itemId + '\'' +
                 ", nodeCount=" + nodeList.size() +
