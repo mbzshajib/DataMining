@@ -22,29 +22,33 @@ class HeaderTableItem {
     private String itemId;
     private List<UNode> nodeList;
 
-     HeaderTableItem(String itemId) {
+    HeaderTableItem(String itemId) {
         this.itemId = itemId;
         nodeList = new ArrayList<UNode>();
     }
+    HeaderTableItem(String itemId,int nodeSize) {
+        this.itemId = itemId;
+        nodeList = new ArrayList<UNode>(nodeSize);
+    }
 
 
-     void updateHeaderData(UNode uNode) {
+    void updateHeaderData(UNode uNode) {
         nodeList.add(uNode);
     }
 
-     String getItemId() {
+    String getItemId() {
         return itemId;
     }
 
-     void setItemId(String itemId) {
+    void setItemId(String itemId) {
         this.itemId = itemId;
     }
 
-     List<UNode> getNodeList() {
+    List<UNode> getNodeList() {
         return nodeList;
     }
 
-     double getItemPrefixValue() {
+    double getItemPrefixValue() {
         double result = 0;
         for (UNode node : nodeList) {
             node.getNodePrefixValue();
@@ -52,7 +56,7 @@ class HeaderTableItem {
         return result;
     }
 
-     double getItemProbabilityValue() {
+    double getItemProbabilityValue() {
         double result = 0;
         for (UNode node : nodeList) {
             node.getItemProbabilityValue();
@@ -60,11 +64,11 @@ class HeaderTableItem {
         return result;
     }
 
-     void setNodeList(List<UNode> nodeList) {
+    void setNodeList(List<UNode> nodeList) {
         this.nodeList = nodeList;
     }
 
-     String traverse() {
+    String traverse() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(Constant.HASH)
                 .append("ID ")
@@ -82,8 +86,22 @@ class HeaderTableItem {
         return stringBuilder.toString();
     }
 
+    int getNodeIndex(UNode node) {
+        int index = -1;
+        for (int i = 0; i < nodeList.size(); i++) {
+            if (node == nodeList.get(i)) {
+                index = i;
+                break;
+            }
+
+        }
+        return index;
+    }
+    void addNodeItem(UNode node,int index){
+        nodeList.add(index,node);
+    }
     @Override
-     public String toString() {
+    public String toString() {
         return "HeaderTableItem{" +
                 "itemId='" + itemId + '\'' +
                 ", nodeCount=" + nodeList.size() +

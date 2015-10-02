@@ -79,7 +79,11 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
         treeConstructionOutput.setStartTime(startTime);
         startTime = System.currentTimeMillis();
         treeConstructionOutput.setEndTime(System.currentTimeMillis());
-        treeConstructionOutput.setUncertainTree(uncertainTree.copy());
+        try {
+            treeConstructionOutput.setUncertainTree(uncertainTree.copy());
+        } catch (DataNotValidException e) {
+            e.printStackTrace();
+        }
         return treeConstructionOutput;
     }
 

@@ -3,9 +3,7 @@ package com.mbzshajib.mining.processor.uncertain.model;
 import com.mbzshajib.mining.exception.DataNotValidException;
 import com.mbzshajib.mining.util.Constant;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * *****************************************************************
@@ -63,6 +61,11 @@ public class HeaderTable {
         }
     }
 
+    private HeaderTableItem addNewTableItem(String id, int totalNodes) {
+        HeaderTableItem headerTableItem = new HeaderTableItem(id, totalNodes);
+        headerTableItems.add(headerTableItem);
+        return headerTableItem;
+    }
     private HeaderTableItem addNewTableItem(String id) {
         HeaderTableItem headerTableItem = new HeaderTableItem(id);
         headerTableItems.add(headerTableItem);
@@ -111,5 +114,45 @@ public class HeaderTable {
         }
         return list;
 
+    }
+
+    private Map<String, Integer> getUniqueIds() {
+        Map<String, Integer> result = new HashMap<String, Integer>();
+        for (HeaderTableItem item : headerTableItems) {
+            result.put(item.getItemId(), item.getNodeList().size());
+        }
+        return result;
+    }
+
+    public String[] findNode(UNode node) {
+        String[] result = new String[]{null, null};
+        for (int i = 0; i < headerTableItems.size(); i++) {
+            HeaderTableItem headerTableItem = headerTableItems.get(i);
+            int index = -1;
+            if ((index = headerTableItem.getNodeIndex(node)) != -1) {
+                result[0] = headerTableItem.getItemId();
+                result[1] = index + "";
+                break;
+            }
+        }
+        return result;
+    }
+
+    public HeaderTable copy() {
+        HeaderTable headerTable = new HeaderTable(windowSize);
+        Map<String, Integer> ids = getUniqueIds();
+        Iterator iterator = ids.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry pair = (Map.Entry) iterator.next();
+            String id = (String) pair.getKey();
+            int totalNode = (int) pair.getValue();
+            headerTable.addNewTableItem(id, totalNode);
+        }
+        return headerTable;
+    }
+
+    void addNode(UNode node, String id, int index) {
+        HeaderTableItem item = findHeaderTableItemById(id);
+        item.addNodeItem(node, index);
     }
 }

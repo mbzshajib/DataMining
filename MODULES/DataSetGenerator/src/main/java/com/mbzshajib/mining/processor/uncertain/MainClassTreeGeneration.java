@@ -1,6 +1,7 @@
 package com.mbzshajib.mining.processor.uncertain;
 
 import com.mbzshajib.mining.Initializer;
+import com.mbzshajib.mining.exception.DataNotValidException;
 import com.mbzshajib.mining.processor.uncertain.uncertaintree.TreeConstructionInput;
 import com.mbzshajib.mining.processor.uncertain.uncertaintree.TreeConstructionOutput;
 import com.mbzshajib.mining.processor.uncertain.uncertaintree.TreeGenerator;
@@ -25,7 +26,7 @@ public class MainClassTreeGeneration {
     public static final String TAG = MainClassTreeGeneration.class.getCanonicalName();
     private static int windowNumber = 1;
 
-    public static void main(String[] args) throws ProcessingError, IOException {
+    public static void main(String[] args) throws ProcessingError, IOException, DataNotValidException {
         Initializer.initialize();
         Utils.log(TAG, "Tree generation algorithm started.");
         TreeConstructionInput treeConstructionInput = getTreeInput();
@@ -35,7 +36,8 @@ public class MainClassTreeGeneration {
         Utils.log(TAG, "Start Time " + treeConstructionOutput.getStartTime() + " MS");
         Utils.log(TAG, "End Time " + treeConstructionOutput.getEndTime() + " MS");
         Utils.log(TAG, "Time needed " + (treeConstructionOutput.getEndTime() - treeConstructionOutput.getStartTime()) + " MS");
-        Utils.log(TAG, "Constructed Tree " + treeConstructionOutput.getUncertainTree().getRootNode().traverse());
+        Utils.log(TAG, "Constructed Tree " + treeConstructionOutput.getUncertainTree().getTraversedString());
+        Utils.log(TAG, "Constructed Tree " + treeConstructionOutput.getUncertainTree().copy().getTraversedString());
         Utils.log(TAG, "Header Table " + treeConstructionOutput.getUncertainTree().getHeaderTable().traverse());
 
     }
@@ -48,7 +50,7 @@ public class MainClassTreeGeneration {
         treeConstructionInput.setWindowCompletionCallback(new WindowCompletionCallback() {
             @Override
             public void sendUpdate(TreeConstructionOutput treeConstructionOutput) {
-                System.out.println("NEW UPDATE HAS COME + " + treeConstructionOutput.getUncertainTree().getTraversedString());
+//                System.out.println("NEW UPDATE HAS COME + " + treeConstructionOutput.getUncertainTree().getTraversedString());
                 windowNumber++;
             }
         });

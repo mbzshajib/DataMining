@@ -7,8 +7,9 @@ import java.util.List;
 /**
  * *****************************************************************
  * Copyright  2015.
+ *
  * @author - Md. Badi-Uz-Zaman Shajib
- * @email  - mbzshajib@gmail.com
+ * @email - mbzshajib@gmail.com
  * @gitHub - https://github.com/mbzshajib
  * @date: 9/28/2015
  * @time: 8:41 PM
@@ -30,7 +31,10 @@ public class UncertainTree {
     }
 
     public String getTraversedString() {
-        return rootNode.traverse();
+        StringBuilder builder = new StringBuilder();
+        builder.append(rootNode.traverse());
+        builder.append(headerTable.traverse());
+        return builder.toString();
     }
 
     public UNode getRootNode() {
@@ -99,7 +103,53 @@ public class UncertainTree {
             return tmpNode;
         }
     }
-    public UncertainTree copy(){
-        return this   ;
+
+    public void setRootNode(UNode rootNode) {
+        this.rootNode = rootNode;
+    }
+
+    public void setHeaderTable(HeaderTable headerTable) {
+        this.headerTable = headerTable;
+    }
+
+    public int getFrameSize() {
+        return frameSize;
+    }
+
+    public void setFrameSize(int frameSize) {
+        this.frameSize = frameSize;
+    }
+
+    public int getWindowSize() {
+        return windowSize;
+    }
+
+    public void setWindowSize(int windowSize) {
+        this.windowSize = windowSize;
+    }
+
+    public UncertainTree copy() throws DataNotValidException {
+        UncertainTree uncertainTree = new UncertainTree(frameSize, windowSize);
+        UNode copiedNode = rootNode.copy();
+        uncertainTree.setRootNode(copiedNode);
+        uncertainTree.setHeaderTable(copyHeaderTable(copiedNode));
+        return uncertainTree;
+    }
+
+    private HeaderTable copyHeaderTable(UNode copiedNode) {
+        HeaderTable headerTable = this.headerTable.copy();
+        for (int i = 0; i < rootNode.getChildNodeList().size(); i++) {
+            UNode nodeOriginal = rootNode.getChildNodeList().get(i);
+            UNode nodeCopied = rootNode.getChildNodeList().get(i);
+
+            String[] nodeInfo = this.headerTable.findNode(nodeOriginal);
+            if (nodeInfo==null||nodeInfo[0] == null || nodeInfo[1] == null) {
+                continue;
+            } else {
+                int index = Integer.parseInt(nodeInfo[1]);
+                headerTable.addNode(nodeCopied, nodeInfo[0], index);
+            }
+        }
+        return headerTable;
     }
 }
