@@ -8,8 +8,9 @@ import java.util.List;
 /**
  * *****************************************************************
  * Copyright  2015.
+ *
  * @author - Md. Badi-Uz-Zaman Shajib
- * @email  - mbzshajib@gmail.com
+ * @email - mbzshajib@gmail.com
  * @gitHub - https://github.com/mbzshajib
  * @date: 9/21/2015
  * @time: 3:59 PM
@@ -43,22 +44,38 @@ public class HeaderTableItem {
         return nodeList;
     }
 
+    public double getItemPrefixValue() {
+        double result = 0;
+        for (UNode node : nodeList) {
+            node.getNodePrefixValue();
+        }
+        return result;
+    }
+
+    public double getItemProbabilityValue() {
+        double result = 0;
+        for (UNode node : nodeList) {
+            node.getItemProbabilityValue();
+        }
+        return result;
+    }
+
     public void setNodeList(List<UNode> nodeList) {
         this.nodeList = nodeList;
     }
 
     public String traverse() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("ID ")
-                .append(Constant.HASH)
+        stringBuilder.append(Constant.HASH)
+                .append("ID ")
                 .append(itemId)
                 .append(Constant.TABBED_HASH)
-                .append("Nodes : { ").append(Constant.TAB);
+                .append("Data { ").append(Constant.TAB);
 
         int index = 0;
         for (UNode node : nodeList) {
             stringBuilder.append(Constant.HASH)
-                    .append(toString()).append(Constant.TAB);
+                    .append(node.toString()).append(Constant.TAB);
             index++;
         }
         stringBuilder.append(" }");
