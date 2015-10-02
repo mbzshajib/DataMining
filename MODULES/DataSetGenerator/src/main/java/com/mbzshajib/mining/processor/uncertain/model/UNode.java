@@ -9,8 +9,9 @@ import java.util.List;
 /**
  * *****************************************************************
  * Copyright  2015.
+ *
  * @author - Md. Badi-Uz-Zaman Shajib
- * @email  - mbzshajib@gmail.com
+ * @email - mbzshajib@gmail.com
  * @gitHub - https://github.com/mbzshajib
  * @date: 9/20/2015
  * @time: 11:16 PM
@@ -23,8 +24,11 @@ public class UNode {
     private int frameSize;
     private UNode parentNode;
     private List<UNode> childNodeList;
-
     private List<UData> uncertainDataList;
+
+    private UNode() {
+
+    }
 
     public UNode(String id, int frameSize) {
         this.id = id;
@@ -136,15 +140,74 @@ public class UNode {
 
     }
 
+    public void setFrameSize(int frameSize) {
+        this.frameSize = frameSize;
+    }
+
+    public void setUncertainDataList(List<UData> uncertainDataList) {
+        this.uncertainDataList = uncertainDataList;
+    }
+
+    public int getFrameSize() {
+        return frameSize;
+    }
+
     public List<UData> getUncertainDataList() {
         return uncertainDataList;
+    }
+
+    public UNode copy() {
+        UNode nodeToBeCopied = this;
+        UNode rootNode = new UNode(new String(nodeToBeCopied.getId()), nodeToBeCopied.getFrameSize());
+        rootNode.setParentNode(null);
+        for (int i = 0; i < nodeToBeCopied.getChildNodeList().size(); i++) {
+            UNode node = nodeToBeCopied.getChildNodeList().get(i);
+            UNode copiedNode = copyNodes(node, rootNode);
+            rootNode.setChildNode(copiedNode);
+        }
+        return rootNode;
+    }
+
+    private UNode copyNodes(UNode nodeToBeCopied, UNode parentNode) {
+        UNode resultNode = new UNode(new String(nodeToBeCopied.getId()), nodeToBeCopied.getFrameSize());
+        resultNode.setParentNode(parentNode);
+        List<UData> uDataList = new ArrayList<UData>();
+        for (UData uData : nodeToBeCopied.getUncertainDataList()) {
+            uDataList.add(uData.copy());
+        }
+        resultNode.setUncertainDataList(uDataList);
+        for (int i = 0; i < nodeToBeCopied.getChildNodeList().size(); i++) {
+            UNode node = nodeToBeCopied.getChildNodeList().get(i);
+            UNode copiedNode = copyNodes(node, resultNode);
+            resultNode.setChildNode(copiedNode);
+        }
+        return resultNode;
+    }
+
+    private void setChildNode(UNode childNode) {
+        this.childNodeList.add(childNode);
     }
 
     @Override
     public String toString() {
         return "UNode{" +
                 "id='" + id + '\'' +
-                ", parentNode=" + parentNode +
                 '}';
+    }
+
+    public double getNodePrefixValue() {
+        double result = 0;
+        for(UData data:uncertainDataList){
+            result=result+data.getPrefixValue();
+        }
+        return result;
+    }
+
+    public double getItemProbabilityValue() {
+        double result = 0;
+        for(UData data:uncertainDataList){
+            result=result+data.getItemProbability();
+        }
+        return result;
     }
 }
