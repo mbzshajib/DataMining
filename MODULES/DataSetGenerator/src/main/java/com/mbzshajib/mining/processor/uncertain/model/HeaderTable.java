@@ -66,6 +66,7 @@ public class HeaderTable {
         headerTableItems.add(headerTableItem);
         return headerTableItem;
     }
+
     private HeaderTableItem addNewTableItem(String id) {
         HeaderTableItem headerTableItem = new HeaderTableItem(id);
         headerTableItems.add(headerTableItem);
@@ -85,6 +86,10 @@ public class HeaderTable {
             }
         }
         return result;
+    }
+
+    public int getWindowSize() {
+        return windowSize;
     }
 
     public String traverse() {
@@ -163,5 +168,11 @@ public class HeaderTable {
             result.add(HTableItemInfo);
         }
         return result;
+    }
+
+    public void updateHeaderTableFromDistinctList(List<UNode> distinctList) throws DataNotValidException {
+        for (UNode node : distinctList) {
+            updateHeaderTable(node);
+        }
     }
 }
