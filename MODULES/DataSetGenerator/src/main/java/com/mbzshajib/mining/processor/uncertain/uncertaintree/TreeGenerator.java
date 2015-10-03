@@ -1,8 +1,8 @@
 package com.mbzshajib.mining.processor.uncertain.uncertaintree;
 
 import com.mbzshajib.mining.exception.DataNotValidException;
-import com.mbzshajib.mining.processor.uncertain.model.*;
-import com.mbzshajib.mining.util.Utils;
+import com.mbzshajib.mining.processor.uncertain.model.UInputData;
+import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
 
@@ -44,7 +44,6 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
                     uncertainTree.addTransactionToTree(nodes, frameNo);
                 }
                 treeConstructionInput.getWindowCompletionCallback().sendUpdate(createUpdate(uncertainTree));
-                Utils.log(TAG, uncertainTree.getTraversedString());
             }
             uncertainTree.slideWindowAndUpdateTree();
             List<UInputData> nodes = null;

@@ -90,8 +90,6 @@ public class HeaderTable {
     public String traverse() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(Constant.NEW_LINE);
-        stringBuilder.append("HEADER TABLE");
-        stringBuilder.append(Constant.NEW_LINE);
         for (HeaderTableItem item : headerTableItems) {
             stringBuilder.append(item.traverse());
             stringBuilder.append(Constant.NEW_LINE);

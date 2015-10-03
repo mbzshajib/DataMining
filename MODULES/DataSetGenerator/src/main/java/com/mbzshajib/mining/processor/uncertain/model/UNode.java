@@ -82,7 +82,7 @@ public class UNode {
     public String traverse() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(Constant.NEW_LINE)
-                .append(Constant.HASH).append(Constant.HASH)
+                .append(Constant.HASH)
                 .append("Parent ")
                 .append("ID:").append(Constant.HASH).append(id);
         stringBuilder.append(Constant.TABBED_HASH)

@@ -2,12 +2,13 @@ package com.mbzshajib.mining.processor.uncertain;
 
 import com.mbzshajib.mining.Initializer;
 import com.mbzshajib.mining.exception.DataNotValidException;
+import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMineInput;
+import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMiner;
 import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
 import com.mbzshajib.mining.processor.uncertain.uncertaintree.TreeConstructionInput;
 import com.mbzshajib.mining.processor.uncertain.uncertaintree.TreeConstructionOutput;
 import com.mbzshajib.mining.processor.uncertain.uncertaintree.TreeGenerator;
 import com.mbzshajib.mining.processor.uncertain.uncertaintree.WindowCompletionCallback;
-import com.mbzshajib.mining.util.Utils;
 import com.mbzshajib.utility.model.ProcessingError;
 
 import java.io.IOException;
@@ -15,8 +16,9 @@ import java.io.IOException;
 /**
  * *****************************************************************
  * Copyright  2015.
+ *
  * @author - Md. Badi-Uz-Zaman Shajib
- * @email  - mbzshajib@gmail.com
+ * @email - mbzshajib@gmail.com
  * @gitHub - https://github.com/mbzshajib
  * @date: 9/20/2015
  * @time: 11:02 PM
@@ -25,21 +27,26 @@ import java.io.IOException;
 
 public class MainClassTreeGeneration {
     public static final String TAG = MainClassTreeGeneration.class.getCanonicalName();
+    private static final double MIN_SUP = .8;
     private static int windowNumber = 1;
 
     public static void main(String[] args) throws ProcessingError, IOException, DataNotValidException {
         Initializer.initialize();
-        Utils.log(TAG, "Tree generation algorithm started.");
         TreeConstructionInput treeConstructionInput = getTreeInput();
-        Utils.log(TAG, treeConstructionInput.toString());
         TreeGenerator processor = new TreeGenerator();
         TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
-        Utils.log(TAG, "Start Time " + treeConstructionOutput.getStartTime() + " MS");
-        Utils.log(TAG, "End Time " + treeConstructionOutput.getEndTime() + " MS");
-        Utils.log(TAG, "Time needed " + (treeConstructionOutput.getEndTime() - treeConstructionOutput.getStartTime()) + " MS");
-        UncertainTree tree =treeConstructionOutput.getUncertainTree();
-        Utils.log(TAG, "Constructed Tree " + tree.getTraversedString());
+        UncertainTree tree = treeConstructionOutput.getUncertainTree();
+        UncertainStreamMineInput uncertainStreamMineInput = getMiningInput(treeConstructionOutput);
+        UncertainStreamMiner uncertainStreamMiner = new UncertainStreamMiner();
+        uncertainStreamMiner.process(uncertainStreamMineInput);
 
+    }
+
+    private static UncertainStreamMineInput getMiningInput(TreeConstructionOutput treeConstructionOutput) {
+        UncertainStreamMineInput result = new UncertainStreamMineInput();
+        result.setMinSupport(MIN_SUP);
+        result.setUncertainTree(treeConstructionOutput.getUncertainTree());
+        return result;
     }
 
     private static TreeConstructionInput getTreeInput() {
@@ -50,7 +57,6 @@ public class MainClassTreeGeneration {
         treeConstructionInput.setWindowCompletionCallback(new WindowCompletionCallback() {
             @Override
             public void sendUpdate(TreeConstructionOutput treeConstructionOutput) {
-//                System.out.println("NEW UPDATE HAS COME + " + treeConstructionOutput.getUncertainTree().getTraversedString());
                 windowNumber++;
             }
         });
