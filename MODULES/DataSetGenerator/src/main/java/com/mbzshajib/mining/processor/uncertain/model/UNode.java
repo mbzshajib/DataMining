@@ -210,4 +210,7 @@ public class UNode {
         }
         return result;
     }
+    public void removeChildNode(UNode childNode){
+        this.childNodeList.remove(childNode);
+    }
 }
