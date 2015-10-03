@@ -197,20 +197,59 @@ public class UNode {
 
     public double getNodePrefixValue() {
         double result = 0;
-        for(UData data:uncertainDataList){
-            result=result+data.getPrefixValue();
+        for (UData data : uncertainDataList) {
+            result = result + data.getPrefixValue();
         }
         return result;
     }
 
     public double getItemProbabilityValue() {
         double result = 0;
-        for(UData data:uncertainDataList){
-            result=result+data.getItemProbability();
+        for (UData data : uncertainDataList) {
+            result = result + data.getItemProbability();
         }
         return result;
     }
-    public void removeChildNode(UNode childNode){
+
+    public void removeChildNode(UNode childNode) {
         this.childNodeList.remove(childNode);
+    }
+
+    public List<UNode> getDistinctNodes() {
+        List<UNode> result = new ArrayList<UNode>();
+        for (int index = 0; index < childNodeList.size(); index++) {
+            UNode child = childNodeList.get(index);
+            if (!result.contains(child)) {
+                result.add(child);
+            }
+            result.addAll(child.getDistinctNodes());
+        }
+        return result;
+    }
+
+    public void removeNodeIfChildOfAnyDepth(UNode node) {
+        int count = childNodeList.size();
+        for (int i = 0; i < count; i++) {
+            UNode child = childNodeList.get(i);
+            if (child == node) {
+                childNodeList.remove(node);
+                i--;
+                count--;
+            }
+            child.removeNodeIfChildOfAnyDepth(node);
+        }
+    }
+
+    public void removeNodeIfChildOfAnyDepthById(String id) {
+        int count = childNodeList.size();
+        for (int i = 0; i < count; i++) {
+            UNode child = childNodeList.get(i);
+            if (child.getId().equalsIgnoreCase(id)) {
+                childNodeList.remove(child);
+                i--;
+                count--;
+            }
+            child.removeNodeIfChildOfAnyDepthById(id);
+        }
     }
 }
