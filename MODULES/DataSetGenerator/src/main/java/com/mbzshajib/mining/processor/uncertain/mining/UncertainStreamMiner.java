@@ -1,5 +1,6 @@
 package com.mbzshajib.mining.processor.uncertain.mining;
 
+import com.mbzshajib.mining.exception.DataNotValidException;
 import com.mbzshajib.mining.processor.uncertain.model.HTableItemInfo;
 import com.mbzshajib.mining.processor.uncertain.model.HeaderTable;
 import com.mbzshajib.mining.processor.uncertain.model.UNode;
@@ -39,12 +40,19 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
         List<HTableItemInfo> HTableItemInfoList = headerTable.getHeaderItemInfo();
         removeDataBelowSupport(minSupport, HTableItemInfoList);
         sortByPrefix(HTableItemInfoList);
-        startMining(rootNode, headerTable, HTableItemInfoList);
+        try {
+            startMining(uncertainTree, HTableItemInfoList);
+        } catch (DataNotValidException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
-    private void startMining(UNode rootNode, HeaderTable headerTable, List<HTableItemInfo> HTableItemInfoList) {
-        mine(rootNode, "7");
+    private void startMining(UncertainTree uncertainTree, List<HTableItemInfo> hTableItemInfoList) throws DataNotValidException {
+        UncertainTree copiedTree = uncertainTree.copy();
+        //TODO:LOOP
+        mine(copiedTree.getRootNode(), copiedTree.getHeaderTable().getWindowSize(), "7");
+
 //        for (int index = HTableItemInfoList.size() - 1; index >= 0; index--) {
 //            HTableItemInfo HTableItemInfo = HTableItemInfoList.get(index);
 //            List<UNode> nodeList = headerTable.getAllNodesOfHeaderTableItem(HTableItemInfo.getItemId());
@@ -53,16 +61,25 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
 //        }
     }
 
-    private void mine(UNode rootNode, String id) {
-        //TODO: construct subTree;
-        UNode node = rootNode.copy();
-        System.out.println(node.traverse());
-        constructConditionalTree(node, id);
-        System.out.println();
-        System.out.println(node.traverse());
+    private void mine(UNode rootNode, int windowSize, String id) throws DataNotValidException {
+        constructConditionalTree(rootNode, id);
+        HeaderTable headerTable = generateHeaderTableForCondTree(rootNode, windowSize);
+        System.out.println(rootNode.traverse());
+        rootNode.removeNodeIfChildOfAnyDepthById("4");
+        System.out.println(rootNode.traverse());
+//        System.out.println();
+//        System.out.println();
+//        System.out.println(headerTable.traverse());
         //TODO: Mine SUbTree;
     }
 
+    private HeaderTable generateHeaderTableForCondTree(UNode rootNode, int windowSize) throws DataNotValidException {
+        List<UNode> distinctList = rootNode.getDistinctNodes();
+
+        HeaderTable headerTable = new HeaderTable(windowSize);
+        headerTable.updateHeaderTableFromDistinctList(distinctList);
+        return headerTable;
+    }
 
 
     private UNode constructConditionalTree(UNode node, String id) {
@@ -160,6 +177,7 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
         });
 
     }
+
     @Deprecated
     private UNode constructConditionalTreeOld(UNode root, String id) {
         int count = root.getChildNodeList().size();
@@ -174,6 +192,7 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
         }
         return root;
     }
+
     private void printBeforeMining(UncertainTree uncertainTree) {
 
         Utils.log(Constant.MULTI_STAR);
