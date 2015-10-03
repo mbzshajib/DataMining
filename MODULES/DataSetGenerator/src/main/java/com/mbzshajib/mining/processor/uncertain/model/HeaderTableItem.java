@@ -26,7 +26,8 @@ class HeaderTableItem {
         this.itemId = itemId;
         nodeList = new ArrayList<UNode>();
     }
-    HeaderTableItem(String itemId,int nodeSize) {
+
+    HeaderTableItem(String itemId, int nodeSize) {
         this.itemId = itemId;
         nodeList = new ArrayList<UNode>(nodeSize);
     }
@@ -97,9 +98,17 @@ class HeaderTableItem {
         }
         return index;
     }
-    void addNodeItem(UNode node,int index){
-        nodeList.add(index,node);
+
+    void addNodeItem(UNode node, int index) {
+        //TODO: Later UPdate this in the table.
+//        if (nodeList.size() <= index) {
+//            for (int i = nodeList.size() - 1; i < index; i++) {
+//                nodeList.add(null);
+//            }
+//        }
+        nodeList.add(node);
     }
+
     @Override
     public String toString() {
         return "HeaderTableItem{" +

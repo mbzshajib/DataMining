@@ -14,8 +14,9 @@ import java.util.List;
 /**
  * *****************************************************************
  * Copyright  2015.
+ *
  * @author - Md. Badi-Uz-Zaman Shajib
- * @email  - mbzshajib@gmail.com
+ * @email - mbzshajib@gmail.com
  * @gitHub - https://github.com/mbzshajib
  * @date: 9/20/2015
  * @time: 11:03 PM
@@ -67,11 +68,7 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
             e.printStackTrace();
         }
 
-        TreeConstructionOutput treeConstructionOutput = new TreeConstructionOutput();
-        treeConstructionOutput.setUncertainTree(uncertainTree);
-        treeConstructionOutput.setStartTime(startTime);
-        treeConstructionOutput.setEndTime(endTime);
-        return treeConstructionOutput;
+        return createUpdate(uncertainTree);
     }
 
     private TreeConstructionOutput createUpdate(UncertainTree uncertainTree) {

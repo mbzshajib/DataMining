@@ -124,14 +124,13 @@ public class HeaderTable {
         return result;
     }
 
-    public String[] findNode(UNode node) {
-        String[] result = new String[]{null, null};
+    public int findNode(UNode node) {
+        int result = -1;
         for (int i = 0; i < headerTableItems.size(); i++) {
             HeaderTableItem headerTableItem = headerTableItems.get(i);
             int index = -1;
             if ((index = headerTableItem.getNodeIndex(node)) != -1) {
-                result[0] = headerTableItem.getItemId();
-                result[1] = index + "";
+                result = index;
                 break;
             }
         }
@@ -151,8 +150,8 @@ public class HeaderTable {
         return headerTable;
     }
 
-    void addNode(UNode node, String id, int index) {
-        HeaderTableItem item = findHeaderTableItemById(id);
+    void addNode(UNode node, int index) {
+        HeaderTableItem item = findHeaderTableItemById(node.getId());
         item.addNodeItem(node, index);
     }
 }

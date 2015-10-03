@@ -2,6 +2,7 @@ package com.mbzshajib.mining.processor.uncertain;
 
 import com.mbzshajib.mining.Initializer;
 import com.mbzshajib.mining.exception.DataNotValidException;
+import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
 import com.mbzshajib.mining.processor.uncertain.uncertaintree.TreeConstructionInput;
 import com.mbzshajib.mining.processor.uncertain.uncertaintree.TreeConstructionOutput;
 import com.mbzshajib.mining.processor.uncertain.uncertaintree.TreeGenerator;
@@ -36,9 +37,8 @@ public class MainClassTreeGeneration {
         Utils.log(TAG, "Start Time " + treeConstructionOutput.getStartTime() + " MS");
         Utils.log(TAG, "End Time " + treeConstructionOutput.getEndTime() + " MS");
         Utils.log(TAG, "Time needed " + (treeConstructionOutput.getEndTime() - treeConstructionOutput.getStartTime()) + " MS");
-        Utils.log(TAG, "Constructed Tree " + treeConstructionOutput.getUncertainTree().getTraversedString());
-        Utils.log(TAG, "Constructed Tree " + treeConstructionOutput.getUncertainTree().copy().getTraversedString());
-        Utils.log(TAG, "Header Table " + treeConstructionOutput.getUncertainTree().getHeaderTable().traverse());
+        UncertainTree tree =treeConstructionOutput.getUncertainTree();
+        Utils.log(TAG, "Constructed Tree " + tree.getTraversedString());
 
     }
 

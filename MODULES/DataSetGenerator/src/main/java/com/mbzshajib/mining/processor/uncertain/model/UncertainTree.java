@@ -131,25 +131,27 @@ public class UncertainTree {
     public UncertainTree copy() throws DataNotValidException {
         UncertainTree uncertainTree = new UncertainTree(frameSize, windowSize);
         UNode copiedNode = rootNode.copy();
+        HeaderTable headerTable = this.headerTable.copy();
+        copyHeaderTable(this.headerTable, headerTable, this.rootNode, copiedNode);
         uncertainTree.setRootNode(copiedNode);
-        uncertainTree.setHeaderTable(copyHeaderTable(copiedNode));
+        uncertainTree.setHeaderTable(headerTable);
         return uncertainTree;
     }
 
-    private HeaderTable copyHeaderTable(UNode copiedNode) {
-        HeaderTable headerTable = this.headerTable.copy();
-        for (int i = 0; i < rootNode.getChildNodeList().size(); i++) {
-            UNode nodeOriginal = rootNode.getChildNodeList().get(i);
-            UNode nodeCopied = rootNode.getChildNodeList().get(i);
+    private HeaderTable copyHeaderTable(HeaderTable mainTable, HeaderTable clonedTable, UNode mainNode, UNode clonedNode) {
+        for (int i = 0; i < mainNode.getChildNodeList().size(); i++) {
+            UNode nodeOriginal = mainNode.getChildNodeList().get(i);
+            UNode nodeCopied = clonedNode.getChildNodeList().get(i);
 
-            String[] nodeInfo = this.headerTable.findNode(nodeOriginal);
-            if (nodeInfo==null||nodeInfo[0] == null || nodeInfo[1] == null) {
+            int index = mainTable.findNode(nodeOriginal);
+            if (index == -1) {
                 continue;
             } else {
-                int index = Integer.parseInt(nodeInfo[1]);
-                headerTable.addNode(nodeCopied, nodeInfo[0], index);
+
+                clonedTable.addNode(nodeCopied, index);
             }
+            copyHeaderTable(mainTable, clonedTable, nodeOriginal, nodeCopied);
         }
-        return headerTable;
+        return clonedTable;
     }
 }
