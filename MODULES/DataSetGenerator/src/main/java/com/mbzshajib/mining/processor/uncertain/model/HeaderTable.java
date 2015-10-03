@@ -175,4 +175,69 @@ public class HeaderTable {
             updateHeaderTable(node);
         }
     }
+
+    public List<HTableItemInfo> getInFrequentItemInfoByPrefix(double minSupport) {
+        List<HTableItemInfo> result = new ArrayList<HTableItemInfo>();
+        for (HeaderTableItem item : headerTableItems) {
+            double prefixVal = item.getItemPrefixValue();
+            double probabilityValue = item.getItemProbabilityValue();
+            if (prefixVal < minSupport) {
+                HTableItemInfo hTableItemInfo = new HTableItemInfo();
+                hTableItemInfo.setItemId(item.getItemId());
+                hTableItemInfo.setItemPrefixValue(prefixVal);
+                hTableItemInfo.setItemProbabilityValue(probabilityValue);
+                result.add(hTableItemInfo);
+            }
+        }
+        return result;
+    }
+
+    public List<HTableItemInfo> getFrequentItemInfoByPrefix(double minSupport) {
+        List<HTableItemInfo> result = new ArrayList<HTableItemInfo>();
+        for (HeaderTableItem item : headerTableItems) {
+            double prefixVal = item.getItemPrefixValue();
+            double probabilityValue = item.getItemProbabilityValue();
+            if (prefixVal >= minSupport) {
+                HTableItemInfo hTableItemInfo = new HTableItemInfo();
+                hTableItemInfo.setItemId(item.getItemId());
+                hTableItemInfo.setItemPrefixValue(prefixVal);
+                hTableItemInfo.setItemProbabilityValue(probabilityValue);
+                result.add(hTableItemInfo);
+            }
+        }
+        return result;
+    }
+
+    public List<HTableItemInfo> getInFrequentItemInfoBySupport(double minSupport) {
+        List<HTableItemInfo> result = new ArrayList<HTableItemInfo>();
+        for (HeaderTableItem item : headerTableItems) {
+            double prefixVal = item.getItemPrefixValue();
+            double probabilityValue = item.getItemProbabilityValue();
+            if (probabilityValue < minSupport) {
+                HTableItemInfo hTableItemInfo = new HTableItemInfo();
+                hTableItemInfo.setItemId(item.getItemId());
+                hTableItemInfo.setItemPrefixValue(prefixVal);
+                hTableItemInfo.setItemProbabilityValue(probabilityValue);
+                result.add(hTableItemInfo);
+            }
+        }
+        return result;
+    }
+
+    public List<HTableItemInfo> getFrequentItemInfoBySupport(double minSupport) {
+        List<HTableItemInfo> result = new ArrayList<HTableItemInfo>();
+        for (HeaderTableItem item : headerTableItems) {
+            double prefixVal = item.getItemPrefixValue();
+            double probabilityValue = item.getItemProbabilityValue();
+            if (probabilityValue >= minSupport) {
+                HTableItemInfo hTableItemInfo = new HTableItemInfo();
+                hTableItemInfo.setItemId(item.getItemId());
+                hTableItemInfo.setItemPrefixValue(prefixVal);
+                hTableItemInfo.setItemProbabilityValue(probabilityValue);
+                result.add(hTableItemInfo);
+            }
+        }
+        return result;
+    }
+
 }
