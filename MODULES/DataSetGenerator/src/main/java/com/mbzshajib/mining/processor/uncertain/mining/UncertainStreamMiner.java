@@ -57,27 +57,15 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
         //TODO: construct subTree;
         UNode node = rootNode.copy();
         System.out.println(node.traverse());
-        findNode(node, id);
+        constructConditionalTree(node, id);
         System.out.println();
         System.out.println(node.traverse());
         //TODO: Mine SUbTree;
     }
 
-    private UNode constructConditionalTree(UNode root, String id) {
-        int count = root.getChildNodeList().size();
-        for (int index = 0; index < count; index++) {
-            UNode child = root.getChildNodeList().get(index);
-            UNode foundNode = findNode(child, id);
-            if (foundNode == null) {
-                root.removeChildNode(child);
-                index--;
-                count--;
-            }
-        }
-        return root;
-    }
 
-    private UNode findNode(UNode node, String id) {
+
+    private UNode constructConditionalTree(UNode node, String id) {
         if (node.getId().equalsIgnoreCase(id)) {
             node.setChildNodeList(new ArrayList<UNode>());
             return node;
@@ -89,7 +77,7 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
                 int count = node.getChildNodeList().size();
                 for (int index = 0; index < count; index++) {
                     UNode child = node.getChildNodeList().get(index);
-                    UNode foundNode = findNode(child, id);
+                    UNode foundNode = constructConditionalTree(child, id);
                     if (foundNode == null) {
                         node.removeChildNode(child);
                         index--;
@@ -172,7 +160,20 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
         });
 
     }
-
+    @Deprecated
+    private UNode constructConditionalTreeOld(UNode root, String id) {
+        int count = root.getChildNodeList().size();
+        for (int index = 0; index < count; index++) {
+            UNode child = root.getChildNodeList().get(index);
+            UNode foundNode = constructConditionalTree(child, id);
+            if (foundNode == null) {
+                root.removeChildNode(child);
+                index--;
+                count--;
+            }
+        }
+        return root;
+    }
     private void printBeforeMining(UncertainTree uncertainTree) {
 
         Utils.log(Constant.MULTI_STAR);
