@@ -52,7 +52,7 @@ class HeaderTableItem {
     double getItemPrefixValue() {
         double result = 0;
         for (UNode node : nodeList) {
-            node.getNodePrefixValue();
+            result = result+node.getNodePrefixValue();
         }
         return result;
     }
@@ -60,7 +60,8 @@ class HeaderTableItem {
     double getItemProbabilityValue() {
         double result = 0;
         for (UNode node : nodeList) {
-            node.getItemProbabilityValue();
+            result=result+node.getItemProbabilityValue();
+
         }
         return result;
     }
