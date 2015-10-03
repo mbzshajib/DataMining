@@ -152,4 +152,16 @@ public class HeaderTable {
         HeaderTableItem item = findHeaderTableItemById(node.getId());
         item.addNodeItem(node, index);
     }
+
+    public List<HTableItemInfo> getHeaderItemInfo() {
+        List<HTableItemInfo> result = new ArrayList<HTableItemInfo>();
+        for (HeaderTableItem item : headerTableItems) {
+            HTableItemInfo HTableItemInfo = new HTableItemInfo();
+            HTableItemInfo.setItemId(item.getItemId());
+            HTableItemInfo.setItemProbabilityValue(item.getItemProbabilityValue());
+            HTableItemInfo.setItemPrefixValue(item.getItemPrefixValue());
+            result.add(HTableItemInfo);
+        }
+        return result;
+    }
 }
