@@ -181,11 +181,13 @@ public class HeaderTable {
         for (HeaderTableItem item : headerTableItems) {
             double prefixVal = item.getItemPrefixValue();
             double probabilityValue = item.getItemProbabilityValue();
+            double miningValue = item.getMiningValue();
             if (prefixVal < minSupport) {
                 HTableItemInfo hTableItemInfo = new HTableItemInfo();
                 hTableItemInfo.setItemId(item.getItemId());
                 hTableItemInfo.setItemPrefixValue(prefixVal);
                 hTableItemInfo.setItemProbabilityValue(probabilityValue);
+                hTableItemInfo.setMiningProbability(miningValue);
                 result.add(hTableItemInfo);
             }
         }
@@ -197,11 +199,31 @@ public class HeaderTable {
         for (HeaderTableItem item : headerTableItems) {
             double prefixVal = item.getItemPrefixValue();
             double probabilityValue = item.getItemProbabilityValue();
+            double miningValue = item.getMiningValue();
             if (prefixVal >= minSupport) {
                 HTableItemInfo hTableItemInfo = new HTableItemInfo();
                 hTableItemInfo.setItemId(item.getItemId());
                 hTableItemInfo.setItemPrefixValue(prefixVal);
                 hTableItemInfo.setItemProbabilityValue(probabilityValue);
+                hTableItemInfo.setMiningProbability(miningValue);
+                result.add(hTableItemInfo);
+            }
+        }
+        return result;
+    }
+
+    public List<HTableItemInfo> getFrequentItemInfoByMiningValue(double minSupport) {
+        List<HTableItemInfo> result = new ArrayList<HTableItemInfo>();
+        for (HeaderTableItem item : headerTableItems) {
+            double prefixVal = item.getItemPrefixValue();
+            double probabilityValue = item.getItemProbabilityValue();
+            double miningValue = item.getMiningValue();
+            if (miningValue >= minSupport) {
+                HTableItemInfo hTableItemInfo = new HTableItemInfo();
+                hTableItemInfo.setItemId(item.getItemId());
+                hTableItemInfo.setItemPrefixValue(prefixVal);
+                hTableItemInfo.setItemProbabilityValue(probabilityValue);
+                hTableItemInfo.setMiningProbability(miningValue);
                 result.add(hTableItemInfo);
             }
         }
@@ -213,11 +235,13 @@ public class HeaderTable {
         for (HeaderTableItem item : headerTableItems) {
             double prefixVal = item.getItemPrefixValue();
             double probabilityValue = item.getItemProbabilityValue();
+            double miningValue = item.getMiningValue();
             if (probabilityValue < minSupport) {
                 HTableItemInfo hTableItemInfo = new HTableItemInfo();
                 hTableItemInfo.setItemId(item.getItemId());
                 hTableItemInfo.setItemPrefixValue(prefixVal);
                 hTableItemInfo.setItemProbabilityValue(probabilityValue);
+                hTableItemInfo.setMiningProbability(miningValue);
                 result.add(hTableItemInfo);
             }
         }
@@ -229,11 +253,31 @@ public class HeaderTable {
         for (HeaderTableItem item : headerTableItems) {
             double prefixVal = item.getItemPrefixValue();
             double probabilityValue = item.getItemProbabilityValue();
+            double miningValue = item.getMiningValue();
             if (probabilityValue >= minSupport) {
                 HTableItemInfo hTableItemInfo = new HTableItemInfo();
                 hTableItemInfo.setItemId(item.getItemId());
                 hTableItemInfo.setItemPrefixValue(prefixVal);
                 hTableItemInfo.setItemProbabilityValue(probabilityValue);
+                hTableItemInfo.setMiningProbability(miningValue);
+                result.add(hTableItemInfo);
+            }
+        }
+        return result;
+    }
+
+    public List<HTableItemInfo> getInFrequentItemInfoByMiningValue(double minSupport) {
+        List<HTableItemInfo> result = new ArrayList<HTableItemInfo>();
+        for (HeaderTableItem item : headerTableItems) {
+            double prefixVal = item.getItemPrefixValue();
+            double probabilityValue = item.getItemProbabilityValue();
+            double miningValue = item.getMiningValue();
+            if (miningValue < minSupport) {
+                HTableItemInfo hTableItemInfo = new HTableItemInfo();
+                hTableItemInfo.setItemId(item.getItemId());
+                hTableItemInfo.setItemPrefixValue(prefixVal);
+                hTableItemInfo.setItemProbabilityValue(probabilityValue);
+                hTableItemInfo.setMiningProbability(miningValue);
                 result.add(hTableItemInfo);
             }
         }
