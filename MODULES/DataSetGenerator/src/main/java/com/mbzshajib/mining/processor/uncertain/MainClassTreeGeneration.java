@@ -27,7 +27,7 @@ import java.io.IOException;
 
 public class MainClassTreeGeneration {
     public static final String TAG = MainClassTreeGeneration.class.getCanonicalName();
-    private static final double MIN_SUP = .8;
+    private static final double MIN_SUP = .5;
     private static int windowNumber = 1;
 
     public static void main(String[] args) throws ProcessingError, IOException, DataNotValidException {
@@ -36,9 +36,7 @@ public class MainClassTreeGeneration {
         TreeGenerator processor = new TreeGenerator();
         TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
         UncertainTree tree = treeConstructionOutput.getUncertainTree();
-        UncertainStreamMineInput uncertainStreamMineInput = getMiningInput(treeConstructionOutput);
-        UncertainStreamMiner uncertainStreamMiner = new UncertainStreamMiner();
-        uncertainStreamMiner.process(uncertainStreamMineInput);
+
 
     }
 
@@ -51,13 +49,16 @@ public class MainClassTreeGeneration {
 
     private static TreeConstructionInput getTreeInput() {
         final TreeConstructionInput treeConstructionInput = new TreeConstructionInput();
-        treeConstructionInput.setInputFilePath("INPUT/test_data_01102015.txt");
-        treeConstructionInput.setFrameSize(2);
-        treeConstructionInput.setWindowSize(3);
+        treeConstructionInput.setInputFilePath("INPUT/puff_tree_dataset.txt");
+        treeConstructionInput.setFrameSize(1);
+        treeConstructionInput.setWindowSize(4);
         treeConstructionInput.setWindowCompletionCallback(new WindowCompletionCallback() {
             @Override
-            public void sendUpdate(TreeConstructionOutput treeConstructionOutput) {
+            public void sendUpdate(TreeConstructionOutput treeConstructionOutput) throws ProcessingError {
                 windowNumber++;
+                UncertainStreamMineInput uncertainStreamMineInput = getMiningInput(treeConstructionOutput);
+                UncertainStreamMiner uncertainStreamMiner = new UncertainStreamMiner();
+                uncertainStreamMiner.process(uncertainStreamMineInput);
             }
         });
         return treeConstructionInput;
