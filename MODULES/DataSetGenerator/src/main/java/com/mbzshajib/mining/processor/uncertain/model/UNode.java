@@ -25,6 +25,7 @@ public class UNode {
     private UNode parentNode;
     private List<UNode> childNodeList;
     private List<UData> uncertainDataList;
+    private double miningProbability;
 
     private UNode() {
 
@@ -248,8 +249,29 @@ public class UNode {
                 childNodeList.remove(child);
                 i--;
                 count--;
+            } else {
+                child.removeNodeIfChildOfAnyDepthById(id);
             }
-            child.removeNodeIfChildOfAnyDepthById(id);
+        }
+    }
+
+    public double getMiningProbability() {
+        return miningProbability;
+    }
+
+    public void setMiningProbability(double miningProbability) {
+        this.miningProbability = miningProbability;
+    }
+
+    public void getLeafNodeList(List<UNode> list) {
+        if (childNodeList.isEmpty()) {
+            list.add(this);
+            return;
+        } else {
+            for (int i = 0; i < childNodeList.size(); i++) {
+                UNode child = childNodeList.get(i);
+                child.getLeafNodeList(list);
+            }
         }
     }
 }
