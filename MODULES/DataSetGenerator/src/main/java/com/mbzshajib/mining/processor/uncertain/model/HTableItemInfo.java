@@ -16,6 +16,7 @@ public class HTableItemInfo {
     String itemId;
     double itemProbabilityValue;
     double itemPrefixValue;
+    double miningProbability;
 
     public String getItemId() {
         return itemId;
@@ -39,6 +40,14 @@ public class HTableItemInfo {
 
     public void setItemPrefixValue(double itemPrefixValue) {
         this.itemPrefixValue = itemPrefixValue;
+    }
+
+    public double getMiningProbability() {
+        return miningProbability;
+    }
+
+    public void setMiningProbability(double miningProbability) {
+        this.miningProbability = miningProbability;
     }
 
     @Override
