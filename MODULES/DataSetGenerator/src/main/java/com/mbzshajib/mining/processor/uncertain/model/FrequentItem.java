@@ -48,4 +48,15 @@ public class FrequentItem {
     public List<String> getFrequentSet() {
         return frequentSet;
     }
+
+    public String traverse() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Item: ");
+        for (String string : frequentSet) {
+            builder.append("(")
+                    .append(string)
+                    .append(")");
+        }
+        return builder.toString();
+    }
 }
