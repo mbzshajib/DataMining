@@ -1,5 +1,7 @@
 package com.mbzshajib.mining.processor.uncertain.uncertaintree;
 
+import com.mbzshajib.utility.model.ProcessingError;
+
 /**
  * *****************************************************************
  * Copyright  2015.
@@ -13,5 +15,5 @@ package com.mbzshajib.mining.processor.uncertain.uncertaintree;
 
 
 public interface WindowCompletionCallback {
-    void sendUpdate(TreeConstructionOutput treeConstructionOutput);
+    void sendUpdate(TreeConstructionOutput treeConstructionOutput) throws ProcessingError;
 }
