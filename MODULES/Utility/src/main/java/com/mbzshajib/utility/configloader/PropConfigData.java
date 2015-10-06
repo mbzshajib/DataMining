@@ -1,4 +1,4 @@
-package com.mbzshajib.utility.properties;
+package com.mbzshajib.utility.configloader;
 
 import java.io.File;
 import java.util.HashMap;
