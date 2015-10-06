@@ -1,4 +1,4 @@
-package com.mbzshajib.mining.processor.randomdata;
+package com.mbzshajib.mining.processor.randomdata.generator.v1;
 
 import com.mbzshajib.mining.Initializer;
 import com.mbzshajib.mining.processor.randomdata.generator.v1.RandomGeneratorInput;
