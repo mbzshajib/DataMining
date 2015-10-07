@@ -1,4 +1,4 @@
-package com.mbzshajib.utility.common;
+package com.mbzshajib.mining.processor.randomdata.generator.v2;
 
 /**
  * *****************************************************************
@@ -7,12 +7,14 @@ package com.mbzshajib.utility.common;
  * @author - Md. Badi-Uz-Zaman Shajib
  * @email - mbzshajib@gmail.com
  * @gitHub - https://github.com/mbzshajib
- * @date: 9/4/2015
- * @time: 4:32 PM
+ * @date: 10/6/2015
+ * @time: 10:13 AM
  * ****************************************************************
  */
 
 
-public class Constants {
-    public static final String FILE_EXT_JSON = ".json";
+public class RInputInfo {
+    int lowerValue;
+    int upperValue;
+    int weight;
 }

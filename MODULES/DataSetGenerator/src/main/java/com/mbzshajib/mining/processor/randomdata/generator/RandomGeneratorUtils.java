@@ -1,5 +1,8 @@
 package com.mbzshajib.mining.processor.randomdata.generator;
 
+import com.mbzshajib.mining.processor.randomdata.generator.v1.RandomGeneratorInput;
+import com.mbzshajib.mining.processor.randomdata.generator.v1.RandomGeneratorOutput;
+import com.mbzshajib.mining.processor.randomdata.generator.v1.RandomGeneratorProcessor;
 import com.mbzshajib.mining.util.Utils;
 
 import java.io.File;

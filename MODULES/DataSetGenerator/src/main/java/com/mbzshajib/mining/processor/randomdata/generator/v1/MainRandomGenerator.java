@@ -1,8 +1,8 @@
-package com.mbzshajib.mining.processor.randomdata;
+package com.mbzshajib.mining.processor.randomdata.generator.v1;
 
 import com.mbzshajib.mining.Initializer;
-import com.mbzshajib.mining.processor.randomdata.generator.RandomGeneratorInput;
-import com.mbzshajib.mining.processor.randomdata.generator.RandomGeneratorOutput;
+import com.mbzshajib.mining.processor.randomdata.generator.v1.RandomGeneratorInput;
+import com.mbzshajib.mining.processor.randomdata.generator.v1.RandomGeneratorOutput;
 import com.mbzshajib.mining.processor.randomdata.generator.RandomGeneratorUtils;
 import com.mbzshajib.mining.util.Configurations;
 import com.mbzshajib.mining.util.Constant;

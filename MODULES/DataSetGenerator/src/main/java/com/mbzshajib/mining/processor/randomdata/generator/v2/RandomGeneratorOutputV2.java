@@ -1,18 +1,18 @@
-package com.mbzshajib.utility.common;
+package com.mbzshajib.mining.processor.randomdata.generator.v2;
+
+import com.mbzshajib.utility.model.Output;
 
 /**
  * *****************************************************************
- * Copyright  2015.
- *
+ * @copyright  2015.
  * @author - Md. Badi-Uz-Zaman Shajib
- * @email - mbzshajib@gmail.com
+ * @email  - mbzshajib@gmail.com
  * @gitHub - https://github.com/mbzshajib
  * @date: 9/4/2015
- * @time: 4:32 PM
+ * @time: 6:41 PM
  * ****************************************************************
  */
 
 
-public class Constants {
-    public static final String FILE_EXT_JSON = ".json";
+public class RandomGeneratorOutputV2 implements Output {
 }

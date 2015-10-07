@@ -1,4 +1,4 @@
-package com.mbzshajib.utility.common;
+package com.mbzshajib.utility.configloader;
 
 /**
  * *****************************************************************
@@ -7,12 +7,11 @@ package com.mbzshajib.utility.common;
  * @author - Md. Badi-Uz-Zaman Shajib
  * @email - mbzshajib@gmail.com
  * @gitHub - https://github.com/mbzshajib
- * @date: 9/4/2015
- * @time: 4:32 PM
+ * @date: 10/6/2015
+ * @time: 2:22 PM
  * ****************************************************************
  */
 
 
-public class Constants {
-    public static final String FILE_EXT_JSON = ".json";
+public interface ConfigModel {
 }
