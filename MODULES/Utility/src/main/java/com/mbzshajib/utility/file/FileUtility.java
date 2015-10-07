@@ -5,8 +5,9 @@ import java.io.*;
 /**
  * *****************************************************************
  * Copyright  2015.
+ *
  * @author - Md. Badi-Uz-Zaman Shajib
- * @email  - mbzshajib@gmail.com
+ * @email - mbzshajib@gmail.com
  * @gitHub - https://github.com/mbzshajib
  * @date: 9/4/2015
  * @time: 4:31 PM
@@ -67,5 +68,24 @@ public class FileUtility {
             bufferedWriter.write(stringBuilder.toString());
         }
 
+    }
+
+    public static void writeFile(String path, String fileName, String data) throws IOException {
+        createPath(path);
+        String fullPath = path + fileName;
+        File file = new File(fullPath);
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+        bufferedWriter.write(data);
+        bufferedWriter.close();
+    }
+
+    private static void createPath(String path) {
+        File dir = new File(path);
+        if (!(dir.exists())) {
+            dir.mkdir();
+        }
     }
 }
