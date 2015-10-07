@@ -1,9 +1,11 @@
 package com.mbzshajib.utility.configloader;
 
+import com.google.gson.Gson;
+import com.mbzshajib.utility.common.Constants;
 import com.mbzshajib.utility.exception.DataNotFoundException;
+import com.mbzshajib.utility.file.FileUtility;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Properties;
@@ -21,9 +23,14 @@ import java.util.Properties;
  */
 
 
-public class ConfigurationLoader {
+public class ConfigurationLoader<E extends ConfigModel> {
+    final Class<E> typeParameterClass;
 
-    public static void loadConfigDataFromPropertiesFile(PropConfigData propConfigData) throws IOException, IllegalAccessException, DataNotFoundException {
+    public ConfigurationLoader(Class<E> typeParameterClass) {
+        this.typeParameterClass = typeParameterClass;
+    }
+
+    public void loadConfigDataFromPropertiesFile(PropConfigData propConfigData) throws IOException, IllegalAccessException, DataNotFoundException {
         FileInputStream fileInputStream = new FileInputStream(propConfigData.getFile());
         Properties properties = new Properties();
         properties.load(fileInputStream);
@@ -43,5 +50,24 @@ public class ConfigurationLoader {
         }
 
 
+    }
+
+    public E loadConfigDataFromJsonFile(File file) throws IOException {
+        Gson gson = new Gson();
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        String line = null;
+        StringBuilder builder = new StringBuilder();
+        while ((line = bufferedReader.readLine()) != null) {
+            builder.append(line);
+        }
+        String jsonString = builder.toString();
+        E e = (E) gson.fromJson(jsonString, this.typeParameterClass);
+        return e;
+    }
+
+    public void generateJsonConfigFile(String path, String fileName, E e) throws IOException {
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(e);
+        FileUtility.writeFile(path, fileName + Constants.FILE_EXT_JSON, jsonString);
     }
 }
