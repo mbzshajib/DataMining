@@ -43,4 +43,12 @@ public class UInputData {
   public void setItemPValue(double itemPValue) {
    this.itemPValue = itemPValue;
   }
+
+     @Override
+     public String toString() {
+         return "UInputData{" +
+                 "itemPValue=" + itemPValue +
+                 ", id='" + id + '\'' +
+                 '}';
+     }
  }
