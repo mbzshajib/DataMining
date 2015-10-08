@@ -1,7 +1,11 @@
 rootProject.name = 'DataMining'
 
-include(':DataSetGenerator')
+include(':ManualDataMining')
+include(':UncertainDataSetGenerator')
+include(':UncertainStreamMining')
 include(':Utility')
 
-project(':DataSetGenerator').projectDir = "$rootDir/MODULES/DataSetGenerator" as File
+project(':UncertainStreamMining').projectDir = "$rootDir/MODULES/ManualDataMining" as File
+project(':UncertainDataSetGenerator').projectDir = "$rootDir/MODULES/UncertainDataSetGenerator" as File
+project(':UncertainStreamMining').projectDir = "$rootDir/MODULES/UncertainStreamMining" as File
 project(':Utility').projectDir = "$rootDir/MODULES/Utility" as File
