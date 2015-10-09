@@ -1,6 +1,5 @@
 package com.mbzshajib.mining.processor.uncertain;
 
-import com.mbzshajib.mining.Initializer;
 import com.mbzshajib.mining.exception.DataNotValidException;
 import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMineInput;
 import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMiner;
@@ -31,7 +30,6 @@ public class MainClassTreeGeneration {
     private static int windowNumber = 1;
 
     public static void main(String[] args) throws ProcessingError, IOException, DataNotValidException {
-        Initializer.initialize();
         TreeConstructionInput treeConstructionInput = getTreeInput();
         TreeGenerator processor = new TreeGenerator();
         TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
