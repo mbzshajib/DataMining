@@ -1,9 +1,9 @@
 package com.mbzshajib.mining.processor.uncertain.mining;
 
-import com.mbzshajib.mining.exception.DataNotValidException;
 import com.mbzshajib.mining.processor.uncertain.model.*;
 import com.mbzshajib.mining.util.Utils;
 import com.mbzshajib.utility.common.Constants;
+import com.mbzshajib.utility.exception.DataNotFoundException;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
 
@@ -36,7 +36,7 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
         double minSupport = uncertainStreamMineInput.getMinSupport();
         try {
             startMining(uncertainTree, minSupport);
-        } catch (DataNotValidException e) {
+        } catch (DataNotFoundException e) {
             throw new ProcessingError(e);
         }
         printOutput();
@@ -64,7 +64,7 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
         System.out.println(builder.toString());
     }
 
-    private void startMining(UncertainTree uncertainTree, double minSupport) throws DataNotValidException {
+    private void startMining(UncertainTree uncertainTree, double minSupport) throws DataNotFoundException {
         UNode rootNode = uncertainTree.getRootNode();
         List<UNode> leafNodeList = new ArrayList<UNode>();
         rootNode.getLeafNodeList(leafNodeList);
@@ -87,7 +87,7 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
 
     }
 
-    private void mine(UNode root, FrequentItem item, int windowSize, String id, double minSupport, boolean isFirstIteration) throws DataNotValidException {
+    private void mine(UNode root, FrequentItem item, int windowSize, String id, double minSupport, boolean isFirstIteration) throws DataNotFoundException {
         item.addFrequentItem(id);
         if (isFirstIteration) {
             frequentItemList.add(item);
@@ -142,7 +142,7 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
         }
     }
 
-    private HeaderTable removeInfrequentData(UNode node, HeaderTable headerTable, List<HTableItemInfo> inFrequentItemInfoByPrefix, int windowSize) throws DataNotValidException {
+    private HeaderTable removeInfrequentData(UNode node, HeaderTable headerTable, List<HTableItemInfo> inFrequentItemInfoByPrefix, int windowSize) throws DataNotFoundException {
         for (HTableItemInfo hTableItemInfo : inFrequentItemInfoByPrefix) {
             removeInfrequentItemNodes(node, hTableItemInfo.getItemId());
             headerTable = generateHeaderTableForCondTree(node, windowSize);
@@ -165,7 +165,7 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
         rootNode.removeNodeIfChildOfAnyDepthById(itemId);
     }
 
-    private HeaderTable generateHeaderTableForCondTree(UNode rootNode, int windowSize) throws DataNotValidException {
+    private HeaderTable generateHeaderTableForCondTree(UNode rootNode, int windowSize) throws DataNotFoundException {
         List<UNode> distinctList = rootNode.getDistinctNodes();
 
         HeaderTable headerTable = new HeaderTable(windowSize);

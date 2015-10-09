@@ -1,7 +1,7 @@
 package com.mbzshajib.mining.processor.uncertain.model;
 
-import com.mbzshajib.mining.exception.DataNotValidException;
 import com.mbzshajib.utility.common.Constants;
+import com.mbzshajib.utility.exception.DataNotFoundException;
 
 import java.util.*;
 
@@ -27,7 +27,7 @@ public class HeaderTable {
         headerTableItems = new ArrayList<HeaderTableItem>();
     }
 
-    public void updateHeaderTable(UNode uNode) throws DataNotValidException {
+    public void updateHeaderTable(UNode uNode) throws DataNotFoundException {
         HeaderTableItem item = null;
         if ((item = findHeaderTableItemById(uNode.getId())) == null) {
             HeaderTableItem headerTableItem = addNewTableItem(uNode.getId());
@@ -170,7 +170,7 @@ public class HeaderTable {
         return result;
     }
 
-    public void updateHeaderTableFromDistinctList(List<UNode> distinctList) throws DataNotValidException {
+    public void updateHeaderTableFromDistinctList(List<UNode> distinctList) throws DataNotFoundException {
         for (UNode node : distinctList) {
             updateHeaderTable(node);
         }

@@ -1,9 +1,0 @@
-version = '1.0'
-buildscript {
-}
-repositories {
-        mavenCentral()
-}
-dependencies {
-        compile project(':Utility')
-}

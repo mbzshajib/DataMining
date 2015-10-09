@@ -1,6 +1,5 @@
 package com.mbzshajib.mining.processor.uncertain;
 
-import com.mbzshajib.mining.exception.DataNotValidException;
 import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
 import com.mbzshajib.mining.processor.uncertain.uncertaintree.TreeConstructionInput;
 import com.mbzshajib.mining.processor.uncertain.uncertaintree.TreeConstructionOutput;
@@ -8,6 +7,7 @@ import com.mbzshajib.mining.processor.uncertain.uncertaintree.TreeGenerator;
 import com.mbzshajib.mining.processor.uncertain.uncertaintree.WindowCompletionCallBackImpl;
 import com.mbzshajib.mining.util.Constants;
 import com.mbzshajib.utility.configloader.ConfigurationLoader;
+import com.mbzshajib.utility.exception.DataNotFoundException;
 import com.mbzshajib.utility.model.ProcessingError;
 
 import java.io.File;
@@ -30,7 +30,7 @@ public class UncertainStreamMiningDemo {
     private static final double MIN_SUP = .5;
     private static int windowNumber = 1;
 
-    public static void main(String[] args) throws ProcessingError, IOException, DataNotValidException {
+    public static void main(String[] args) throws ProcessingError, IOException, DataNotFoundException {
         ConfigurationLoader<MiningInput> configurationLoader = new ConfigurationLoader<>(MiningInput.class);
         MiningInput miningInput = configurationLoader.loadConfigDataFromJsonFile(new File(Constants.F_MINING_PATH + Constants.F_MINING_FILE));
 

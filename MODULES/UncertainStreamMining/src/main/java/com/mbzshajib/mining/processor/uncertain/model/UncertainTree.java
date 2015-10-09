@@ -1,7 +1,7 @@
 package com.mbzshajib.mining.processor.uncertain.model;
 
-import com.mbzshajib.mining.exception.DataNotValidException;
 import com.mbzshajib.utility.common.Constants;
+import com.mbzshajib.utility.exception.DataNotFoundException;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class UncertainTree {
     private int frameSize;
     private int windowSize;
 
-    public UncertainTree(int frameSize, int windowSize) throws DataNotValidException {
+    public UncertainTree(int frameSize, int windowSize) throws DataNotFoundException {
         this.frameSize = frameSize;
         this.windowSize = windowSize;
         this.headerTable = new HeaderTable(windowSize);
@@ -55,7 +55,7 @@ public class UncertainTree {
         return headerTable;
     }
 
-    public void addTransactionToTree(List<UInputData> uInputData, int frameNo) throws DataNotValidException {
+    public void addTransactionToTree(List<UInputData> uInputData, int frameNo) throws DataNotFoundException {
         UNode parentNode = rootNode;
         for (UInputData inputData : uInputData) {
             parentNode = addNode(inputData, parentNode, frameNo);
@@ -90,7 +90,7 @@ public class UncertainTree {
         }
     }
 
-    private UNode addNode(UInputData uInputData, UNode parentNode, int frameNo) throws DataNotValidException {
+    private UNode addNode(UInputData uInputData, UNode parentNode, int frameNo) throws DataNotFoundException {
         int foundIndex = -1;
         for (int i = 0; i < parentNode.getChildNodeList().size(); i++) {
             if (parentNode.getChildNodeList().get(i).isSameId(uInputData.getId())) {
@@ -136,7 +136,7 @@ public class UncertainTree {
         this.windowSize = windowSize;
     }
 
-    public UncertainTree copy() throws DataNotValidException {
+    public UncertainTree copy() throws DataNotFoundException {
         UncertainTree uncertainTree = new UncertainTree(frameSize, windowSize);
         UNode copiedNode = rootNode.copy();
         HeaderTable headerTable = this.headerTable.copy();

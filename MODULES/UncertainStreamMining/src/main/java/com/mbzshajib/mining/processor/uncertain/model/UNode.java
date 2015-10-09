@@ -1,7 +1,7 @@
 package com.mbzshajib.mining.processor.uncertain.model;
 
-import com.mbzshajib.mining.exception.DataNotValidException;
 import com.mbzshajib.utility.common.Constants;
+import com.mbzshajib.utility.exception.DataNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +42,9 @@ public class UNode {
         }
     }
 
-    public void addUData(int frameNo, UData dataToBeAdded) throws DataNotValidException {
+    public void addUData(int frameNo, UData dataToBeAdded) throws DataNotFoundException {
         if (frameNo >= frameSize) {
-            throw new DataNotValidException("Frame no " + frameNo + " must be less than frame size " + frameSize + ".");
+            throw new DataNotFoundException("Frame no " + frameNo + " must be less than frame size " + frameSize + ".");
         }
         UData uData = uncertainDataList.get(frameNo);
         uData.setPrefixValue(uData.getPrefixValue() + dataToBeAdded.getPrefixValue());

@@ -1,8 +1,8 @@
 package com.mbzshajib.mining.processor.uncertain.uncertaintree;
 
-import com.mbzshajib.mining.exception.DataNotValidException;
 import com.mbzshajib.mining.processor.uncertain.model.UInputData;
 import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
+import com.mbzshajib.utility.exception.DataNotFoundException;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
 
@@ -61,7 +61,7 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
             finish();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (DataNotValidException e) {
+        } catch (DataNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,7 +77,7 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
         treeConstructionOutput.setEndTime(System.currentTimeMillis());
         try {
             treeConstructionOutput.setUncertainTree(uncertainTree.copy());
-        } catch (DataNotValidException e) {
+        } catch (DataNotFoundException e) {
             e.printStackTrace();
         }
         return treeConstructionOutput;
@@ -88,14 +88,14 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
     }
 
 
-    private void initialize() throws ProcessingError, FileNotFoundException, DataNotValidException {
+    private void initialize() throws ProcessingError, FileNotFoundException, DataNotFoundException {
         globalStartTime = System.currentTimeMillis();
         startTime = System.currentTimeMillis();
         bufferedReader = new BufferedReader(new FileReader(new File(treeConstructionInput.getInputFilePath())));
     }
 
 
-    private List<UInputData> getTransaction() throws IOException, DataNotValidException {
+    private List<UInputData> getTransaction() throws IOException, DataNotFoundException {
         String line = bufferedReader.readLine();
         if (line == null) {
             bufferedReader.close();
