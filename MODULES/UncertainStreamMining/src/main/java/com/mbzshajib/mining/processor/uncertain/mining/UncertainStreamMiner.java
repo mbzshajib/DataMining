@@ -1,9 +1,9 @@
 package com.mbzshajib.mining.processor.uncertain.mining;
 
 import com.mbzshajib.mining.processor.uncertain.model.*;
-import com.mbzshajib.mining.util.Utils;
 import com.mbzshajib.utility.common.Constants;
 import com.mbzshajib.utility.exception.DataNotFoundException;
+import com.mbzshajib.utility.log.Logger;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
 
@@ -319,12 +319,12 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
 
     private void printBeforeMining(UncertainTree uncertainTree) {
 
-        Utils.log(Constants.MULTI_STAR);
-        Utils.log(TAG, "Tree For Mining");
-        Utils.log(Constants.MULTI_STAR);
-        Utils.log(TAG, uncertainTree.getTraversedString());
-        Utils.log(Constants.MULTI_STAR);
-        Utils.log(TAG, "Mining Started");
-        Utils.log(Constants.MULTI_STAR);
+        Logger.log(Constants.MULTI_STAR);
+        Logger.log(TAG, "Tree For Mining");
+        Logger.log(Constants.MULTI_STAR);
+        Logger.log(TAG, uncertainTree.getTraversedString());
+        Logger.log(Constants.MULTI_STAR);
+        Logger.log(TAG, "Mining Started");
+        Logger.log(Constants.MULTI_STAR);
     }
 }

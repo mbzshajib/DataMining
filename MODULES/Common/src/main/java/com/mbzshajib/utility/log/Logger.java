@@ -1,22 +1,21 @@
-package com.mbzshajib.mining.util;
+package com.mbzshajib.utility.log;
 
 /**
  * *****************************************************************
- * Copyright  2015.
  *
  * @author - Md. Badi-Uz-Zaman Shajib
+ * @copyright 2015.
  * @email - mbzshajib@gmail.com
  * @gitHub - https://github.com/mbzshajib
- * @date: 9/4/2015
- * @time: 4:39 PM
+ * @date: 10/9/2015
+ * @time: 9:52 PM
  * ****************************************************************
  */
 
-
-public class Utils {
+public class Logger {
     private static String mode = "DEBUG";
-    private static String DEBUG= "DEBUG";
-    private static String RUN= "DEBUG";
+    private static String DEBUG = "DEBUG";
+    private static String RUN = "DEBUG";
 
     public static void log(String tag, String message) {
         if (DEBUG.equals(mode)) {
@@ -29,5 +28,4 @@ public class Utils {
             System.out.println(message);
         }
     }
-
 }
