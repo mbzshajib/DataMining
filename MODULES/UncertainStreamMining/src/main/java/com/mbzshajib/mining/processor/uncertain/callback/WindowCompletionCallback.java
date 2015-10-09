@@ -1,5 +1,6 @@
-package com.mbzshajib.mining.processor.uncertain.tree;
+package com.mbzshajib.mining.processor.uncertain.callback;
 
+import com.mbzshajib.mining.processor.uncertain.tree.TreeConstructionOutput;
 import com.mbzshajib.utility.model.ProcessingError;
 
 /**

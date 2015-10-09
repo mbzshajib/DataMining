@@ -1,5 +1,6 @@
 package com.mbzshajib.mining.processor.uncertain.tree;
 
+import com.mbzshajib.mining.processor.uncertain.callback.WindowCompletionCallback;
 import com.mbzshajib.utility.model.Input;
 
 /**
@@ -59,4 +60,5 @@ public class TreeConstructionInput implements Input {
                 ", frameSize=" + frameSize +
                 '}';
     }
+
 }
