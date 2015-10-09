@@ -1,6 +1,6 @@
 package com.mbzshajib.mining.processor.uncertain.model;
 
-import com.mbzshajib.mining.util.Constant;
+import com.mbzshajib.utility.common.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,16 +81,16 @@ class HeaderTableItem {
 
     String traverse() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(Constant.HASH)
+        stringBuilder.append(Constants.HASH)
                 .append("ID ")
                 .append(itemId)
-                .append(Constant.TABBED_HASH)
-                .append("Data { ").append(Constant.TAB);
+                .append(Constants.TABBED_HASH)
+                .append("Data { ").append(Constants.TAB);
 
         int index = 0;
         for (UNode node : nodeList) {
-            stringBuilder.append(Constant.HASH)
-                    .append(node.toString()).append(Constant.TAB);
+            stringBuilder.append(Constants.HASH)
+                    .append(node.toString()).append(Constants.TAB);
             index++;
         }
         stringBuilder.append(" }");

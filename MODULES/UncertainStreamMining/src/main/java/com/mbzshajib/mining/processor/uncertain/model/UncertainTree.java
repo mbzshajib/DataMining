@@ -1,7 +1,7 @@
 package com.mbzshajib.mining.processor.uncertain.model;
 
 import com.mbzshajib.mining.exception.DataNotValidException;
-import com.mbzshajib.mining.util.Constant;
+import com.mbzshajib.utility.common.Constants;
 
 import java.util.List;
 
@@ -34,16 +34,16 @@ public class UncertainTree {
     public String getTraversedString() {
         StringBuilder builder = new StringBuilder();
         builder.append("UNCERTAIN TREE")
-                .append(Constant.NEW_LINE)
-                .append(Constant.NEW_LINE);
+                .append(Constants.NEW_LINE)
+                .append(Constants.NEW_LINE);
         builder.append(rootNode.traverse());
-        builder.append(Constant.NEW_LINE);
+        builder.append(Constants.NEW_LINE);
 
         builder.append("HEADER TABLE")
-                .append(Constant.NEW_LINE)
-                .append(Constant.NEW_LINE);
+                .append(Constants.NEW_LINE)
+                .append(Constants.NEW_LINE);
         builder.append(headerTable.traverse());
-        builder.append(Constant.NEW_LINE);
+        builder.append(Constants.NEW_LINE);
         return builder.toString();
     }
 

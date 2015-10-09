@@ -1,7 +1,7 @@
 package com.mbzshajib.mining.processor.uncertain.model;
 
 import com.mbzshajib.mining.exception.DataNotValidException;
-import com.mbzshajib.mining.util.Constant;
+import com.mbzshajib.utility.common.Constants;
 
 import java.util.*;
 
@@ -94,10 +94,10 @@ public class HeaderTable {
 
     public String traverse() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(Constant.NEW_LINE);
+        stringBuilder.append(Constants.NEW_LINE);
         for (HeaderTableItem item : headerTableItems) {
             stringBuilder.append(item.traverse());
-            stringBuilder.append(Constant.NEW_LINE);
+            stringBuilder.append(Constants.NEW_LINE);
         }
         return stringBuilder.toString();
     }

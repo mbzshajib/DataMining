@@ -1,7 +1,7 @@
 package com.mbzshajib.mining.processor.uncertain.model;
 
 import com.mbzshajib.mining.exception.DataNotValidException;
-import com.mbzshajib.mining.util.Constant;
+import com.mbzshajib.utility.common.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,18 +82,18 @@ public class UNode {
 
     public String traverse() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(Constant.NEW_LINE)
-                .append(Constant.HASH)
+        stringBuilder.append(Constants.NEW_LINE)
+                .append(Constants.HASH)
                 .append("Parent ")
-                .append("ID:").append(Constant.HASH).append(id);
-        stringBuilder.append(Constant.TABBED_HASH)
-                .append(Constant.HASH)
+                .append("ID:").append(Constants.HASH).append(id);
+        stringBuilder.append(Constants.TABBED_HASH)
+                .append(Constants.HASH)
                 .append("Child ").append(childNodeList.size())
-                .append(Constant.TABBED_HASH)
+                .append(Constants.TABBED_HASH)
                 .append("[ ");
         for (UNode node : childNodeList) {
             stringBuilder
-                    .append(Constant.TABBED_HASH)
+                    .append(Constants.TABBED_HASH)
                     .append(node.getId())
                     .append("[");
             for (UData uData : node.getUncertainDataList()) {

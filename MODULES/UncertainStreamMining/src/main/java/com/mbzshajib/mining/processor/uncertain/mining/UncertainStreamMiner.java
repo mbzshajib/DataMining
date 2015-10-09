@@ -2,8 +2,8 @@ package com.mbzshajib.mining.processor.uncertain.mining;
 
 import com.mbzshajib.mining.exception.DataNotValidException;
 import com.mbzshajib.mining.processor.uncertain.model.*;
-import com.mbzshajib.mining.util.Constant;
 import com.mbzshajib.mining.util.Utils;
+import com.mbzshajib.utility.common.Constants;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
 
@@ -53,13 +53,13 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
         StringBuilder builder = new StringBuilder();
         int count = 1;
         builder.append("Total Frequent Items ")
-                .append(Constant.TABBED_HASH)
+                .append(Constants.TABBED_HASH)
                 .append(frequentItemList.size())
-                .append(Constant.NEW_LINE);
+                .append(Constants.NEW_LINE);
         for (FrequentItem item : frequentItemList) {
             builder.append(count)
                     .append(item.traverse())
-                    .append(Constant.NEW_LINE);
+                    .append(Constants.NEW_LINE);
         }
         System.out.println(builder.toString());
     }
@@ -319,12 +319,12 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
 
     private void printBeforeMining(UncertainTree uncertainTree) {
 
-        Utils.log(Constant.MULTI_STAR);
+        Utils.log(Constants.MULTI_STAR);
         Utils.log(TAG, "Tree For Mining");
-        Utils.log(Constant.MULTI_STAR);
+        Utils.log(Constants.MULTI_STAR);
         Utils.log(TAG, uncertainTree.getTraversedString());
-        Utils.log(Constant.MULTI_STAR);
+        Utils.log(Constants.MULTI_STAR);
         Utils.log(TAG, "Mining Started");
-        Utils.log(Constant.MULTI_STAR);
+        Utils.log(Constants.MULTI_STAR);
     }
 }
