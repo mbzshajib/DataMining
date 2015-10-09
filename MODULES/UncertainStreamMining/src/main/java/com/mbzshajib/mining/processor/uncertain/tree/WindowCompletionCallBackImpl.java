@@ -1,4 +1,4 @@
-package com.mbzshajib.mining.processor.uncertain.uncertaintree;
+package com.mbzshajib.mining.processor.uncertain.tree;
 
 import com.mbzshajib.mining.processor.uncertain.MiningInput;
 import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMineInput;

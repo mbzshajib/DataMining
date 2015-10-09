@@ -1,4 +1,4 @@
-package com.mbzshajib.mining.processor.uncertain.uncertaintree;
+package com.mbzshajib.mining.processor.uncertain.tree;
 
 import com.mbzshajib.utility.model.ProcessingError;
 
