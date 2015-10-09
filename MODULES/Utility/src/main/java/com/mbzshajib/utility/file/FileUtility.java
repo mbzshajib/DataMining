@@ -1,6 +1,8 @@
 package com.mbzshajib.utility.file;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * *****************************************************************
@@ -34,6 +36,23 @@ public class FileUtility {
         dataOutputStream.close();
     }
 
+    public static void writeDoublesToFile(String filePath, Double[] values) throws IOException {
+        File file = new File(filePath);
+        if (file.exists()) {
+            file.delete();
+            file.createNewFile();
+        } else {
+            file.createNewFile();
+        }
+        DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(file));
+        dataOutputStream.writeUTF("DATA_COUNT:");
+        dataOutputStream.writeInt(values.length);
+        for (double val : values) {
+            dataOutputStream.writeDouble(val);
+        }
+        dataOutputStream.close();
+    }
+
     public static double[] readDoublesFromFile(String filePath) throws IOException {
         File file = new File(filePath);
         DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file));
@@ -43,6 +62,20 @@ public class FileUtility {
 
         for (int i = 0; i < totalDoubleValues; i++) {
             result[i] = dataInputStream.readDouble();
+        }
+        dataInputStream.close();
+        return result;
+    }
+
+    public static List<Double> readDoublesFromFileAsList(String filePath) throws IOException {
+        File file = new File(filePath);
+        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file));
+        dataInputStream.readUTF();
+        int totalDoubleValues = dataInputStream.readInt();
+        List<Double> result = new ArrayList<Double>();
+        for (int i = 0; i < totalDoubleValues; i++) {
+            result.add(dataInputStream.readDouble());
+
         }
         dataInputStream.close();
         return result;
@@ -87,5 +120,18 @@ public class FileUtility {
         if (!(dir.exists())) {
             dir.mkdir();
         }
+    }
+
+    public static int countTransaction(String pathCertData, String fileNameCertData, String transactionDelemeter) throws IOException {
+        File file = new File(pathCertData + fileNameCertData);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line = null;
+        int totalCount = 0;
+        while ((line = reader.readLine()) != null) {
+            String[] split = line.split(transactionDelemeter);
+            totalCount = totalCount + split.length;
+        }
+        return totalCount;
+
     }
 }

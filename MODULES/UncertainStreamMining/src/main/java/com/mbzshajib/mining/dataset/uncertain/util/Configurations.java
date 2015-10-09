@@ -1,4 +1,4 @@
-package com.mbzshajib.mining.util;
+package com.mbzshajib.mining.dataset.uncertain.util;
 
 /**
  * *****************************************************************
