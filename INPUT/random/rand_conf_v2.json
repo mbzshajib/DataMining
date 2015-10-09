@@ -1,0 +1,68 @@
+{
+  "numberOfRandomToBeGenerated": 10000,
+  "list": [
+    {
+      "lowerValue": 0.0,
+      "upperValue": 0.1,
+      "weight": 10,
+      "precision": 2
+    },
+    {
+      "lowerValue": 0.1,
+      "upperValue": 0.2,
+      "weight": 10,
+      "precision": 2
+    },
+    {
+      "lowerValue": 0.2,
+      "upperValue": 0.3,
+      "weight": 10,
+      "precision": 2
+    },
+    {
+      "lowerValue": 0.3,
+      "upperValue": 0.4,
+      "weight": 10,
+      "precision": 2
+    },
+    {
+      "lowerValue": 0.4,
+      "upperValue": 0.5,
+      "weight": 10,
+      "precision": 2
+    },
+    {
+      "lowerValue": 0.5,
+      "upperValue": 0.6,
+      "weight": 10,
+      "precision": 2
+    },
+    {
+      "lowerValue": 0.6,
+      "upperValue": 0.7,
+      "weight": 10,
+      "precision": 2
+    },
+    {
+      "lowerValue": 0.7,
+      "upperValue": 0.8,
+      "weight": 10,
+      "precision": 2
+    },
+    {
+      "lowerValue": 0.8,
+      "upperValue": 0.9,
+      "weight": 10,
+      "precision": 2
+    },
+    {
+      "lowerValue": 0.9,
+      "upperValue": 1.0,
+      "weight": 10,
+      "precision": 2
+    }
+  ],
+  "outputFileName": "double.dat",
+  "outputPath": "OUTPUT\\",
+  "file": {"path": "OUTPUT\\rand_conf_v2.json"}
+}
