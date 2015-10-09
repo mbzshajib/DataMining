@@ -34,7 +34,7 @@ public class MainRandGenV2 {
         RandomGeneratorInputV2 generatorInput = loader.loadConfigDataFromJsonFile(new File(CONFIGURATION_INPUT_FILE));
         ConfigurationLoader<UDataSetGeneratorInput> dataSetGeneratorInputConfigurationLoader = new ConfigurationLoader<UDataSetGeneratorInput>(UDataSetGeneratorInput.class);
         UDataSetGeneratorInput uDataSetGeneratorInput = dataSetGeneratorInputConfigurationLoader.loadConfigDataFromJsonFile(new File(CONFIGURATION_INPUT_FILE_UNCERTAIN));
-        int numberOfTransaction = FileUtility.countTransaction(uDataSetGeneratorInput.getPathCertData(),uDataSetGeneratorInput.getFileNameCertData(),uDataSetGeneratorInput.getTransactionDelemeter());
+        int numberOfTransaction = FileUtility.countTransaction(uDataSetGeneratorInput.getPathCertData(), uDataSetGeneratorInput.getFileNameCertData(), uDataSetGeneratorInput.getTransactionDelemeter());
         generatorInput.setNumberOfRandomToBeGenerated(numberOfTransaction);
         generatorInput.setDataSaver(new DoubleDataToFileSaver());
         RandomGeneratorProcessor processor = new RandomGeneratorProcessor();
@@ -44,8 +44,9 @@ public class MainRandGenV2 {
         DoubleDataSaverOutput saverOutput = (DoubleDataSaverOutput) output.getSaverOutput();
         uDataSetGeneratorInput.setFileNameUncertainity(saverOutput.getNameOfFile());
         uDataSetGeneratorInput.setPathUncertainity(saverOutput.getPathOfSavedDoubles());
-        uDataSetGeneratorInput.setFileNameUncertData("uncert_"+uDataSetGeneratorInput.getFileNameCertData());
-
+        if (uDataSetGeneratorInput.getFileNameUncertData().equals("")) {
+            uDataSetGeneratorInput.setFileNameUncertData("uncert_" + uDataSetGeneratorInput.getFileNameCertData());
+        }
         UDataSetGenerator dataSetGenerator = new UDataSetGenerator();
         UDataSetGeneratorOutput process = dataSetGenerator.process(uDataSetGeneratorInput);
 
