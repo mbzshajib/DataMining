@@ -99,7 +99,9 @@ public class UDataSetGeneratorInput extends JsonFileConfigModel implements Input
     @Override
     public String toString() {
         return "UDataSetGeneratorInput{" +
-                "fileNameUncertainity='" + fileNameUncertainity + '\'' +
+                "uncertainityDelemeter='" + uncertainityDelemeter + '\'' +
+                ", transactionDelemeter='" + transactionDelemeter + '\'' +
+                ", fileNameUncertainity='" + fileNameUncertainity + '\'' +
                 ", fileNameCertData='" + fileNameCertData + '\'' +
                 ", fileNameUncertData='" + fileNameUncertData + '\'' +
                 ", pathUncertainity='" + pathUncertainity + '\'' +

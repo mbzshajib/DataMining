@@ -27,10 +27,11 @@ public class UDataSetGenerator implements Processor<UDataSetGeneratorInput, UDat
     @Override
     public UDataSetGeneratorOutput process(UDataSetGeneratorInput uDataSetGeneratorInput) throws ProcessingError {
         List<Double> randomValues = null;
+        int totalTransaction;
         try {
             randomValues = FileUtility.readDoublesFromFileAsList(uDataSetGeneratorInput.getPathUncertainity() + uDataSetGeneratorInput.getFileNameUncertainity());
             Collections.shuffle(randomValues);
-            int totalTransaction = FileUtility.countTransaction(uDataSetGeneratorInput.getPathCertData(), uDataSetGeneratorInput.getFileNameCertData(), uDataSetGeneratorInput.getTransactionDelemeter());
+            totalTransaction = FileUtility.countTransaction(uDataSetGeneratorInput.getPathCertData(), uDataSetGeneratorInput.getFileNameCertData(), uDataSetGeneratorInput.getTransactionDelemeter());
             if (totalTransaction != randomValues.size()) {
                 throw new ProcessingError(new DataNotFoundException("Total Randoms " + randomValues.size() + " Total Transactions " + totalTransaction));
             }
@@ -56,7 +57,11 @@ public class UDataSetGenerator implements Processor<UDataSetGeneratorInput, UDat
         } catch (IOException e) {
             throw new ProcessingError(e);
         }
-        return null;
+        UDataSetGeneratorOutput output = new UDataSetGeneratorOutput();
+        output.setPathDataSetGenerated(uDataSetGeneratorInput.getPathUncertData());
+        output.setNameOfDataSet(uDataSetGeneratorInput.getFileNameUncertData());
+        output.setTotalTransaction(totalTransaction);
+        return output;
 
     }
 }

@@ -7,9 +7,10 @@ import java.util.List;
 
 /**
  * *****************************************************************
- * @copyright  2015.
+ *
  * @author - Md. Badi-Uz-Zaman Shajib
- * @email  - mbzshajib@gmail.com
+ * @copyright 2015.
+ * @email - mbzshajib@gmail.com
  * @gitHub - https://github.com/mbzshajib
  * @date: 9/4/2015
  * @time: 6:41 PM
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class RandomGeneratorOutputV2 implements Output {
     SaverOutput saverOutput;
-    private List<Double> randoms ;
+    private List<Double> randoms;
 
     public SaverOutput getSaverOutput() {
         return saverOutput;
@@ -35,5 +36,19 @@ public class RandomGeneratorOutputV2 implements Output {
 
     public void setRandoms(List<Double> randoms) {
         this.randoms = randoms;
+    }
+
+    @Override
+    public String toString() {
+
+        int size = 0;
+        if (randoms != null) {
+            size = randoms.size();
+        }
+
+        return "RandomGeneratorOutputV2{" +
+                "saverOutput=" + saverOutput +
+                ", total randoms=" + size +
+                '}';
     }
 }
