@@ -52,7 +52,6 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
             Logger.log("Minimum support ", "" + output.getMinSupport());
             Logger.log("TIME ", "Time Tree " + totalTreeGenerationTime + " Time Mining " + totalMiningTime + " Time File Read " + totalFileReadTime);
             Logger.log("Total Frequent Item Generated " + totalFrequentItem);
-            Logger.log("FrequentItems " + frequentItemCount);
         } catch (IOException e) {
             throw new ProcessingError(e);
         }
