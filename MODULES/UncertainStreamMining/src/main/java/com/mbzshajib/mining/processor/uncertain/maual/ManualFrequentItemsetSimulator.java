@@ -20,7 +20,7 @@ import java.io.*;
  * ****************************************************************
  */
 
-public class TestMain {
+public class ManualFrequentItemsetSimulator {
     private static final int WINDOW_SIZE = 3;
     private static final String FILE_INPUT_PATH = "INPUT/puff_tree_dataset.txt";
     private static final int FRAME_SIZE = 2;

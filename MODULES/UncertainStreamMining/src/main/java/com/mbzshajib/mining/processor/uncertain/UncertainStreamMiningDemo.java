@@ -1,10 +1,12 @@
 package com.mbzshajib.mining.processor.uncertain;
 
+import com.mbzshajib.mining.processor.uncertain.callback.WindowCompletionCallBackImpl;
+import com.mbzshajib.mining.processor.uncertain.evalutor.Evalutor;
+import com.mbzshajib.mining.processor.uncertain.evalutor.EvalutorInput;
 import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
 import com.mbzshajib.mining.processor.uncertain.tree.TreeConstructionInput;
 import com.mbzshajib.mining.processor.uncertain.tree.TreeConstructionOutput;
 import com.mbzshajib.mining.processor.uncertain.tree.TreeGenerator;
-import com.mbzshajib.mining.processor.uncertain.callback.WindowCompletionCallBackImpl;
 import com.mbzshajib.mining.util.Constants;
 import com.mbzshajib.utility.configloader.ConfigurationLoader;
 import com.mbzshajib.utility.exception.DataNotFoundException;
@@ -34,12 +36,23 @@ public class UncertainStreamMiningDemo {
         MiningInput miningInput = configurationLoader.loadConfigDataFromJsonFile(new File(Constants.F_MINING_PATH + Constants.F_MINING_FILE));
 
         TreeConstructionInput treeConstructionInput = getTreeInput(miningInput);
+        for (double i = .1; i < 1; i += .1) {
+            miningInput.setMinSupport(i);
+            TreeGenerator processor = new TreeGenerator();
+            TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
+            UncertainTree tree = treeConstructionOutput.getUncertainTree();
+            Evalutor evalutor = new Evalutor();
+            evalutor.process(getEvalutorInput(miningInput.getMetaDataPath(), miningInput.getMetaDataFile()));
+        }
 
-        TreeGenerator processor = new TreeGenerator();
-        TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
-        UncertainTree tree = treeConstructionOutput.getUncertainTree();
 
+    }
 
+    private static EvalutorInput getEvalutorInput(String metaDataPath, String metaDataFile) {
+        EvalutorInput input = new EvalutorInput();
+        input.setMetaDataName(metaDataFile);
+        input.setMiningMetaDataPath(metaDataPath);
+        return input;
     }
 
 

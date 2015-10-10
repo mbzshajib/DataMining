@@ -2,11 +2,13 @@
   "minSupport": 0.50,
   "windowSize": 5,
   "frameSize": 20,
-  "dataSetPath": "INPUT\\",
-  "dataSetName": "puff_tree_dataset.txt",
-  "metaDataPath": "META\\",
+  "dataSetPath": "Input\\DataMining\\",
+  "dataSetName": "uncertain_mushroom.dat",
+  "metaDataPath": "meta\\",
   "metaDataFile": "meta.json",
-  "frequentSetPath": "INPUT\\",
+  "frequentSetPath": "Input\\",
   "frequentSetName": "frequent_item.txt",
-  "file": {"path": "INPUT\\mining\\mining_config.json"}
+  "file": {
+    "path": "INPUT\\mining\\mining_config.json"
+  }
 }

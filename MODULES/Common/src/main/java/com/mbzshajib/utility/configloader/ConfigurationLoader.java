@@ -64,6 +64,19 @@ public class ConfigurationLoader<E extends ConfigModel> {
         return e;
     }
 
+    public E loadConfigDataFromJsonFile(String path, String fileName) throws IOException {
+        Gson gson = new Gson();
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(path + fileName)));
+        String line = null;
+        StringBuilder builder = new StringBuilder();
+        while ((line = bufferedReader.readLine()) != null) {
+            builder.append(line);
+        }
+        String jsonString = builder.toString();
+        E e = (E) gson.fromJson(jsonString, this.typeParameterClass);
+        return e;
+    }
+
     public void generateJsonConfigFile(String path, String fileName, E e) throws IOException {
         Gson gson = new Gson();
         String jsonString = gson.toJson(e);

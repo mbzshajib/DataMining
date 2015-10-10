@@ -200,9 +200,6 @@ public class ManualFrequentItemSetGenerator implements Processor<ManualFrequentI
             String[] transactionItems = line.split(" ");
             for (String item : transactionItems) {
                 String[] val = item.split("-");
-                if (val.length != 2) {
-                    break;
-                }
                 UInputData data = new UInputData(val[0], Double.parseDouble(val[1]));
                 transaction.add(data);
             }

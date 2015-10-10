@@ -59,7 +59,7 @@ public class WindowCompletionCallBackImpl implements WindowCompletionCallback {
         } catch (IOException e) {
             throw new ProcessingError(e);
         }
-        printMessage(treeConstructionOutput, miningResult);
+//        printMessage(treeConstructionOutput, miningResult);
     }
 
     private void writeOutputToFile(USDMiningOutput uSDMiningOutput, String path, String fileName) throws IOException {
