@@ -34,6 +34,7 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
     @Override
     public TreeConstructionOutput process(TreeConstructionInput treeConstructionInput) throws ProcessingError {
         this.treeConstructionInput = treeConstructionInput;
+        this.bufferedReader = treeConstructionInput.getBufferedReader();
         UncertainTree uncertainTree = null;
         try {
             initialize();
@@ -91,7 +92,6 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
     private void initialize() throws ProcessingError, FileNotFoundException, DataNotFoundException {
         globalStartTime = System.currentTimeMillis();
         startTime = System.currentTimeMillis();
-        bufferedReader = new BufferedReader(new FileReader(new File(treeConstructionInput.getInputFilePath())));
     }
 
 

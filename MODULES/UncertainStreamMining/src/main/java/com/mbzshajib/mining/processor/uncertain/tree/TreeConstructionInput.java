@@ -3,6 +3,8 @@ package com.mbzshajib.mining.processor.uncertain.tree;
 import com.mbzshajib.mining.processor.uncertain.callback.WindowCompletionCallback;
 import com.mbzshajib.utility.model.Input;
 
+import java.io.BufferedReader;
+
 /**
  * *****************************************************************
  * Copyright  2015.
@@ -15,17 +17,17 @@ import com.mbzshajib.utility.model.Input;
  */
 
 public class TreeConstructionInput implements Input {
-    private String inputFilePath;
     private int windowSize;
     private int frameSize;
+    private BufferedReader bufferedReader;
     private WindowCompletionCallback windowCompletionCallback;
 
-    public String getInputFilePath() {
-        return inputFilePath;
+    public BufferedReader getBufferedReader() {
+        return bufferedReader;
     }
 
-    public void setInputFilePath(String inputFilePath) {
-        this.inputFilePath = inputFilePath;
+    public void setBufferedReader(BufferedReader bufferedReader) {
+        this.bufferedReader = bufferedReader;
     }
 
     public int getWindowSize() {
@@ -52,13 +54,5 @@ public class TreeConstructionInput implements Input {
         this.windowCompletionCallback = windowCompletionCallback;
     }
 
-    @Override
-    public String toString() {
-        return "TreeInput{" +
-                "inputFilePath='" + inputFilePath + '\'' +
-                ", windowSize=" + windowSize +
-                ", frameSize=" + frameSize +
-                '}';
-    }
 
 }

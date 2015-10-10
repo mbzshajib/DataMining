@@ -10,8 +10,7 @@ import com.mbzshajib.utility.configloader.ConfigurationLoader;
 import com.mbzshajib.utility.exception.DataNotFoundException;
 import com.mbzshajib.utility.model.ProcessingError;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * *****************************************************************
@@ -44,9 +43,11 @@ public class UncertainStreamMiningDemo {
     }
 
 
-    private static TreeConstructionInput getTreeInput(MiningInput miningInput) {
+    private static TreeConstructionInput getTreeInput(MiningInput miningInput) throws FileNotFoundException {
         final TreeConstructionInput treeConstructionInput = new TreeConstructionInput();
-        treeConstructionInput.setInputFilePath(miningInput.getDataSetPath() + miningInput.getDataSetName());
+        String inputPath = miningInput.getDataSetPath() + miningInput.getDataSetName();
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(inputPath)));
+        treeConstructionInput.setBufferedReader(bufferedReader);
         treeConstructionInput.setFrameSize(miningInput.getFrameSize());
         treeConstructionInput.setWindowSize(miningInput.getWindowSize());
         treeConstructionInput.setWindowCompletionCallback(new WindowCompletionCallBackImpl(miningInput));
