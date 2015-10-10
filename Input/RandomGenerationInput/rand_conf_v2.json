@@ -1,4 +1,6 @@
 {
+
+
   "numberOfRandomToBeGenerated": 10000,
   "list": [
     {
@@ -16,37 +18,37 @@
     {
       "lowerValue": 0.2,
       "upperValue": 0.3,
-      "weight": 0,
+      "weight": 1,
       "precision": 2
     },
     {
       "lowerValue": 0,
       "upperValue": 0.4,
-      "weight": 0,
+      "weight": 2,
       "precision": 2
     },
     {
       "lowerValue": 0.4,
       "upperValue": 0.5,
-      "weight": 10,
+      "weight": 5,
       "precision": 2
     },
     {
       "lowerValue": 0.5,
       "upperValue": 0.6,
-      "weight": 10,
+      "weight": 8,
       "precision": 2
     },
     {
       "lowerValue": 0.6,
       "upperValue": 0.7,
-      "weight": 10,
+      "weight": 25,
       "precision": 2
     },
     {
       "lowerValue": 0.7,
       "upperValue": 0.8,
-      "weight": 10,
+      "weight": 80,
       "precision": 2
     },
     {
@@ -58,7 +60,7 @@
     {
       "lowerValue": 0.9,
       "upperValue": 1.0,
-      "weight": 10,
+      "weight": 6,
       "precision": 2
     }
   ],
