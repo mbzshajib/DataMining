@@ -39,8 +39,6 @@ public class MainRandGenV2 {
         generatorInput.setDataSaver(new DoubleDataToFileSaver());
         RandomGeneratorProcessor processor = new RandomGeneratorProcessor();
         RandomGeneratorOutputV2 output = processor.process(generatorInput);
-
-        System.out.println(output.toString());
         DoubleDataSaverOutput saverOutput = (DoubleDataSaverOutput) output.getSaverOutput();
         uDataSetGeneratorInput.setFileNameUncertainity(saverOutput.getNameOfFile());
         uDataSetGeneratorInput.setPathUncertainity(saverOutput.getPathOfSavedDoubles());

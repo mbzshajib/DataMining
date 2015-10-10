@@ -26,16 +26,13 @@ public class RandomGeneratorProcessor implements Processor<RandomGeneratorInputV
     @Override
     public RandomGeneratorOutputV2 process(RandomGeneratorInputV2 input) throws ProcessingError {
         List<Double> result = new ArrayList<Double>();
-        System.out.println(input.toString());
         updateWeight(input.getList(), input.getNumberOfRandomToBeGenerated());
-        System.out.println(input.toString());
         for (RInputInfo info : input.getList()) {
             double[] randoms = RandomUtility.getRandoms(info.getLowerValue(), info.getUpperValue(), info.getWeight(), info.getPrecision());
             for (double tmp : randoms) {
                 result.add(tmp);
             }
         }
-        System.out.println(result);
         RandomGeneratorOutputV2 output = new RandomGeneratorOutputV2();
         output.setRandoms(result);
 

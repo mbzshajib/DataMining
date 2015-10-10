@@ -26,7 +26,6 @@ public class UDataSetGenerator implements Processor<UDataSetGeneratorInput, UDat
 
     @Override
     public UDataSetGeneratorOutput process(UDataSetGeneratorInput uDataSetGeneratorInput) throws ProcessingError {
-        System.out.println(uDataSetGeneratorInput.toString());
         List<Double> randomValues = null;
         try {
             randomValues = FileUtility.readDoublesFromFileAsList(uDataSetGeneratorInput.getPathUncertainity() + uDataSetGeneratorInput.getFileNameUncertainity());
