@@ -1,12 +1,16 @@
 package com.mbzshajib.mining.processor.uncertain.maual;
 
+import com.mbzshajib.mining.processor.uncertain.callback.ManualWindowCompletionCallback;
 import com.mbzshajib.mining.processor.uncertain.model.FrequentItem;
+import com.mbzshajib.mining.processor.uncertain.model.TimeModel;
 import com.mbzshajib.mining.processor.uncertain.model.UInputData;
 import com.mbzshajib.utility.collection.PowerSetGenerator;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -23,33 +27,73 @@ import java.util.*;
 
 public class ManualFrequentItemSetGenerator implements Processor<ManualFrequentItemSetGeneratorInput, ManualFrequentItemSetGeneratorOutput>, Comparator<FrequentItem> {
     private BufferedReader bufferedReader;
+    private ManualWindowCompletionCallback callback;
+    private long startTime;
 
     @Override
     public ManualFrequentItemSetGeneratorOutput process(ManualFrequentItemSetGeneratorInput manualFrequentItemSetGeneratorInput) throws ProcessingError {
+        startTime = System.currentTimeMillis();
         int frameSize = manualFrequentItemSetGeneratorInput.getFrameSize();
         int windowSize = manualFrequentItemSetGeneratorInput.getWindowSize();
-        String path = manualFrequentItemSetGeneratorInput.getInputFilePath();
+        this.callback = manualFrequentItemSetGeneratorInput.getCallback();
+        bufferedReader = manualFrequentItemSetGeneratorInput.getBufferedReader();
         double minSup = manualFrequentItemSetGeneratorInput.getMinSupport();
+        int initialTransactionCount = windowSize * frameSize;
+        List<FrequentItem> frequentItems = null;
+        ManualFrequentItemSetGeneratorOutput output = null;
         try {
-            bufferedReader = new BufferedReader(new FileReader(new File(path)));
-            int initialTransactionCount = windowSize * frameSize;
             List<List<UInputData>> transactionList = getTransactionList(initialTransactionCount);
-            updateFrequentData(transactionList, minSup);
+            frequentItems = getFrequentItems(transactionList, minSup);
 
             if (initialTransactionCount != transactionList.size()) {
                 return null;
             }
+            callback.sendUpdate(createUpdate(frequentItems));
+
+            List<List<UInputData>> newList;
+            while (true) {
+                newList = getTransactionList(frameSize);
+                if (newList.size() != frameSize) {
+                    break;
+                }
+                removeFromList(transactionList, frameSize);
+                transactionList.addAll(newList);
+                frequentItems = getFrequentItems(transactionList, minSup);
+                System.out.println(frequentItems);
+                callback.sendUpdate(createUpdate(frequentItems));
+            }
+//                newList = getTransactionList(frameSize);
+
+
         } catch (FileNotFoundException e) {
             throw new ProcessingError(e);
         } catch (IOException e) {
             throw new ProcessingError(e);
         }
 
-
-        return null;
+        return createUpdate(frequentItems);
     }
 
-    private void updateFrequentData(List<List<UInputData>> transactionList, double minSupport) {
+    private void removeFromList(List<List<UInputData>> transactionList, int frameSize) {
+        for (int i = 0; i < frameSize; i++) {
+            List<UInputData> tmp = transactionList.get(i);
+            transactionList.remove(tmp);
+            i--;
+            frameSize--;
+        }
+    }
+
+    private ManualFrequentItemSetGeneratorOutput createUpdate(List<FrequentItem> frequentItems) {
+        long endTime = System.currentTimeMillis();
+        TimeModel timeModel = new TimeModel(startTime, endTime);
+        startTime = endTime;
+        ManualFrequentItemSetGeneratorOutput output = new ManualFrequentItemSetGeneratorOutput();
+        output.setMiningTime(timeModel);
+        output.setFrequentItemList(frequentItems);
+        return output;
+    }
+
+    private List<FrequentItem> getFrequentItems(List<List<UInputData>> transactionList, double minSupport) {
         List<List<UInputData>> frequentList = new ArrayList<List<UInputData>>();
         List<UInputData> distinctInputList = getDistinctTransaction(transactionList);
         PowerSetGenerator<UInputData> powerSetGenerator = new PowerSetGenerator<UInputData>();
@@ -62,6 +106,20 @@ public class ManualFrequentItemSetGenerator implements Processor<ManualFrequentI
                 }
             }
         }
+        List<FrequentItem> result = getFrequentItemList(frequentList);
+        return result;
+    }
+
+    private List<FrequentItem> getFrequentItemList(List<List<UInputData>> frequentList) {
+        List<FrequentItem> result = new ArrayList<FrequentItem>();
+        for (List<UInputData> item : frequentList) {
+            FrequentItem frequentItem = new FrequentItem();
+            for (UInputData data : item) {
+                frequentItem.addFrequentItem(data.getId());
+            }
+            result.add(frequentItem);
+        }
+        return result;
     }
 
     private boolean findIfItemIsFrequent(List<List<UInputData>> transactionList, List<UInputData> itemToBeTested, double minSupport) {
@@ -106,21 +164,6 @@ public class ManualFrequentItemSetGenerator implements Processor<ManualFrequentI
         return result;
     }
 
-    private double findItemProbabilityInTransaction(List<UInputData> transaction, UInputData item) {
-        double result = 0;
-        for (UInputData data : transaction) {
-            if (data == item) {
-                result = data.getItemPValue();
-            }
-        }
-        return result;
-    }
-
-    private List<FrequentItem> createCandiDateSet(List<UInputData> distinctInputSet, int setValue) {
-//                      frequentItemList.
-        return null;
-    }
-
     private List<UInputData> getDistinctTransaction(List<List<UInputData>> transactionList) {
         List<UInputData> result = new ArrayList<UInputData>();
         for (int i = 0; i < transactionList.size(); i++) {
@@ -151,6 +194,9 @@ public class ManualFrequentItemSetGenerator implements Processor<ManualFrequentI
         for (int i = 0; i < count; i++) {
             List<UInputData> transaction = new ArrayList<UInputData>();
             String line = bufferedReader.readLine();
+            if(line==null){
+                return result;
+            }
             String[] transactionItems = line.split(" ");
             for (String item : transactionItems) {
                 String[] val = item.split("-");

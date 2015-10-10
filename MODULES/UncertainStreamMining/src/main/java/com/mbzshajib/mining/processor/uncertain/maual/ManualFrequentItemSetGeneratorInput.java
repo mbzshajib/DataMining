@@ -1,6 +1,9 @@
 package com.mbzshajib.mining.processor.uncertain.maual;
 
+import com.mbzshajib.mining.processor.uncertain.callback.ManualWindowCompletionCallback;
 import com.mbzshajib.utility.model.Input;
+
+import java.io.BufferedReader;
 
 /**
  * *****************************************************************
@@ -15,17 +18,18 @@ import com.mbzshajib.utility.model.Input;
  */
 
 public class ManualFrequentItemSetGeneratorInput implements Input {
-    private String inputFilePath;
+    private BufferedReader bufferedReader;
     private int windowSize;
     private int frameSize;
     private double minSupport;
+    private ManualWindowCompletionCallback callback;
 
-    public String getInputFilePath() {
-        return inputFilePath;
+    public BufferedReader getBufferedReader() {
+        return bufferedReader;
     }
 
-    public void setInputFilePath(String inputFilePath) {
-        this.inputFilePath = inputFilePath;
+    public void setBufferedReader(BufferedReader bufferedReader) {
+        this.bufferedReader = bufferedReader;
     }
 
     public int getWindowSize() {
@@ -50,5 +54,13 @@ public class ManualFrequentItemSetGeneratorInput implements Input {
 
     public void setMinSupport(double minSupport) {
         this.minSupport = minSupport;
+    }
+
+    public ManualWindowCompletionCallback getCallback() {
+        return callback;
+    }
+
+    public void setCallback(ManualWindowCompletionCallback callback) {
+        this.callback = callback;
     }
 }
