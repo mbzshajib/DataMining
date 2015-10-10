@@ -14,6 +14,6 @@ package com.mbzshajib.mining.dataset.uncertain.util;
 
 
 public class Constant {
-    public static final String DIR_RANDOM_GEN = "random/";
-    public static final String DIR_DATA_GEN = "data_generation/";
+    public static final String DIR_RANDOM_GEN = "RandomGenerationInput/";
+    public static final String DIR_DATA_GEN = "DataGenerationInput/";
 }
