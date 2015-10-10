@@ -1,16 +1,19 @@
-package com.mbzshajib.mining.dataset.uncertain.v2;
+package com.mbzshajib.mining.dataset.uncertain;
 
 
 import com.mbzshajib.mining.dataset.uncertain.util.Constant;
+import com.mbzshajib.mining.dataset.uncertain.v2.*;
 import com.mbzshajib.utility.common.Constants;
 import com.mbzshajib.utility.common.datasaver.DoubleDataSaverOutput;
 import com.mbzshajib.utility.common.datasaver.DoubleDataToFileSaver;
 import com.mbzshajib.utility.configloader.ConfigurationLoader;
 import com.mbzshajib.utility.file.FileUtility;
+import com.mbzshajib.utility.log.Logger;
 import com.mbzshajib.utility.model.ProcessingError;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * *****************************************************************
@@ -25,28 +28,46 @@ import java.io.IOException;
  */
 
 
-public class MainRandGenV2 {
+public class DataSetGenerationSimulationV2 {
     public static final String CONFIGURATION_INPUT_FILE = Constants.DIR_INPUT + Constant.DIR_RANDOM_GEN + "rand_conf_v2.json";
     public static final String CONFIGURATION_INPUT_FILE_UNCERTAIN = Constants.DIR_INPUT + Constant.DIR_DATA_GEN + "conf_uncert_data_gen.json";
 
     public static void main(String[] args) throws IOException, ProcessingError {
-        ConfigurationLoader<RandomGeneratorInputV2> loader = new ConfigurationLoader<RandomGeneratorInputV2>(RandomGeneratorInputV2.class);
-        RandomGeneratorInputV2 generatorInput = loader.loadConfigDataFromJsonFile(new File(CONFIGURATION_INPUT_FILE));
-        ConfigurationLoader<UDataSetGeneratorInput> dataSetGeneratorInputConfigurationLoader = new ConfigurationLoader<UDataSetGeneratorInput>(UDataSetGeneratorInput.class);
-        UDataSetGeneratorInput uDataSetGeneratorInput = dataSetGeneratorInputConfigurationLoader.loadConfigDataFromJsonFile(new File(CONFIGURATION_INPUT_FILE_UNCERTAIN));
+        long startTime = System.currentTimeMillis();
+        Logger.log("Data Set Generation Started.");
+
+        ConfigurationLoader<UDataSetGeneratorInput> dataGenConfigLoader = new ConfigurationLoader<UDataSetGeneratorInput>(UDataSetGeneratorInput.class);
+        UDataSetGeneratorInput uDataSetGeneratorInput = dataGenConfigLoader.loadConfigDataFromJsonFile(new File(CONFIGURATION_INPUT_FILE_UNCERTAIN));
+
+        ConfigurationLoader<RandomGeneratorInputV2> randGenConfigLoader = new ConfigurationLoader<RandomGeneratorInputV2>(RandomGeneratorInputV2.class);
+        RandomGeneratorInputV2 generatorInput = randGenConfigLoader.loadConfigDataFromJsonFile(new File(CONFIGURATION_INPUT_FILE));
+
         int numberOfTransaction = FileUtility.countTransaction(uDataSetGeneratorInput.getPathCertData(), uDataSetGeneratorInput.getFileNameCertData(), uDataSetGeneratorInput.getTransactionDelemeter());
         generatorInput.setNumberOfRandomToBeGenerated(numberOfTransaction);
         generatorInput.setDataSaver(new DoubleDataToFileSaver());
+
+        Logger.log("Random ", "Generating Random With Configuration " + generatorInput.toString());
         RandomGeneratorProcessor processor = new RandomGeneratorProcessor();
-        RandomGeneratorOutputV2 output = processor.process(generatorInput);
-        DoubleDataSaverOutput saverOutput = (DoubleDataSaverOutput) output.getSaverOutput();
+        RandomGeneratorOutputV2 randomGenOutput = processor.process(generatorInput);
+        DoubleDataSaverOutput saverOutput = (DoubleDataSaverOutput) randomGenOutput.getSaverOutput();
+        Logger.log("Random ", "Random Generation Completed RandomGenOutput " + randomGenOutput.toString());
+
         uDataSetGeneratorInput.setFileNameUncertainity(saverOutput.getNameOfFile());
         uDataSetGeneratorInput.setPathUncertainity(saverOutput.getPathOfSavedDoubles());
+
         if (uDataSetGeneratorInput.getFileNameUncertData().equals("")) {
             uDataSetGeneratorInput.setFileNameUncertData("uncert_" + uDataSetGeneratorInput.getFileNameCertData());
         }
+        Logger.log("Data Set ", "Data Set Generation started With Configuration " + uDataSetGeneratorInput.toString());
         UDataSetGenerator dataSetGenerator = new UDataSetGenerator();
-        UDataSetGeneratorOutput process = dataSetGenerator.process(uDataSetGeneratorInput);
+        UDataSetGeneratorOutput dataSetGeneratorOutput = dataSetGenerator.process(uDataSetGeneratorInput);
+        Logger.log("Data Set ", "Data Set Generation Completed DataSetGeneratorOutput " + dataSetGeneratorOutput.toString());
+
+        long endTime = System.currentTimeMillis();
+        Logger.log("Completed Data Set Generation.");
+        Logger.log("Time Start = " + new Date(startTime).toString());
+        Logger.log("Time End = " + new Date(endTime).toString());
+        Logger.log("Time Needed= " + (endTime - startTime) + " ms");
 
     }
 
