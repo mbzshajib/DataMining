@@ -1,5 +1,6 @@
 package com.mbzshajib.mining.processor.uncertain.tree;
 
+import com.mbzshajib.mining.processor.uncertain.model.TimeModel;
 import com.mbzshajib.mining.processor.uncertain.model.UInputData;
 import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
 import com.mbzshajib.utility.exception.DataNotFoundException;
@@ -24,20 +25,19 @@ import java.util.List;
  */
 
 public class TreeGenerator implements Processor<TreeConstructionInput, TreeConstructionOutput> {
-    private static final String TAG = TreeGenerator.class.getCanonicalName();
     private BufferedReader bufferedReader;
-    private TreeConstructionInput treeConstructionInput;
-    private long endTime;
+    private long timePointer;
     private long globalStartTime;
-    private long startTime;
+    private long fileReadTimeNeeded;
 
     @Override
     public TreeConstructionOutput process(TreeConstructionInput treeConstructionInput) throws ProcessingError {
-        this.treeConstructionInput = treeConstructionInput;
         this.bufferedReader = treeConstructionInput.getBufferedReader();
+        this.timePointer = System.currentTimeMillis();
+        this.globalStartTime = System.currentTimeMillis();
+        this.fileReadTimeNeeded = 0;
         UncertainTree uncertainTree = null;
         try {
-            initialize();
             uncertainTree = new UncertainTree(treeConstructionInput.getFrameSize(), treeConstructionInput.getWindowSize());
             for (int frameNo = 0; frameNo < treeConstructionInput.getWindowSize(); frameNo++) {
                 for (int i = 0; i < treeConstructionInput.getFrameSize(); i++) {
@@ -45,21 +45,20 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
                     uncertainTree.addTransactionToTree(nodes, frameNo);
                 }
             }
-            treeConstructionInput.getWindowCompletionCallback().sendUpdate(createUpdate(uncertainTree));
+            treeConstructionInput.getWindowCompletionCallback().sendUpdate(createWindowOutput(uncertainTree));
             uncertainTree.slideWindowAndUpdateTree();
             List<UInputData> nodes = null;
             int frameCounter = 0;
             while (!(nodes = getTransaction()).isEmpty()) {
                 if (!(frameCounter < treeConstructionInput.getWindowSize())) {
                     frameCounter = 0;
-                    treeConstructionInput.getWindowCompletionCallback().sendUpdate(createUpdate(uncertainTree));
+                    treeConstructionInput.getWindowCompletionCallback().sendUpdate(createWindowOutput(uncertainTree));
                     uncertainTree.slideWindowAndUpdateTree();
                 }
                 uncertainTree.addTransactionToTree(nodes, treeConstructionInput.getWindowSize() - 1);
                 frameCounter++;
 
             }
-            finish();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (DataNotFoundException e) {
@@ -68,14 +67,17 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
             e.printStackTrace();
         }
 
-        return createUpdate(uncertainTree);
+        return createWindowOutput(uncertainTree);
     }
 
-    private TreeConstructionOutput createUpdate(UncertainTree uncertainTree) {
+    private TreeConstructionOutput createWindowOutput(UncertainTree uncertainTree) {
         TreeConstructionOutput treeConstructionOutput = new TreeConstructionOutput();
-        treeConstructionOutput.setStartTime(startTime);
-        startTime = System.currentTimeMillis();
-        treeConstructionOutput.setEndTime(System.currentTimeMillis());
+        TimeModel tTreeConstruction = new TimeModel(this.timePointer, System.currentTimeMillis());
+        TimeModel tFileRead = new TimeModel(this.fileReadTimeNeeded);
+        this.timePointer = System.currentTimeMillis();
+        this.fileReadTimeNeeded = 0;
+        treeConstructionOutput.setTreeConstructionTime(tTreeConstruction);
+        treeConstructionOutput.setScanningTransactionTime(tFileRead);
         try {
             treeConstructionOutput.setUncertainTree(uncertainTree.copy());
         } catch (DataNotFoundException e) {
@@ -84,18 +86,8 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
         return treeConstructionOutput;
     }
 
-    private void finish() {
-        endTime = System.currentTimeMillis();
-    }
-
-
-    private void initialize() throws ProcessingError, FileNotFoundException, DataNotFoundException {
-        globalStartTime = System.currentTimeMillis();
-        startTime = System.currentTimeMillis();
-    }
-
-
     private List<UInputData> getTransaction() throws IOException, DataNotFoundException {
+        long fileReadSTime = System.currentTimeMillis();
         String line = bufferedReader.readLine();
         if (line == null) {
             bufferedReader.close();
@@ -122,6 +114,9 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
                 maxProbability = data.getItemPValue();
             }
         }
+        long fileReadETime = System.currentTimeMillis();
+        long timeNeeded = fileReadETime - fileReadSTime;
+        this.fileReadTimeNeeded = this.fileReadTimeNeeded + timeNeeded;
         return uNodeList;
     }
 }
