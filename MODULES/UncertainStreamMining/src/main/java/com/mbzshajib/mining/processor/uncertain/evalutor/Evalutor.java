@@ -50,11 +50,13 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
                 frequentItemCount.put(output.getWindowNo(), output.getFrequentItemSize());
             }
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("MIN_SUP->").append(Constants.TAB).append(output.getMinSupport())
+            stringBuilder.append("MIN_SUP-> : ").append(Constants.TAB).append(output.getMinSupport()).append(" ")
+                    .append("WIN-> : ").append(output.getWindowSize()).append(" ")
+                    .append("FRAME-> : ").append(" ")
                     .append("TIME->").append(Constants.TAB)
                     .append("Tree: ").append(totalTreeGenerationTime).append(" ms ")
                     .append("Mining: ").append(totalMiningTime).append(" ms ")
-                    .append("DB Read: ").append(totalFileReadTime).append(" ms ")
+                    .append("DB Read: ").append(totalFileReadTime).append(" ms ").append(Constants.TAB)
                     .append("TotalFrequentItem:").append(Constants.TAB).append(totalFrequentItem);
             System.out.println(stringBuilder.toString());
         } catch (IOException e) {
