@@ -1,6 +1,6 @@
 package com.mbzshajib.mining.processor.uncertain.callback;
 
-import com.mbzshajib.mining.MetaDataConfig;
+import com.mbzshajib.mining.processor.uncertain.MetaDataConfig;
 import com.mbzshajib.mining.processor.uncertain.MiningInput;
 import com.mbzshajib.mining.processor.uncertain.USDMiningOutput;
 import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMineInput;
