@@ -30,39 +30,24 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
 
     @Override
     public UncertainStreamMineOutput process(UncertainStreamMineInput uncertainStreamMineInput) throws ProcessingError {
+        long startTime = System.currentTimeMillis();
         frequentItemList = new ArrayList<FrequentItem>();
         UncertainTree uncertainTree = uncertainStreamMineInput.getUncertainTree();
-        System.out.println(uncertainTree.getTraversedString());
         double minSupport = uncertainStreamMineInput.getMinSupport();
         try {
             startMining(uncertainTree, minSupport);
         } catch (DataNotFoundException e) {
             throw new ProcessingError(e);
         }
-        printOutput();
-        return null;
-//        printBeforeMining(uncertainTree);
-//        UNode rootNode = uncertainTree.getRootNode();
-//        HeaderTable headerTable = uncertainTree.getHeaderTable();
-//        List<HTableItemInfo> HTableItemInfoList = headerTable.getHeaderItemInfo();
-//        removeDataBelowSupport(minSupport, HTableItemInfoList);
-//        sortByPrefix(HTableItemInfoList);
+        UncertainStreamMineOutput output = new UncertainStreamMineOutput();
+        output.setFrequentItemList(this.frequentItemList);
+        long endTime = System.currentTimeMillis();
+
+        TimeModel miningTime = new TimeModel(startTime, endTime);
+        output.setMiningTime(miningTime);
+        return output;
     }
 
-    private void printOutput() {
-        StringBuilder builder = new StringBuilder();
-        int count = 1;
-        builder.append("Total Frequent Items ")
-                .append(Constants.TABBED_HASH)
-                .append(frequentItemList.size())
-                .append(Constants.NEW_LINE);
-        for (FrequentItem item : frequentItemList) {
-            builder.append(count)
-                    .append(item.traverse())
-                    .append(Constants.NEW_LINE);
-        }
-        System.out.println(builder.toString());
-    }
 
     private void startMining(UncertainTree uncertainTree, double minSupport) throws DataNotFoundException {
         UNode rootNode = uncertainTree.getRootNode();
