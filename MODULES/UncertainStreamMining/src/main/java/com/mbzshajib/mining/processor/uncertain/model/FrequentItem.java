@@ -1,5 +1,7 @@
 package com.mbzshajib.mining.processor.uncertain.model;
 
+import java.util.Arrays;
+
 /**
  * *****************************************************************
  *
@@ -61,5 +63,12 @@ public class FrequentItem {
                     .append(")");
         }
         return builder.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "FI{" +
+                Arrays.toString(frequentItemSet) +
+                '}';
     }
 }
