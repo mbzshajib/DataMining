@@ -14,8 +14,10 @@ package com.mbzshajib.utility.common;
 
 
 public class Constants {
-    public static final String DIR_OUTPUT = "OUTPUT/";
-    public static final String DIR_INPUT = "INPUT/";
+    public static final String DIR_OUTPUT = "Output/";
+    public static final String DIR_INPUT = "Input/";
+    public static final String DIR_RESULT = "Result/";
+    public static final String DIR_TMP = "Tmp/";
 
     public static final String FILE_EXT_JSON = ".json";
     public static final String FILE_EXT_DAT = ".DAT";
@@ -28,4 +30,5 @@ public class Constants {
     public static final String HASH = "#";
     public static final String TABBED_HASH = "\t#";
     public static final String MULTI_STAR = "******************************************************************************************************************************************************************";
+    public static final String TMP = "tmp_";
 }
