@@ -14,8 +14,14 @@ package com.mbzshajib.mining.util;
 
 
 public class Constants {
+    public static final String DIR_USM = "USM/";
+    public static final String DIR_MANUAL = "MAN/";
     public static final String F_MINING_PATH = "INPUT/mining/";
     public static final String F_MINING_FILE = "mining_config.json";
+
+    public static final String DIR_META_USM = com.mbzshajib.utility.common.Constants.DIR_TMP + "USM/";
+    public static final String DIR_META_MAN = com.mbzshajib.utility.common.Constants.DIR_TMP + "MAN/";
+    ;
 
 
 }

@@ -1,10 +1,12 @@
 package com.mbzshajib.mining.processor.uncertain.callback;
 
+import com.mbzshajib.mining.MetaDataConfig;
 import com.mbzshajib.mining.processor.uncertain.MiningInput;
-import com.mbzshajib.mining.processor.uncertain.MiningOutput;
+import com.mbzshajib.mining.processor.uncertain.USDMiningOutput;
 import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMineInput;
 import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMineOutput;
 import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMiner;
+import com.mbzshajib.mining.processor.uncertain.model.MetaData;
 import com.mbzshajib.mining.processor.uncertain.tree.TreeConstructionOutput;
 import com.mbzshajib.utility.common.Constants;
 import com.mbzshajib.utility.configloader.ConfigurationLoader;
@@ -13,6 +15,8 @@ import com.mbzshajib.utility.model.ProcessingError;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * *****************************************************************
@@ -30,56 +34,82 @@ import java.io.IOException;
 public class WindowCompletionCallBackImpl implements WindowCompletionCallback {
     private int windowNumber;
     private MiningInput miningInput;
+    private List<MetaData> metaDataList;
 
     public WindowCompletionCallBackImpl(MiningInput miningInput) {
         this.windowNumber = 0;
         this.miningInput = miningInput;
+        this.metaDataList = new ArrayList<MetaData>();
     }
 
     @Override
     public void sendUpdate(TreeConstructionOutput treeConstructionOutput) throws ProcessingError {
+        windowNumber++;
         UncertainStreamMineInput uncertainStreamMineInput = getMiningInput(treeConstructionOutput);
         UncertainStreamMiner uncertainStreamMiner = new UncertainStreamMiner();
         UncertainStreamMineOutput miningResult = uncertainStreamMiner.process(uncertainStreamMineInput);
-        StringBuilder builder = new StringBuilder();
-        String path = miningInput.getFrequentSetPath() + "USM\\";
-        builder.append(miningInput.getFrequentSetName())
-                .append(Constants.UNDER_SCORE)
-                .append("MIN_SUP")
-                .append(Constants.HIGH_PHEN)
-                .append(miningInput.getMinSupport())
-                .append(Constants.UNDER_SCORE)
-                .append("WIN_SIZE")
-                .append(Constants.HIGH_PHEN)
-                .append(miningInput.getWindowSize())
-                .append(Constants.UNDER_SCORE)
-                .append("FRAME_SIZE")
-                .append(Constants.HIGH_PHEN)
-                .append(miningInput.getFrameSize())
-                .append(Constants.UNDER_SCORE).append(Constants.UNDER_SCORE).append(Constants.UNDER_SCORE)
-                .append(++windowNumber);
-        MiningOutput miningOutput = new MiningOutput(new File(path + builder.toString()));
-        miningOutput.setWindowNo(windowNumber);
-        miningOutput.setFrameSize(miningInput.getFrameSize());
-        miningOutput.setWindowSize(miningInput.getWindowSize());
-        miningOutput.setMiningTime(miningResult.getMiningTime());
-        miningOutput.setMinSupport(miningInput.getMinSupport());
-        miningOutput.setDataSetFilePath(miningInput.getDataSetPath() + miningInput.getDataSetName());
 
-        miningOutput.setFrequentItemSize(miningResult.getFrequentItemList().size());
-        miningOutput.setFrequentItemFound(miningResult.getFrequentItemList());
+        String path = Constants.DIR_TMP + com.mbzshajib.mining.util.Constants.DIR_USM;
+        String fileName = makeFileName();
+        USDMiningOutput uSDMiningOutput = getUsdMiningOutput(treeConstructionOutput, miningResult, path, fileName);
 
-        miningOutput.setMiningTime(miningResult.getMiningTime());
-        miningOutput.setTreeConstructionTime(treeConstructionOutput.getTreeConstructionTime());
-        miningOutput.setScanningTransactionTime(treeConstructionOutput.getScanningTransactionTime());
-
-        ConfigurationLoader<MiningOutput> loader = new ConfigurationLoader<MiningOutput>(MiningOutput.class);
-        printMessage(treeConstructionOutput, miningResult);
         try {
-            loader.generateJsonConfigFile(path, builder.toString() + ".json", miningOutput);
+            writeOutputToFile(uSDMiningOutput, path, fileName);
+            updateMetaData(path, fileName);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ProcessingError(e);
         }
+        printMessage(treeConstructionOutput, miningResult);
+    }
+
+    private void writeOutputToFile(USDMiningOutput uSDMiningOutput, String path, String fileName) throws IOException {
+        ConfigurationLoader<USDMiningOutput> loader = new ConfigurationLoader<USDMiningOutput>(USDMiningOutput.class);
+        loader.generateJsonConfigFile(path, fileName, uSDMiningOutput);
+    }
+
+    private void updateMetaData(String path, String fileName) throws IOException {
+        String metaDataPath = miningInput.getMetaDataPath();
+        String metaDataFileName = miningInput.getMetaDataFile();
+        MetaData metaData = new MetaData(path, fileName);
+        if (metaDataList.size() == 0) {
+            MetaDataConfig output = new MetaDataConfig(new File(metaDataPath + metaDataFileName));
+            ConfigurationLoader<MetaDataConfig> tmp = new ConfigurationLoader<MetaDataConfig>(MetaDataConfig.class);
+            tmp.generateJsonConfigFile(metaDataPath, metaDataFileName, output);
+        }
+        metaDataList.add(metaData);
+        ConfigurationLoader<MetaDataConfig> loader = new ConfigurationLoader<MetaDataConfig>(MetaDataConfig.class);
+        MetaDataConfig metaDataConfig = loader.loadConfigDataFromJsonFile(new File(metaDataPath + metaDataFileName));
+        metaDataConfig.setMetaDataList(metaDataList);
+        loader.generateJsonConfigFile(metaDataPath, metaDataFileName, metaDataConfig);
+    }
+
+    private USDMiningOutput getUsdMiningOutput(TreeConstructionOutput treeConstructionOutput, UncertainStreamMineOutput miningResult, String path, String fileName) {
+        USDMiningOutput USDMiningOutput = new USDMiningOutput(new File(path + fileName));
+        USDMiningOutput.setWindowNo(windowNumber);
+        USDMiningOutput.setFrameSize(miningInput.getFrameSize());
+        USDMiningOutput.setWindowSize(miningInput.getWindowSize());
+        USDMiningOutput.setMiningTime(miningResult.getMiningTime());
+        USDMiningOutput.setMinSupport(miningInput.getMinSupport());
+        USDMiningOutput.setDataSetFilePath(miningInput.getDataSetPath() + miningInput.getDataSetName());
+
+        USDMiningOutput.setFrequentItemSize(miningResult.getFrequentItemList().size());
+        USDMiningOutput.setFrequentItemFound(miningResult.getFrequentItemList());
+
+        USDMiningOutput.setMiningTime(miningResult.getMiningTime());
+        USDMiningOutput.setTreeConstructionTime(treeConstructionOutput.getTreeConstructionTime());
+        USDMiningOutput.setScanningTransactionTime(treeConstructionOutput.getScanningTransactionTime());
+        return USDMiningOutput;
+    }
+
+    private String makeFileName() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("set")
+                .append(Constants.UNDER_SCORE)
+                .append("frame_no")
+                .append(Constants.UNDER_SCORE)
+                .append(windowNumber)
+                .append(Constants.FILE_EXT_JSON);
+        return builder.toString();
     }
 
     private void printMessage(TreeConstructionOutput treeConstructionOutput, UncertainStreamMineOutput miningOutput) {

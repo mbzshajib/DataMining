@@ -194,12 +194,15 @@ public class ManualFrequentItemSetGenerator implements Processor<ManualFrequentI
         for (int i = 0; i < count; i++) {
             List<UInputData> transaction = new ArrayList<UInputData>();
             String line = bufferedReader.readLine();
-            if(line==null){
+            if (line == null) {
                 return result;
             }
             String[] transactionItems = line.split(" ");
             for (String item : transactionItems) {
                 String[] val = item.split("-");
+                if (val.length != 2) {
+                    break;
+                }
                 UInputData data = new UInputData(val[0], Double.parseDouble(val[1]));
                 transaction.add(data);
             }

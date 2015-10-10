@@ -23,6 +23,8 @@ public class MiningInput extends JsonFileConfigModel {
     int frameSize;
     String dataSetPath;
     String dataSetName;
+    String metaDataPath;
+    String metaDataFile;
     String frequentSetPath;
     String frequentSetName;
 
@@ -62,6 +64,22 @@ public class MiningInput extends JsonFileConfigModel {
         this.dataSetPath = dataSetPath;
     }
 
+    public String getMetaDataPath() {
+        return metaDataPath;
+    }
+
+    public void setMetaDataPath(String metaDataPath) {
+        this.metaDataPath = metaDataPath;
+    }
+
+    public String getMetaDataFile() {
+        return metaDataFile;
+    }
+
+    public void setMetaDataFile(String metaDataFile) {
+        this.metaDataFile = metaDataFile;
+    }
+
     public String getDataSetName() {
         return dataSetName;
     }
@@ -89,10 +107,13 @@ public class MiningInput extends JsonFileConfigModel {
     @Override
     public String toString() {
         return "MiningInput{" +
-                "windowSize=" + windowSize +
+                "minSupport=" + minSupport +
+                ", windowSize=" + windowSize +
                 ", frameSize=" + frameSize +
                 ", dataSetPath='" + dataSetPath + '\'' +
                 ", dataSetName='" + dataSetName + '\'' +
+                ", metaDataPath='" + metaDataPath + '\'' +
+                ", metaDAtaFile='" + metaDataFile + '\'' +
                 ", frequentSetPath='" + frequentSetPath + '\'' +
                 ", frequentSetName='" + frequentSetName + '\'' +
                 '}';

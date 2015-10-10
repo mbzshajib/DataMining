@@ -1,6 +1,7 @@
 package com.mbzshajib.mining.processor.uncertain.callback;
 
 import com.mbzshajib.mining.processor.uncertain.maual.ManualFrequentItemSetGeneratorOutput;
+import com.mbzshajib.utility.model.ProcessingError;
 
 /**
  * *****************************************************************
@@ -15,5 +16,5 @@ import com.mbzshajib.mining.processor.uncertain.maual.ManualFrequentItemSetGener
  */
 
 public interface ManualWindowCompletionCallback {
-    void sendUpdate(ManualFrequentItemSetGeneratorOutput output);
+    void sendUpdate(ManualFrequentItemSetGeneratorOutput output) throws ProcessingError;
 }

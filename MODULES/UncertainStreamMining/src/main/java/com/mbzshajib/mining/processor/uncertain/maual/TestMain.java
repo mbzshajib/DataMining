@@ -1,13 +1,12 @@
 package com.mbzshajib.mining.processor.uncertain.maual;
 
-import com.mbzshajib.mining.processor.uncertain.callback.ManualWindowCompletionCallback;
+import com.mbzshajib.mining.processor.uncertain.MiningInput;
 import com.mbzshajib.mining.processor.uncertain.callback.ManualWindowCompletionCallbackImpl;
+import com.mbzshajib.mining.util.Constants;
+import com.mbzshajib.utility.configloader.ConfigurationLoader;
 import com.mbzshajib.utility.model.ProcessingError;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 
 /**
  * *****************************************************************
@@ -27,26 +26,25 @@ public class TestMain {
     private static final int FRAME_SIZE = 2;
     private static final double MIN_SUPPORT = .5;
 
-    public static void main(String[] args) throws ProcessingError {
+    public static void main(String[] args) throws ProcessingError, IOException {
+        ConfigurationLoader<MiningInput> miningInputConfigurationLoader = new ConfigurationLoader<MiningInput>(MiningInput.class);
+        File file = new File(Constants.F_MINING_PATH + Constants.F_MINING_FILE);
+        MiningInput miningInput = miningInputConfigurationLoader.loadConfigDataFromJsonFile(file);
         ManualFrequentItemSetGeneratorInput input = null;
-        try {
-            input = getInput();
-        } catch (FileNotFoundException e) {
-            throw new ProcessingError(e);
-        }
+        input = getInput(miningInput);
         ManualFrequentItemSetGenerator generator = new ManualFrequentItemSetGenerator();
         generator.process(input);
     }
 
-    public static ManualFrequentItemSetGeneratorInput getInput() throws FileNotFoundException {
+    public static ManualFrequentItemSetGeneratorInput getInput(MiningInput miningInput) throws IOException {
+        File file = new File(miningInput.getDataSetPath() + miningInput.getDataSetName());
+        BufferedReader reader = new BufferedReader(new FileReader(file));
         ManualFrequentItemSetGeneratorInput input = new ManualFrequentItemSetGeneratorInput();
-        ManualWindowCompletionCallback callback = new ManualWindowCompletionCallbackImpl();
-        input.setFrameSize(FRAME_SIZE);
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(FILE_INPUT_PATH)));
-        input.setBufferedReader(bufferedReader);
-        input.setMinSupport(MIN_SUPPORT);
-        input.setWindowSize(WINDOW_SIZE);
-        input.setCallback(callback);
+        input.setBufferedReader(reader);
+        input.setWindowSize(miningInput.getWindowSize());
+        input.setFrameSize(miningInput.getFrameSize());
+        input.setMinSupport(miningInput.getMinSupport());
+        input.setCallback(new ManualWindowCompletionCallbackImpl(miningInput));
         return input;
     }
 }
