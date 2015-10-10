@@ -1,7 +1,7 @@
 {
   "minSupport": 0.50,
   "windowSize": 5,
-  "frameSize": 20,
+  "frameSize":5 ,
   "dataSetPath": "Input\\DataMining\\",
   "dataSetName": "uncertain_mushroom.dat",
   "metaDataPath": "meta\\",

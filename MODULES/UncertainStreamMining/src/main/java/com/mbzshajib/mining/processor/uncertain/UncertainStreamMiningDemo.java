@@ -34,16 +34,20 @@ public class UncertainStreamMiningDemo {
     public static void main(String[] args) throws ProcessingError, IOException, DataNotFoundException {
         ConfigurationLoader<MiningInput> configurationLoader = new ConfigurationLoader<>(MiningInput.class);
         MiningInput miningInput = configurationLoader.loadConfigDataFromJsonFile(new File(Constants.F_MINING_PATH + Constants.F_MINING_FILE));
-
-        for (double i = .1; i < 1; i += .1) {
-            TreeConstructionInput treeConstructionInput = getTreeInput(miningInput);
-            miningInput.setMinSupport(i);
-            TreeGenerator processor = new TreeGenerator();
-            TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
-            UncertainTree tree = treeConstructionOutput.getUncertainTree();
-            Evalutor evalutor = new Evalutor();
-            evalutor.process(getEvalutorInput(miningInput.getMetaDataPath(), miningInput.getMetaDataFile()));
-            treeConstructionInput.getBufferedReader().close();
+        for (int windowSize = 1; windowSize < 10; windowSize++) {
+            for (int framesize = 10; framesize < 1000; framesize++) {
+                miningInput.setFrameSize(framesize);
+                for (double i = .1; i < 1; i += .1) {
+                    TreeConstructionInput treeConstructionInput = getTreeInput(miningInput);
+                    miningInput.setMinSupport(i);
+                    TreeGenerator processor = new TreeGenerator();
+                    TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
+                    UncertainTree tree = treeConstructionOutput.getUncertainTree();
+                    Evalutor evalutor = new Evalutor();
+                    evalutor.process(getEvalutorInput(miningInput.getMetaDataPath(), miningInput.getMetaDataFile()));
+                    treeConstructionInput.getBufferedReader().close();
+                }
+            }
         }
 
 

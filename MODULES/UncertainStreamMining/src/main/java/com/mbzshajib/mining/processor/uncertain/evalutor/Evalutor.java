@@ -3,8 +3,8 @@ package com.mbzshajib.mining.processor.uncertain.evalutor;
 import com.mbzshajib.mining.processor.uncertain.MetaDataConfig;
 import com.mbzshajib.mining.processor.uncertain.USDMiningOutput;
 import com.mbzshajib.mining.processor.uncertain.model.MetaData;
+import com.mbzshajib.utility.common.Constants;
 import com.mbzshajib.utility.configloader.ConfigurationLoader;
-import com.mbzshajib.utility.log.Logger;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
 
@@ -49,9 +49,14 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
                 totalFrequentItem += output.getFrequentItemSize();
                 frequentItemCount.put(output.getWindowNo(), output.getFrequentItemSize());
             }
-            Logger.log("Minimum support ", "" + output.getMinSupport());
-            Logger.log("TIME ", "Time Tree " + totalTreeGenerationTime + " Time Mining " + totalMiningTime + " Time File Read " + totalFileReadTime);
-            Logger.log("Total Frequent Item Generated " + totalFrequentItem);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("MIN_SUP->").append(Constants.TAB).append(output.getMinSupport())
+                    .append("TIME->").append(Constants.TAB)
+                    .append("Tree: ").append(totalTreeGenerationTime).append(" ms ")
+                    .append("Mining: ").append(totalMiningTime).append(" ms ")
+                    .append("DB Read: ").append(totalFileReadTime).append(" ms ")
+                    .append("TotalFrequentItem:").append(Constants.TAB).append(totalFrequentItem);
+            System.out.println(stringBuilder.toString());
         } catch (IOException e) {
             throw new ProcessingError(e);
         }
