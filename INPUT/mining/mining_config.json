@@ -4,6 +4,8 @@
   "frameSize": 1,
   "dataSetPath": "INPUT\\",
   "dataSetName": "puff_tree_dataset.txt",
+  "metaDataPath": "META\\",
+  "metaDataFile": "meta.json",
   "frequentSetPath": "INPUT\\",
   "frequentSetName": "frequent_item.txt",
   "file": {"path": "INPUT\\mining\\mining_config.json"}
