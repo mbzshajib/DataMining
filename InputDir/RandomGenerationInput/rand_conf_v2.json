@@ -4,25 +4,25 @@
     {
       "lowerValue": 0.0,
       "upperValue": 0.1,
-      "weight": 10,
+      "weight": 0,
       "precision": 2
     },
     {
       "lowerValue": 0.1,
       "upperValue": 0.2,
-      "weight": 10,
+      "weight": 0,
       "precision": 2
     },
     {
       "lowerValue": 0.2,
       "upperValue": 0.3,
-      "weight": 10,
+      "weight": 0,
       "precision": 2
     },
     {
-      "lowerValue": 0.3,
+      "lowerValue": 0,
       "upperValue": 0.4,
-      "weight": 10,
+      "weight": 0,
       "precision": 2
     },
     {

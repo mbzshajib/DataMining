@@ -1,0 +1,11 @@
+{
+  "transactionDelemeter": " ",
+  "uncertainityDelemeter": "-",
+  "fileNameUncertainity": "double.dat",
+  "fileNameCertData": "mushroom.dat",
+  "fileNameUncertData": "uncertain_mushroom.dat",
+  "pathUncertainity": "Input\\DataGenerationInput\\",
+  "pathCertData": "Input\\DataGenerationInput\\",
+  "pathUncertData": "Input\\DataGenerationInput\\",
+  "file": {"path": "Input\\conf_uncert_data_gen.json"}
+}
