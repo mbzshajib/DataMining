@@ -23,6 +23,8 @@ public class Constants {
     public static final String NEW_LINE = "\n";
     public static final String TAB = "\t";
     public static final String STAR = "*";
+    public static final String UNDER_SCORE = "_";
+    public static final String HIGH_PHEN = "-";
     public static final String HASH = "#";
     public static final String TABBED_HASH = "\t#";
     public static final String MULTI_STAR = "******************************************************************************************************************************************************************";
