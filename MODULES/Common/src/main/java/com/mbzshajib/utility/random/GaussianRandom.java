@@ -1,5 +1,6 @@
 package com.mbzshajib.utility.random;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -28,10 +29,11 @@ public class GaussianRandom {
         random = new Random();
     }
 
-    public List<Double> getGaussianRandoms(int count) {
+    public List<Double> getGaussianRandoms(int count, int precision) {
         List<Double> result = new ArrayList<Double>();
         for (int i = 0; i < count; i++) {
             double rand = Math.abs(minValue + random.nextGaussian() * variance);
+            rand = new BigDecimal(rand).setScale(precision, BigDecimal.ROUND_CEILING).doubleValue();
             if (rand > 1) {
                 rand = rand - 1;
             }
@@ -44,7 +46,7 @@ public class GaussianRandom {
         double min = .5;
         double variance = .5 / Math.PI;
         GaussianRandom gaussianRandom = new GaussianRandom(min, variance);
-        List<Double> randoms = gaussianRandom.getGaussianRandoms(1000);
+        List<Double> randoms = gaussianRandom.getGaussianRandoms(1000,2);
         for (double random : randoms) {
             System.out.println("" + random);
         }
