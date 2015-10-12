@@ -22,7 +22,7 @@ import java.util.List;
  */
 
 
-public class RandomGeneratorProcessor implements Processor<RandomGeneratorInputV2, RandomGeneratorOutputV2> {
+public class RandomGeneratorV2 implements Processor<RandomGeneratorInputV2, RandomGeneratorOutputV2> {
     @Override
     public RandomGeneratorOutputV2 process(RandomGeneratorInputV2 input) throws ProcessingError {
         List<Double> result = new ArrayList<Double>();

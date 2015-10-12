@@ -1,4 +1,4 @@
-package com.mbzshajib.mining.dataset.uncertain.v2;
+package com.mbzshajib.mining.dataset.uncertain.uncertaindatageneration;
 
 import com.mbzshajib.utility.configloader.JsonFileConfigModel;
 import com.mbzshajib.utility.model.Input;

@@ -3,6 +3,7 @@ package com.mbzshajib.mining.dataset.uncertain.util;
 import com.mbzshajib.mining.dataset.uncertain.v1.RandomGeneratorInput;
 import com.mbzshajib.mining.dataset.uncertain.v1.RandomGeneratorOutput;
 import com.mbzshajib.mining.dataset.uncertain.v1.RandomGeneratorProcessor;
+import com.mbzshajib.utility.log.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,9 +36,9 @@ public class RandomGeneratorUtils {
         RandomGeneratorOutput randomSetGeneratorOutput = randomSetGeneratorProcessor.process(randomSetGeneratorInput);
         long endTime = System.currentTimeMillis();
         long totalTime = endTime - startTime;
-        Utils.log("STARTT TIME", startTime + " UTC");
-        Utils.log("END TIME", endTime + " UTC");
-        Utils.log("TIME NEEDED", totalTime + " MS");
+        Logger.log("STARTT TIME", startTime + " UTC");
+        Logger.log("END TIME", endTime + " UTC");
+        Logger.log("TIME NEEDED", totalTime + " MS");
         return randomSetGeneratorOutput;
     }
 
@@ -73,7 +74,7 @@ public class RandomGeneratorUtils {
     }
 
     public static void print(RandomGeneratorInput randomGeneratorInput ,RandomGeneratorOutput randomSetGeneratorOutput) {
-        Utils.log("INPUT ",randomGeneratorInput.toString());
-        Utils.log("OUTPUT ",randomSetGeneratorOutput.toString());
+        Logger.log("INPUT ",randomGeneratorInput.toString());
+        Logger.log("OUTPUT ",randomSetGeneratorOutput.toString());
     }
 }

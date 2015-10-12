@@ -2,7 +2,7 @@ package com.mbzshajib.mining.dataset.uncertain.util;
 
 import com.mbzshajib.mining.dataset.uncertain.v2.RInputInfo;
 import com.mbzshajib.mining.dataset.uncertain.v2.RandomGeneratorInputV2;
-import com.mbzshajib.mining.dataset.uncertain.v2.UDataSetGeneratorInput;
+import com.mbzshajib.mining.dataset.uncertain.uncertaindatageneration.UDataSetGeneratorInput;
 import com.mbzshajib.utility.common.Constants;
 import com.mbzshajib.utility.configloader.ConfigurationLoader;
 

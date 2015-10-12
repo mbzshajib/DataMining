@@ -1,6 +1,9 @@
 package com.mbzshajib.mining.dataset.uncertain;
 
 
+import com.mbzshajib.mining.dataset.uncertain.uncertaindatageneration.UDataSetGenerator;
+import com.mbzshajib.mining.dataset.uncertain.uncertaindatageneration.UDataSetGeneratorInput;
+import com.mbzshajib.mining.dataset.uncertain.uncertaindatageneration.UDataSetGeneratorOutput;
 import com.mbzshajib.mining.dataset.uncertain.util.Constant;
 import com.mbzshajib.mining.dataset.uncertain.v2.*;
 import com.mbzshajib.utility.common.Constants;
@@ -47,7 +50,7 @@ public class DataSetGenerationSimulationV2 {
         generatorInput.setDataSaver(new DoubleDataToFileSaver());
 
         Logger.log("Random ", "Generating Random With Configuration " + generatorInput.toString());
-        RandomGeneratorProcessor processor = new RandomGeneratorProcessor();
+        RandomGeneratorV2 processor = new RandomGeneratorV2();
         RandomGeneratorOutputV2 randomGenOutput = processor.process(generatorInput);
         DoubleDataSaverOutput saverOutput = (DoubleDataSaverOutput) randomGenOutput.getSaverOutput();
         Logger.log("Random ", "Random Generation Completed RandomGenOutput " + randomGenOutput.toString());
