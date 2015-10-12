@@ -28,7 +28,7 @@ public class RandomGeneratorV3Gaussian implements Processor<RandomGeneratorInput
         double variance = input.getVariance();
         double mean = input.getMean();
         GaussianRandom gaussianRandom = new GaussianRandom(mean, variance);
-        List<Double> randomNumbers = gaussianRandom.getGaussianRandoms(numberOfRandom);
+        List<Double> randomNumbers = gaussianRandom.getGaussianRandoms(numberOfRandom,3);
         RandomGeneratorOutputV3 output = new RandomGeneratorOutputV3();
         output.setRandoms(randomNumbers);
         SaverInput saverInput = input.getDataSaver().prepareSaverInput(input.getOutputPath(), input.getOutputFileName(), randomNumbers);
