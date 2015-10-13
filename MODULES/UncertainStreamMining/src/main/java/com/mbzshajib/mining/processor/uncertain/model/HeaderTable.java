@@ -195,7 +195,67 @@ public class HeaderTable {
         }
     }
 
-//    public List<HTableItemInfo> getInFrequentItemInfoByPrefix(double minSupport) {
+    public List<UNode> removeAndFindInfrequentNodesByProbability(double minSupport) {
+        List<UNode> nodes = new ArrayList<UNode>();
+        int count = headerTableItems.size();
+        for (int i = 0; i < count; i++) {
+            HeaderTableItem item = headerTableItems.get(i);
+            if (item.getTotalProbability() < minSupport) {
+                nodes.addAll(item.getNodeList());
+                headerTableItems.remove(item);
+                i--;
+                count--;
+            }
+        }
+        return nodes;
+    }
+
+    public List<UNode> removeAndFindInfrequentNodesByPrefix(double minSupport) {
+        List<UNode> nodes = new ArrayList<UNode>();
+        int count = headerTableItems.size();
+        for (int i = 0; i < count; i++) {
+            HeaderTableItem item = headerTableItems.get(i);
+            if (item.getTotalPrefixValue() < minSupport) {
+                nodes.addAll(item.getNodeList());
+                headerTableItems.remove(item);
+                i--;
+                count--;
+            }
+        }
+        return nodes;
+    }
+
+    public List<UNode> removeAndFindInfrequentNodesByMining(double minSupport) {
+        List<UNode> nodes = new ArrayList<UNode>();
+        int count = headerTableItems.size();
+        for (int i = 0; i < count; i++) {
+            HeaderTableItem item = headerTableItems.get(i);
+            if (item.getMiningValue() < minSupport) {
+                nodes.addAll(item.getNodeList());
+                headerTableItems.remove(item);
+                i--;
+                count--;
+            }
+        }
+        return nodes;
+    }
+
+    public void sortByPrefix() {
+        Collections.sort(headerTableItems, new Comparator<HeaderTableItem>() {
+            @Override
+            public int compare(HeaderTableItem o1, HeaderTableItem o2) {
+                if (o2.getTotalPrefixValue() - o1.getTotalPrefixValue() == 0) {
+                    return 0;
+                } else if (o2.getTotalPrefixValue() - o1.getTotalPrefixValue() > 0) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        });
+    }
+
+    //    public List<HTableItemInfo> getInFrequentItemInfoByPrefix(double minSupport) {
 //        List<HTableItemInfo> result = new ArrayList<HTableItemInfo>();
 //        for (HeaderTableItem item : headerTableItems) {
 //            double prefixVal = item.getItemPrefixValue();
@@ -302,5 +362,33 @@ public class HeaderTable {
 //        }
 //        return result;
 //    }
+    public List<HTableItemInfo> getHeaderInfo() {
+        List<HTableItemInfo> result = new ArrayList<HTableItemInfo>();
+        for (HeaderTableItem item : headerTableItems) {
+            HTableItemInfo hTableItemInfo = new HTableItemInfo();
 
+            double prefixVal = item.getTotalPrefixValue();
+            double probabilityValue = item.getTotalProbability();
+            double miningValue = item.getMiningValue();
+
+            hTableItemInfo.setItemId(item.getItemId());
+            hTableItemInfo.setItemPrefixValue(prefixVal);
+            hTableItemInfo.setItemProbabilityValue(probabilityValue);
+            hTableItemInfo.setMiningProbability(miningValue);
+            result.add(hTableItemInfo);
+        }
+        return result;
+    }
+
+    public void removeAllNodes(String id) {
+        HeaderTableItem headerTableItem = getHeaderTableItem(id);
+        List<UNode> nodeList = headerTableItem.getNodeList();
+        headerTableItems.remove(headerTableItem);
+        int count = nodeList.size();
+        for (int i = 0; i < count; i++) {
+            UNode childNode = nodeList.get(i);
+            UNode parentNode = childNode.getParentNode();
+            parentNode.getChildNodeList().remove(childNode);
+        }
+    }
 }
