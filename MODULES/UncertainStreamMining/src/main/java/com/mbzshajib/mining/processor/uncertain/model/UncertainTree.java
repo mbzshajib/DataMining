@@ -100,13 +100,14 @@ public class UncertainTree {
         if (foundIndex == -1) {
             UNode node = new UNode(uInputData.getId(), windowSize);
             parentNode.addChild(node);
-            headerTable.updateHeaderTable(node);
+            headerTable.updateHeaderTable(node, uInputData.getItemPValue(), uInputData.getPrefixValue());
             UData uData = new UData(uInputData.getItemPValue(), uInputData.getPrefixValue());
             node.addUData(frameNo, uData);
             return node;
         } else {
             UNode tmpNode = parentNode.getChildNodeList().get(foundIndex);
             UData uData = new UData(uInputData.getItemPValue(), uInputData.getPrefixValue());
+            headerTable.updateHeaderTable(uInputData.getId(), uInputData.getItemPValue(), uInputData.getPrefixValue());
             tmpNode.addUData(frameNo, uData);
             return tmpNode;
         }
@@ -139,10 +140,9 @@ public class UncertainTree {
     public UncertainTree copy() throws DataNotFoundException {
         UncertainTree uncertainTree = new UncertainTree(frameSize, windowSize);
         UNode copiedNode = rootNode.copy();
-        HeaderTable headerTable = this.headerTable.copy();
-        copyHeaderTable(this.headerTable, headerTable, this.rootNode, copiedNode);
+        HeaderTable newTable = this.headerTable.copy(copiedNode);
         uncertainTree.setRootNode(copiedNode);
-        uncertainTree.setHeaderTable(headerTable);
+        uncertainTree.setHeaderTable(newTable);
         return uncertainTree;
     }
 

@@ -19,6 +19,8 @@ import java.util.List;
 
 
 class HeaderTableItem {
+    private double totalProbability;
+    private double totalPrefixValue;
     private String itemId;
     private List<UNode> nodeList;
 
@@ -33,8 +35,14 @@ class HeaderTableItem {
     }
 
 
-    void updateHeaderData(UNode uNode) {
+    void updateHeaderData(UNode uNode, double probability, double prefixValue) {
+        addProbabilityAndPrefixValue(probability, prefixValue);
         nodeList.add(uNode);
+    }
+
+    public void addProbabilityAndPrefixValue(double probability, double prefixValue) {
+        this.totalProbability = this.totalProbability + probability;
+        this.totalPrefixValue = this.totalPrefixValue + prefixValue;
     }
 
     String getItemId() {
@@ -117,6 +125,22 @@ class HeaderTableItem {
 //            }
 //        }
         nodeList.add(node);
+    }
+
+    public double getTotalProbability() {
+        return totalProbability;
+    }
+
+    public void setTotalProbability(double totalProbability) {
+        this.totalProbability = totalProbability;
+    }
+
+    public double getTotalPrefixValue() {
+        return totalPrefixValue;
+    }
+
+    public void setTotalPrefixValue(double totalPrefixValue) {
+        this.totalPrefixValue = totalPrefixValue;
     }
 
     @Override
