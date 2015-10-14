@@ -118,7 +118,7 @@ public class FileUtility {
     private static void createPath(String path) {
         File dir = new File(path);
         if (!(dir.exists())) {
-            dir.mkdir();
+            dir.mkdirs();
         }
     }
 
