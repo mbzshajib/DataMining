@@ -1,4 +1,4 @@
-package com.mbzshajib.mining.processor.uncertain;
+package com.mbzshajib.mining.processor.uncertain.simulator;
 
 import com.mbzshajib.mining.processor.uncertain.callback.WindowCompletionCallBackImpl;
 import com.mbzshajib.mining.processor.uncertain.evalutor.Evalutor;
@@ -38,16 +38,17 @@ public class UncertainStreamMiningDemo {
 //            miningInput.setWindowSize(windowSize);
 //            for (int framesize = 10; framesize < 1000; framesize += 30) {
 //                miningInput.setFrameSize(framesize);
-                for (double i = .1; i < 1; i += .1) {
-                    TreeConstructionInput treeConstructionInput = getTreeInput(miningInput);
-                    miningInput.setMinSupport(i*6000);
-                    TreeGenerator processor = new TreeGenerator();
-                    TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
-                    UncertainTree tree = treeConstructionOutput.getUncertainTree();
-                    Evalutor evalutor = new Evalutor();
-                    evalutor.process(getEvalutorInput(miningInput.getMetaDataPath(), miningInput.getMetaDataFile()));
-                    treeConstructionInput.getBufferedReader().close();
-                }
+        for (double i = .01; i < .1; i += .01) {
+            TreeConstructionInput treeConstructionInput = getTreeInput(miningInput);
+            double minSup = i * miningInput.getFrameSize() * miningInput.getFrameSize()/100;
+            miningInput.setMinSupport(minSup);
+            TreeGenerator processor = new TreeGenerator();
+            TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
+            UncertainTree tree = treeConstructionOutput.getUncertainTree();
+            Evalutor evalutor = new Evalutor();
+            evalutor.process(getEvalutorInput(miningInput.getMetaDataPath(), miningInput.getMetaDataFile()));
+            treeConstructionInput.getBufferedReader().close();
+        }
 //            }
 //        }
 

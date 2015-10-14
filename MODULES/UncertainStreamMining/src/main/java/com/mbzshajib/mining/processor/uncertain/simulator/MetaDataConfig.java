@@ -1,4 +1,4 @@
-package com.mbzshajib.mining.processor.uncertain;
+package com.mbzshajib.mining.processor.uncertain.simulator;
 
 import com.mbzshajib.mining.processor.uncertain.model.MetaData;
 import com.mbzshajib.utility.configloader.JsonFileConfigModel;

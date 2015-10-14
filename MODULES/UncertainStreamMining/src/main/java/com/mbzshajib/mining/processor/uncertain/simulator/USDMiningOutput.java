@@ -1,4 +1,4 @@
-package com.mbzshajib.mining.processor.uncertain;
+package com.mbzshajib.mining.processor.uncertain.simulator;
 
 import com.mbzshajib.mining.processor.uncertain.model.FrequentItem;
 import com.mbzshajib.mining.processor.uncertain.model.TimeModel;
@@ -15,12 +15,13 @@ import java.util.List;
  * @email - mbzshajib@gmail.com
  * @gitHub - https://github.com/mbzshajib
  * @date: 10/10/2015
- * @time: 11:19 PM
+ * @time: 7:23 PM
  * ****************************************************************
  */
 
-public class ManualMiningOutput extends JsonFileConfigModel {
-    private double minSup;
+public class USDMiningOutput extends JsonFileConfigModel {
+    private double minSupport;
+
     private int windowNo;
     private int windowSize;
     private int frameSize;
@@ -30,18 +31,20 @@ public class ManualMiningOutput extends JsonFileConfigModel {
     private int frequentItemSize;
     private List<FrequentItem> frequentItemFound;
 
+    private TimeModel treeConstructionTime;
+    private TimeModel scanningTransactionTime;
     private TimeModel miningTime;
 
-    public ManualMiningOutput(File file) {
+    public USDMiningOutput(File file) {
         super(file);
     }
 
-    public double getMinSup() {
-        return minSup;
+    public double getMinSupport() {
+        return minSupport;
     }
 
-    public void setMinSup(double minSup) {
-        this.minSup = minSup;
+    public void setMinSupport(double minSupport) {
+        this.minSupport = minSupport;
     }
 
     public int getWindowNo() {
@@ -76,6 +79,7 @@ public class ManualMiningOutput extends JsonFileConfigModel {
         this.dataSetFilePath = dataSetFilePath;
     }
 
+
     public int getFrequentItemSize() {
         return frequentItemSize;
     }
@@ -90,6 +94,22 @@ public class ManualMiningOutput extends JsonFileConfigModel {
 
     public void setFrequentItemFound(List<FrequentItem> frequentItemFound) {
         this.frequentItemFound = frequentItemFound;
+    }
+
+    public TimeModel getTreeConstructionTime() {
+        return treeConstructionTime;
+    }
+
+    public void setTreeConstructionTime(TimeModel treeConstructionTime) {
+        this.treeConstructionTime = treeConstructionTime;
+    }
+
+    public TimeModel getScanningTransactionTime() {
+        return scanningTransactionTime;
+    }
+
+    public void setScanningTransactionTime(TimeModel scanningTransactionTime) {
+        this.scanningTransactionTime = scanningTransactionTime;
     }
 
     public TimeModel getMiningTime() {

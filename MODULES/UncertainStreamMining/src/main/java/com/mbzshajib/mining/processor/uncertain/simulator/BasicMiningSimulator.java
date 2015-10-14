@@ -1,4 +1,4 @@
-package com.mbzshajib.mining.processor.uncertain;
+package com.mbzshajib.mining.processor.uncertain.simulator;
 
 import com.mbzshajib.mining.processor.uncertain.callback.WindowCompletionCallBackImpl;
 import com.mbzshajib.mining.processor.uncertain.evalutor.Evalutor;
@@ -26,8 +26,8 @@ import java.io.*;
  * ****************************************************************
  */
 
-public class BasicMiningTest {
-    public static final String TAG = BasicMiningTest.class.getCanonicalName();
+public class BasicMiningSimulator {
+    public static final String TAG = BasicMiningSimulator.class.getCanonicalName();
     private static final double MIN_SUP = .5;
     private static int windowNumber = 1;
 

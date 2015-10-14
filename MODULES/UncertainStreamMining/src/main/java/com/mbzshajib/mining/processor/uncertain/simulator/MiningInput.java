@@ -1,4 +1,4 @@
-package com.mbzshajib.mining.processor.uncertain;
+package com.mbzshajib.mining.processor.uncertain.simulator;
 
 import com.mbzshajib.utility.configloader.JsonFileConfigModel;
 
@@ -25,8 +25,6 @@ public class MiningInput extends JsonFileConfigModel {
     String dataSetName;
     String metaDataPath;
     String metaDataFile;
-    String frequentSetPath;
-    String frequentSetName;
 
     public MiningInput(File file) {
         super(file);
@@ -88,21 +86,6 @@ public class MiningInput extends JsonFileConfigModel {
         this.dataSetName = dataSetName;
     }
 
-    public String getFrequentSetPath() {
-        return frequentSetPath;
-    }
-
-    public void setFrequentSetPath(String frequentSetPath) {
-        this.frequentSetPath = frequentSetPath;
-    }
-
-    public String getFrequentSetName() {
-        return frequentSetName;
-    }
-
-    public void setFrequentSetName(String frequentSetName) {
-        this.frequentSetName = frequentSetName;
-    }
 
     @Override
     public String toString() {
@@ -114,8 +97,6 @@ public class MiningInput extends JsonFileConfigModel {
                 ", dataSetName='" + dataSetName + '\'' +
                 ", metaDataPath='" + metaDataPath + '\'' +
                 ", metaDAtaFile='" + metaDataFile + '\'' +
-                ", frequentSetPath='" + frequentSetPath + '\'' +
-                ", frequentSetName='" + frequentSetName + '\'' +
                 '}';
     }
 }
