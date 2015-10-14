@@ -48,7 +48,6 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
         return output;
     }
 
-
     private void startMining(UncertainTree uncertainTree, double minSupport) throws DataNotFoundException {
         UNode rootNode = uncertainTree.getRootNode();
         HeaderTable headerTable = uncertainTree.getHeaderTable();
@@ -64,9 +63,9 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
             UNode parentNode = tmpNode.getParentNode();
             parentNode.removeChildNode(tmpNode);
         }
-        headerTable.sortByPrefix();
-        List<HTableItemInfo> listToBeMined = headerTable.getHeaderInfo();//TODO: find list to be mined.
-        //TODO:LOOP
+//        headerTable.sortByPrefix();
+//        headerTable.sortByProbability();
+        List<HTableItemInfo> listToBeMined = headerTable.getHeaderInfo();
         for (int count = listToBeMined.size() - 1; count >= 0; count--) {
             UNode tmpNode = rootNode.copy();
             FrequentItem frequentItem = new FrequentItem();
@@ -89,24 +88,15 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
         constructConditionalTreeNotRemovingChild(root, id);
         headerTable = headerTable.copy(root);
         headerTable.removeAllNodes(id);
-
-//        removeInfrequentItemNodes(root, id);
-//        List<UNode> nodes = headerTable.removeAndFindInfrequentNodesByPrefix(minSupport);
-
         List<UNode> leafNodeList = new ArrayList<UNode>();
         root.getLeafNodeList(leafNodeList);
         updateMiningProbability(leafNodeList);
-        headerTable = headerTable.copy(root);
-        headerTable = generateHeaderTableForCondTree(root, windowSize);
         List<UNode> infrequentNodes = headerTable.removeAndFindInfrequentNodesByMining(minSupport);
         for (int i = 0; i < infrequentNodes.size(); i++) {
             UNode tmpNode = infrequentNodes.get(i);
             UNode parentNode = tmpNode.getParentNode();
             parentNode.removeChildNode(tmpNode);
         }
-
-//        List<HTableItemInfo> inFrequentItemsInfo = null;//TODO //getInfrequentItemInfoForMining(headerTable, minSupport);
-//        headerTable = removeInfrequentData(root, headerTable, inFrequentItemsInfo, windowSize);
         updateFrequentItem(root, item);
         List<HTableItemInfo> headerItemInfo = headerTable.getHeaderInfo();
         for (int i = headerItemInfo.size() - 1; i > 0; i--) {
@@ -114,21 +104,6 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
             mine(root, headerTable, item, windowSize, headerItemInfo.get(i).getItemId(), minSupport, false);
         }
     }
-
-//    private List<HTableItemInfo> getInfrequentItemInfoForMining(HeaderTable headerTable, double minSupport) {
-//        List<HTableItemInfo> inFrequentItemInfoByMiningValue = headerTable.getInFrequentItemInfoByMiningValue(minSupport);
-//        return inFrequentItemInfoByMiningValue;
-//    }
-
-//    private List<HTableItemInfo> getInfrequentItemInfoFromHeader(HeaderTable headerTable, double minSupport) {
-//        List<HTableItemInfo> inFrequentItemInfoByPrefix = headerTable.getInFrequentItemInfoByPrefix(minSupport);
-//        List<HTableItemInfo> inFrequentItemInfoBySupport = headerTable.getInFrequentItemInfoBySupport(minSupport);
-//        List<HTableItemInfo> result = new ArrayList<HTableItemInfo>();
-//        result.addAll(inFrequentItemInfoByPrefix);
-//        result.addAll(inFrequentItemInfoBySupport);
-//        return result;
-//    }
-
 
     private void updateMiningProbability(List<UNode> leafNodeList) {
         for (UNode leafNode : leafNodeList) {
@@ -147,14 +122,6 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
         }
     }
 
-    private HeaderTable removeInfrequentData(UNode node, HeaderTable headerTable, List<HTableItemInfo> inFrequentItemInfoByPrefix, int windowSize) throws DataNotFoundException {
-        for (HTableItemInfo hTableItemInfo : inFrequentItemInfoByPrefix) {
-            removeInfrequentItemNodes(node, hTableItemInfo.getItemId());
-            headerTable = generateHeaderTableForCondTree(node, windowSize);
-        }
-        return headerTable;
-    }
-
     private void updateFrequentItem(UNode rootNode, FrequentItem item) {
 
         for (int i = 0; i < rootNode.getChildNodeList().size(); i++) {
@@ -168,42 +135,6 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
 
     private void removeInfrequentItemNodes(UNode rootNode, String itemId) {
         rootNode.removeNodeIfChildOfAnyDepthById(itemId);
-    }
-
-    private HeaderTable generateHeaderTableForCondTree(UNode rootNode, int windowSize) throws DataNotFoundException {
-        List<UNode> distinctList = rootNode.getDistinctNodes();
-
-        HeaderTable headerTable = new HeaderTable(windowSize);
-        headerTable.updateHeaderTableFromDistinctList(distinctList);
-        return headerTable;
-    }
-
-    @Deprecated
-    private UNode constructConditionalTreeRemovingChild(UNode node, String id) {
-        if (node.getId().equalsIgnoreCase(id)) {
-            UNode parentNode = node.getParentNode();
-            parentNode.removeChildNode(node);
-            return parentNode;
-        } else {
-            if (node.getChildNodeList() == null || node.getChildNodeList().isEmpty()) {
-                return null;
-            } else {
-                UNode returnNode = null;
-                int count = node.getChildNodeList().size();
-                for (int index = 0; index < count; index++) {
-                    UNode child = node.getChildNodeList().get(index);
-                    UNode foundNode = constructConditionalTreeRemovingChild(child, id);
-                    if (foundNode == null) {
-                        node.removeChildNode(child);
-                        index--;
-                        count--;
-                    } else {
-                        returnNode = foundNode;
-                    }
-                }
-                return returnNode;
-            }
-        }
     }
 
     private void sortByID(List<HTableItemInfo> sortedFilteredById) {
@@ -251,6 +182,34 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
             }
         });
 
+    }
+
+    @Deprecated
+    private UNode constructConditionalTreeRemovingChild(UNode node, String id) {
+        if (node.getId().equalsIgnoreCase(id)) {
+            UNode parentNode = node.getParentNode();
+            parentNode.removeChildNode(node);
+            return parentNode;
+        } else {
+            if (node.getChildNodeList() == null || node.getChildNodeList().isEmpty()) {
+                return null;
+            } else {
+                UNode returnNode = null;
+                int count = node.getChildNodeList().size();
+                for (int index = 0; index < count; index++) {
+                    UNode child = node.getChildNodeList().get(index);
+                    UNode foundNode = constructConditionalTreeRemovingChild(child, id);
+                    if (foundNode == null) {
+                        node.removeChildNode(child);
+                        index--;
+                        count--;
+                    } else {
+                        returnNode = foundNode;
+                    }
+                }
+                return returnNode;
+            }
+        }
     }
 
     @Deprecated
