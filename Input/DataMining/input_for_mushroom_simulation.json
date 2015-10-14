@@ -1,0 +1,18 @@
+{
+  "minSupStart": 0.1,
+  "minSupEnd": 1.0,
+  "minSupInterval": 0.1,
+  "frameStart": 650,
+  "frameEnd": 1350,
+  "frameInterval": 200,
+  "windowStart": 3,
+  "windowEnd": 5,
+  "windowInterval": 1,
+  "dataSetName": "mushroom_uncertain.dat",
+  "dataSetDir": "Input/DataMining/",
+  "metaDataFileName": "meta.json",
+  "metaDataFileDir": "Tmp/usm/mushroom/",
+  "file": {
+    "path": "Input\\DataMining\\mining_input_generatorConfig"
+  }
+}
