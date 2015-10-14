@@ -34,13 +34,13 @@ public class UncertainStreamMiningDemo {
     public static void main(String[] args) throws ProcessingError, IOException, DataNotFoundException {
         ConfigurationLoader<MiningInput> configurationLoader = new ConfigurationLoader<>(MiningInput.class);
         MiningInput miningInput = configurationLoader.loadConfigDataFromJsonFile(new File(Constants.F_MINING_PATH + Constants.F_MINING_FILE));
-        for (int windowSize = 1; windowSize < 50; windowSize += 3) {
-            miningInput.setWindowSize(windowSize);
-            for (int framesize = 10; framesize < 1000; framesize += 30) {
-                miningInput.setFrameSize(framesize);
+//        for (int windowSize = 1; windowSize < 50; windowSize += 3) {
+//            miningInput.setWindowSize(windowSize);
+//            for (int framesize = 10; framesize < 1000; framesize += 30) {
+//                miningInput.setFrameSize(framesize);
                 for (double i = .1; i < 1; i += .1) {
                     TreeConstructionInput treeConstructionInput = getTreeInput(miningInput);
-                    miningInput.setMinSupport(i);
+                    miningInput.setMinSupport(i*6000);
                     TreeGenerator processor = new TreeGenerator();
                     TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
                     UncertainTree tree = treeConstructionOutput.getUncertainTree();
@@ -48,8 +48,8 @@ public class UncertainStreamMiningDemo {
                     evalutor.process(getEvalutorInput(miningInput.getMetaDataPath(), miningInput.getMetaDataFile()));
                     treeConstructionInput.getBufferedReader().close();
                 }
-            }
-        }
+//            }
+//        }
 
 
     }

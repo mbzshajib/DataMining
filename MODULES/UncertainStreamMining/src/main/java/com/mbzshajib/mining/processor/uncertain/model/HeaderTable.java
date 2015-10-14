@@ -60,7 +60,9 @@ public class HeaderTable {
                 if (isEmpty) {
                     nodes.remove(node);
                     counter = counter - 1;
-                    i = -1;
+                    i --;
+
+
 
                 }
             }
