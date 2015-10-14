@@ -1,7 +1,6 @@
 package com.mbzshajib.mining.processor.uncertain.model;
 
 import com.mbzshajib.utility.common.Constants;
-import com.mbzshajib.utility.exception.DataNotFoundException;
 
 import java.util.*;
 
@@ -60,8 +59,7 @@ public class HeaderTable {
                 if (isEmpty) {
                     nodes.remove(node);
                     counter = counter - 1;
-                    i --;
-
+                    i--;
 
 
                 }
@@ -179,23 +177,6 @@ public class HeaderTable {
         item.addNodeItem(node, index);
     }
 
-//    public List<HTableItemInfo> getHeaderItemInfo() {
-//        List<HTableItemInfo> result = new ArrayList<HTableItemInfo>();
-//        for (HeaderTableItem item : headerTableItems) {
-//            HTableItemInfo HTableItemInfo = new HTableItemInfo();
-//            HTableItemInfo.setItemId(item.getItemId());
-//            HTableItemInfo.setItemProbabilityValue(item.getItemProbabilityValue());
-//            HTableItemInfo.setItemPrefixValue(item.getItemPrefixValue());
-//            result.add(HTableItemInfo);
-//        }
-//        return result;
-//    }
-
-    public void updateHeaderTableFromDistinctList(List<UNode> distinctList) throws DataNotFoundException {
-        for (UNode node : distinctList) {
-//            updateHeaderTable(node);
-        }
-    }
 
     public List<UNode> removeAndFindInfrequentNodesByProbability(double minSupport) {
         List<UNode> nodes = new ArrayList<UNode>();
@@ -256,7 +237,20 @@ public class HeaderTable {
             }
         });
     }
-
+    public void sortByProbability() {
+        Collections.sort(headerTableItems, new Comparator<HeaderTableItem>() {
+            @Override
+            public int compare(HeaderTableItem o1, HeaderTableItem o2) {
+                if (o2.getTotalProbability() - o1.getTotalProbability() == 0) {
+                    return 0;
+                } else if (o2.getTotalProbability() - o1.getTotalProbability() > 0) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        });
+    }
     //    public List<HTableItemInfo> getInFrequentItemInfoByPrefix(double minSupport) {
 //        List<HTableItemInfo> result = new ArrayList<HTableItemInfo>();
 //        for (HeaderTableItem item : headerTableItems) {
@@ -393,4 +387,6 @@ public class HeaderTable {
             parentNode.getChildNodeList().remove(childNode);
         }
     }
+
+
 }
