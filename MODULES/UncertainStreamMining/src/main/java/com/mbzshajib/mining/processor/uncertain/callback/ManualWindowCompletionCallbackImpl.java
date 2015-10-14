@@ -1,8 +1,8 @@
 package com.mbzshajib.mining.processor.uncertain.callback;
 
-import com.mbzshajib.mining.processor.uncertain.MetaDataConfig;
-import com.mbzshajib.mining.processor.uncertain.ManualMiningOutput;
-import com.mbzshajib.mining.processor.uncertain.MiningInput;
+import com.mbzshajib.mining.processor.uncertain.simulator.MetaDataConfig;
+import com.mbzshajib.mining.processor.uncertain.simulator.ManualMiningOutput;
+import com.mbzshajib.mining.processor.uncertain.simulator.MiningInput;
 import com.mbzshajib.mining.processor.uncertain.maual.ManualFrequentItemSetGeneratorOutput;
 import com.mbzshajib.mining.processor.uncertain.model.MetaData;
 import com.mbzshajib.utility.common.Constants;
