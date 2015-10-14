@@ -1,6 +1,6 @@
 package com.mbzshajib.mining.processor.uncertain.maual;
 
-import com.mbzshajib.mining.processor.uncertain.MiningInput;
+import com.mbzshajib.mining.processor.uncertain.simulator.MiningInput;
 import com.mbzshajib.mining.processor.uncertain.callback.ManualWindowCompletionCallbackImpl;
 import com.mbzshajib.mining.util.Constants;
 import com.mbzshajib.utility.configloader.ConfigurationLoader;

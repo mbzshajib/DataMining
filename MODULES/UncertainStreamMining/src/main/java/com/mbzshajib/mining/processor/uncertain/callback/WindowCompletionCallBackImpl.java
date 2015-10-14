@@ -1,8 +1,8 @@
 package com.mbzshajib.mining.processor.uncertain.callback;
 
-import com.mbzshajib.mining.processor.uncertain.MetaDataConfig;
-import com.mbzshajib.mining.processor.uncertain.MiningInput;
-import com.mbzshajib.mining.processor.uncertain.USDMiningOutput;
+import com.mbzshajib.mining.processor.uncertain.simulator.MetaDataConfig;
+import com.mbzshajib.mining.processor.uncertain.simulator.MiningInput;
+import com.mbzshajib.mining.processor.uncertain.simulator.USDMiningOutput;
 import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMineInput;
 import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMineOutput;
 import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMiner;
@@ -49,7 +49,7 @@ public class WindowCompletionCallBackImpl implements WindowCompletionCallback {
         UncertainStreamMiner uncertainStreamMiner = new UncertainStreamMiner();
         UncertainStreamMineOutput miningResult = uncertainStreamMiner.process(uncertainStreamMineInput);
 
-        String path = Constants.DIR_TMP + com.mbzshajib.mining.util.Constants.DIR_USM;
+        String path = miningInput.getMetaDataPath();
         String fileName = makeFileName();
         USDMiningOutput uSDMiningOutput = getUsdMiningOutput(treeConstructionOutput, miningResult, path, fileName);
 

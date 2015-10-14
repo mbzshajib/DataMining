@@ -1,7 +1,7 @@
 package com.mbzshajib.mining.processor.uncertain.evalutor;
 
-import com.mbzshajib.mining.processor.uncertain.MetaDataConfig;
-import com.mbzshajib.mining.processor.uncertain.USDMiningOutput;
+import com.mbzshajib.mining.processor.uncertain.simulator.MetaDataConfig;
+import com.mbzshajib.mining.processor.uncertain.simulator.USDMiningOutput;
 import com.mbzshajib.mining.processor.uncertain.model.MetaData;
 import com.mbzshajib.utility.common.Constants;
 import com.mbzshajib.utility.configloader.ConfigurationLoader;

@@ -21,6 +21,7 @@ public class Constants {
 
     public static final String DIR_META_USM = com.mbzshajib.utility.common.Constants.DIR_TMP + "usm/";
     public static final String DIR_META_MAN = com.mbzshajib.utility.common.Constants.DIR_TMP + "manual/";
+    public static final String F_MINING_INPUT_GEN = "mining_input_generatorConfig";
     ;
 
 
