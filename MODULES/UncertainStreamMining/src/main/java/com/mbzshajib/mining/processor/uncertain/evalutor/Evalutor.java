@@ -57,7 +57,8 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
                     .append("Tree: ").append(totalTreeGenerationTime).append(" ms ")
                     .append("Mining : ").append(totalMiningTime).append(" ms ")
                     .append("DB Read: ").append(totalFileReadTime).append(" ms ").append(Constants.TAB)
-                    .append("TotalFrequentItem-> : ").append(Constants.TAB).append(totalFrequentItem);
+                    .append("TotalFrequentItem-> : ").append(Constants.TAB).append(totalFrequentItem).append(Constants.TAB)
+                    .append("Total Window : ").append(Constants.TABBED_HASH).append(metaDataConfig.getMetaDataList().size());
             System.out.println(stringBuilder.toString());
         } catch (IOException e) {
             throw new ProcessingError(e);
