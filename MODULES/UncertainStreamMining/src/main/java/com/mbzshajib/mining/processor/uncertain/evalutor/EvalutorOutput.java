@@ -15,5 +15,30 @@ import com.mbzshajib.utility.model.Output;
  */
 
 public class EvalutorOutput implements Output {
+    private String resultPath;
+    private String resultFileName;
 
+    public String getResultPath() {
+        return resultPath;
+    }
+
+    public void setResultPath(String resultPath) {
+        this.resultPath = resultPath;
+    }
+
+    public String getResultFileName() {
+        return resultFileName;
+    }
+
+    public void setResultFileName(String resultFileName) {
+        this.resultFileName = resultFileName;
+    }
+
+    @Override
+    public String toString() {
+        return "EvalutorOutput{" +
+                "resultPath='" + resultPath + '\'' +
+                ", resultFileName='" + resultFileName + '\'' +
+                '}';
+    }
 }
