@@ -1,18 +1,26 @@
 package com.mbzshajib.mining.processor.uncertain.evalutor;
 
+import com.mbzshajib.mining.processor.uncertain.model.FrequentItem;
 import com.mbzshajib.mining.processor.uncertain.model.MetaData;
+import com.mbzshajib.mining.processor.uncertain.model.UInputData;
 import com.mbzshajib.mining.processor.uncertain.simulator.MetaDataConfig;
 import com.mbzshajib.mining.processor.uncertain.simulator.Result;
 import com.mbzshajib.mining.processor.uncertain.simulator.USDMiningOutput;
+import com.mbzshajib.mining.util.MininUtility;
 import com.mbzshajib.utility.common.Constants;
 import com.mbzshajib.utility.configloader.ConfigurationLoader;
+import com.mbzshajib.utility.exception.DataNotFoundException;
 import com.mbzshajib.utility.file.FileUtility;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -42,31 +50,46 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
     private int falsePositiveCount;
 
     private List<Result> resultList;
+    List<List<UInputData>> transactionList = new ArrayList<List<UInputData>>();
 
     @Override
     public EvalutorOutput process(EvalutorInput evalutorInput) throws ProcessingError {
         ConfigurationLoader<MetaDataConfig> metaDataLoader = new ConfigurationLoader<MetaDataConfig>(MetaDataConfig.class);
+
         try {
             MetaDataConfig metaDataConfig = metaDataLoader.loadConfigDataFromJsonFile(evalutorInput.getMiningMetaDataPath(), evalutorInput.getMetaDataName());
             List<MetaData> metaDataList = metaDataConfig.getMetaDataList();
             USDMiningOutput output = null;
             BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(evalutorInput.getMiningDataSetPath() + evalutorInput.getMiningDataSetFileName())));
             resultList = new ArrayList<Result>();
-
+            boolean firstScan = true;
             for (MetaData metaData : metaDataList) {
                 ConfigurationLoader<USDMiningOutput> loader = new ConfigurationLoader<USDMiningOutput>(USDMiningOutput.class);
                 output = loader.loadConfigDataFromJsonFile(metaData.getFilePath(), metaData.getFileName());
-                totalTreeGenerationTime += output.getTreeConstructionTime().getTimeNeeded();
-                totalFileReadTime += output.getScanningTransactionTime().getTimeNeeded();
-                totalMiningTime += output.getMiningTime().getTimeNeeded();
-                totalFrequentItem += output.getFrequentItemSize();
-                totalFalsePositiveCount += countFalsePositive(bufferedReader, output.getWindowSize(), output.getFrameSize());
+
+                if (firstScan) {
+                    List<List<UInputData>> transactionList = getTransactionList(bufferedReader, output.getWindowSize() * output.getFrameSize());
+                    this.transactionList.addAll(transactionList);
+                    firstScan = false;
+                } else {
+                    slideTransactionList(transactionList, output.getFrameSize());
+                    List<List<UInputData>> newTransactionList = getTransactionList(bufferedReader, output.getFrameSize());
+                    this.transactionList.addAll(newTransactionList);
+                }
 
                 treeGenerationTime = output.getTreeConstructionTime().getTimeNeeded();
                 fileReadTime = output.getScanningTransactionTime().getTimeNeeded();
                 miningTime = output.getMiningTime().getTimeNeeded();
                 frequentItem = output.getFrequentItemSize();
-                falsePositiveCount = countFalsePositive(bufferedReader, output.getWindowSize(), output.getFrameSize());
+                falsePositiveCount = countFalsePositive(output.getFrequentItemFound(), output.getMinSupport());
+
+
+                totalTreeGenerationTime += output.getTreeConstructionTime().getTimeNeeded();
+                totalFileReadTime += output.getScanningTransactionTime().getTimeNeeded();
+                totalMiningTime += output.getMiningTime().getTimeNeeded();
+                totalFrequentItem += output.getFrequentItemSize();
+                totalFalsePositiveCount += falsePositiveCount;
+
 
                 Result result = createResult(evalutorInput.getDataSetName(), output);
                 resultList.add(result);
@@ -78,8 +101,26 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
 
         } catch (IOException e) {
             throw new ProcessingError(e);
+        } catch (DataNotFoundException e) {
+            e.printStackTrace();
         }
         return null;
+    }
+
+    private void slideTransactionList(List<List<UInputData>> transactionList, int count) {
+        for (int i = 0; i < count; i++) {
+            List<UInputData> list = transactionList.get(0);
+            transactionList.remove(list);
+        }
+    }
+
+    private List<List<UInputData>> getTransactionList(BufferedReader bufferedReader, int count) throws IOException, DataNotFoundException {
+        List<List<UInputData>> transactions = new ArrayList<List<UInputData>>();
+        for (int i = 0; i < count; i++) {
+            List<UInputData> transaction = getTransaction(bufferedReader);
+            transactions.add(transaction);
+        }
+        return transactions;
     }
 
     private void writeResultOfEvalutor() throws IOException {
@@ -98,17 +139,17 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
                 .append("TotalTreeConsTime: ").append(totalTreeGenerationTime).append(" MS ").append(Constants.TAB)
                 .append("TotalMiningTime : ").append(totalMiningTime).append(" MS ").append(Constants.TAB)
 
-                .append("AvgFileReadTime : ").append(totalFileReadTime/resultList.size()).append(" MS ").append(Constants.TAB)
-                .append("AvgTreeConsTime: ").append(totalTreeGenerationTime/resultList.size()).append(" MS ").append(Constants.TAB)
-                .append("AvgMiningTime : ").append(totalMiningTime/resultList.size()).append(" MS ").append(Constants.TAB)
+                .append("AvgFileReadTime : ").append(totalFileReadTime / resultList.size()).append(" MS ").append(Constants.TAB)
+                .append("AvgTreeConsTime: ").append(totalTreeGenerationTime / resultList.size()).append(" MS ").append(Constants.TAB)
+                .append("AvgMiningTime : ").append(totalMiningTime / resultList.size()).append(" MS ").append(Constants.TAB)
 
                 .append("TotalFrequentItems : ").append(totalFrequentItem).append(" MS ").append(Constants.TAB)
                 .append("TotalFalsePositive : ").append(totalFalsePositiveCount).append(" MS ").append(Constants.TAB)
 
-                .append("AvgFrequentItems : ").append(totalFrequentItem/resultList.size()).append(" MS ").append(Constants.TAB)
-                .append("AvgFalsePositive : ").append(totalFalsePositiveCount/resultList.size()).append(" MS ").append(Constants.TAB)
+                .append("AvgFrequentItems : ").append(totalFrequentItem / resultList.size()).append(" MS ").append(Constants.TAB)
+                .append("AvgFalsePositive : ").append(totalFalsePositiveCount / resultList.size()).append(" MS ").append(Constants.TAB)
                 .append(Constants.NEW_LINE);
-        FileUtility.writeSingleLine(path,fileName,message.toString());
+        FileUtility.writeSingleLine(path, fileName, message.toString());
 
     }
 
@@ -139,7 +180,32 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
         return result;
     }
 
-    private int countFalsePositive(BufferedReader bufferedReader, int windowSize, int frameSize) {
-        return 0;
+    private int countFalsePositive(List<FrequentItem> frequentItemFound, double minimumSupport) {
+        List<FrequentItem> resultList = getFalsePositiveItems(frequentItemFound, minimumSupport);
+        return resultList.size();
+    }
+
+    private List<FrequentItem> getFalsePositiveItems(List<FrequentItem> frequentItemFound, double minimumSupport) {
+        //List<FrequentItem>=
+        List<FrequentItem> falsePositive = MininUtility.getFalsePositiveItems(this.transactionList, frequentItemFound, minimumSupport);
+        return falsePositive;
+
+    }
+
+    private List<UInputData> getTransaction(BufferedReader bufferedReader) throws IOException, DataNotFoundException {
+        String line = bufferedReader.readLine();
+        if (line == null) {
+            bufferedReader.close();
+            return Collections.emptyList();
+        }
+        List<UInputData> uNodeList = new ArrayList<UInputData>();
+        String[] transactionItems = line.split(" ");
+        for (int i = 0; i < transactionItems.length; i++) {
+            String tmpId = transactionItems[i].split("-")[0];
+            double tmpPValue = Double.parseDouble(transactionItems[i].split("-")[1]);
+            UInputData data = new UInputData(tmpId, tmpPValue);
+            uNodeList.add(data);
+        }
+        return uNodeList;
     }
 }
