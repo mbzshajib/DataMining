@@ -143,11 +143,11 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
                 .append("AvgTreeConsTime: ").append(totalTreeGenerationTime / resultList.size()).append(" MS ").append(Constants.TAB)
                 .append("AvgMiningTime : ").append(totalMiningTime / resultList.size()).append(" MS ").append(Constants.TAB)
 
-                .append("TotalFrequentItems : ").append(totalFrequentItem).append(" MS ").append(Constants.TAB)
-                .append("TotalFalsePositive : ").append(totalFalsePositiveCount).append(" MS ").append(Constants.TAB)
+                .append("TotalFrequentItems : ").append(totalFrequentItem).append(Constants.TAB)
+                .append("TotalFalsePositive : ").append(totalFalsePositiveCount).append(Constants.TAB)
 
-                .append("AvgFrequentItems : ").append(totalFrequentItem / resultList.size()).append(" MS ").append(Constants.TAB)
-                .append("AvgFalsePositive : ").append(totalFalsePositiveCount / resultList.size()).append(" MS ").append(Constants.TAB)
+                .append("AvgFrequentItems : ").append(totalFrequentItem / resultList.size()).append(Constants.TAB)
+                .append("AvgFalsePositive : ").append(totalFalsePositiveCount / resultList.size()).append(Constants.TAB)
                 .append(Constants.NEW_LINE);
         FileUtility.writeSingleLine(path, fileName, message.toString());
 
