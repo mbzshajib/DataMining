@@ -274,4 +274,12 @@ public class UNode {
             }
         }
     }
+
+    public int countAllChild() {
+        int count = childNodeList.size();
+        for (UNode node : childNodeList) {
+            count = count + node.countAllChild();
+        }
+        return count;
+    }
 }
