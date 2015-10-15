@@ -35,12 +35,12 @@ public class BasicMiningSimulator {
         ConfigurationLoader<MiningInput> configurationLoader = new ConfigurationLoader<>(MiningInput.class);
         MiningInput miningInput = configurationLoader.loadConfigDataFromJsonFile(new File(Constants.F_MINING_PATH + Constants.F_MINING_FILE));
 
-        TreeConstructionInput treeConstructionInput = getTreeInput(miningInput);
         double minSup = .5;
         miningInput.setDataSetName("puff_tree_dataset.txt");
-        miningInput.setWindowSize(2);
+        miningInput.setWindowSize(4);
         miningInput.setFrameSize(1);
         miningInput.setMinSupport(minSup);
+        TreeConstructionInput treeConstructionInput = getTreeInput(miningInput);
         TreeGenerator processor = new TreeGenerator();
         TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
         UncertainTree tree = treeConstructionOutput.getUncertainTree();
