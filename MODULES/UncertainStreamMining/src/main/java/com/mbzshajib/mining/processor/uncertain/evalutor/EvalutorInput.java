@@ -15,8 +15,44 @@ import com.mbzshajib.utility.model.Input;
  */
 
 public class EvalutorInput implements Input {
+    private String resultFileName;
+    private String dataSetName;
+    private String miningDataSetPath;
+    private String miningDataSetFileName;
     private String miningMetaDataPath;
     private String metaDataName;
+
+    public String getResultFileName() {
+        return resultFileName;
+    }
+
+    public void setResultFileName(String resultFileName) {
+        this.resultFileName = resultFileName;
+    }
+
+    public String getDataSetName() {
+        return dataSetName;
+    }
+
+    public void setDataSetName(String dataSetName) {
+        this.dataSetName = dataSetName;
+    }
+
+    public String getMiningDataSetPath() {
+        return miningDataSetPath;
+    }
+
+    public void setMiningDataSetPath(String miningDataSetPath) {
+        this.miningDataSetPath = miningDataSetPath;
+    }
+
+    public String getMiningDataSetFileName() {
+        return miningDataSetFileName;
+    }
+
+    public void setMiningDataSetFileName(String miningDataSetFileName) {
+        this.miningDataSetFileName = miningDataSetFileName;
+    }
 
     public String getMiningMetaDataPath() {
         return miningMetaDataPath;

@@ -2,13 +2,12 @@ package com.mbzshajib.mining.processor.uncertain.simulator;
 
 import com.mbzshajib.mining.util.Constants;
 import com.mbzshajib.utility.configloader.ConfigurationLoader;
+import com.mbzshajib.utility.file.Utility;
 import com.mbzshajib.utility.log.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,10 +48,9 @@ public class MiningInputGenerator {
                     miningInput.setDataSetName(config.getDataSetName());
                     miningInput.setDataSetPath(config.getDataSetDir());
                     miningInput.setMetaDataFile(config.getMetaDataFileName());
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MMM_dd_hh_mm_ss");
-                    String dateStringSuffix = com.mbzshajib.utility.common.Constants.UNDER_SCORE + sdf.format(new Date());
+                    String dateStringSuffix = Utility.getDateTimeString();
                     String simulationIdSuffix = "f_" + frameNo + "_w_" + windowNo + "_minsup_" + support;
-                    miningInput.setMetaDataPath(config.getMetaDataFileDir() + "/" + dateStringSuffix + "/" + simulationIdSuffix + "/");
+                    miningInput.setMetaDataPath(config.getMetaDataFileDir() + "" + dateStringSuffix + "/" + simulationIdSuffix + "/");
                     double minSup = support * windowNo * frameNo / 100;
                     miningInput.setMinSupport(minSup);
                     miningInput.setWindowSize(windowNo);
@@ -64,6 +62,7 @@ public class MiningInputGenerator {
         Logger.log("Mining input data generated.");
         return miningInputList;
     }
+
 
     public static void main(String[] args) throws IOException {
         generateMiningInputForMashroomDataSet();

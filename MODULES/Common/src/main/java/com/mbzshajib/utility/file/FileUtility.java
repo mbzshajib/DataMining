@@ -1,5 +1,7 @@
 package com.mbzshajib.utility.file;
 
+import com.mbzshajib.utility.common.Constants;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,8 +85,7 @@ public class FileUtility {
 
     public static void createUncertainDataSetAndWrite(String certainDataSetLocation, String probabilityLocation, String outputLocation) throws IOException {
         File certDataFile = new File(certainDataSetLocation);
-        FileReader fileReader = new FileReader(certDataFile);
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(certDataFile));
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputLocation));
         double[] probabilityValue = readDoublesFromFile(probabilityLocation);
         String line;
@@ -100,6 +101,7 @@ public class FileUtility {
             stringBuilder.append("\n");
             bufferedWriter.write(stringBuilder.toString());
         }
+        bufferedReader.close();
 
     }
 
@@ -131,7 +133,17 @@ public class FileUtility {
             String[] split = line.split(transactionDelemeter);
             totalCount = totalCount + split.length;
         }
+        reader.close();
         return totalCount;
+
+    }
+
+    public static void writeSingleLine(String resultDir, String resultFileName, String message) throws IOException {
+        createPath(resultDir);
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(resultDir + resultFileName, true));
+        bufferedWriter.write(Utility.getDateTimeString() + Constants.TAB + message);
+        bufferedWriter.close();
+
 
     }
 }

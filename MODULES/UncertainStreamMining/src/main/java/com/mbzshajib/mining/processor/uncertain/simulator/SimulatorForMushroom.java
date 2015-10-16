@@ -3,11 +3,13 @@ package com.mbzshajib.mining.processor.uncertain.simulator;
 import com.mbzshajib.mining.processor.uncertain.callback.WindowCompletionCallBackImpl;
 import com.mbzshajib.mining.processor.uncertain.evalutor.Evalutor;
 import com.mbzshajib.mining.processor.uncertain.evalutor.EvalutorInput;
+import com.mbzshajib.mining.processor.uncertain.evalutor.EvalutorOutput;
 import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
 import com.mbzshajib.mining.processor.uncertain.tree.TreeConstructionInput;
 import com.mbzshajib.mining.processor.uncertain.tree.TreeConstructionOutput;
 import com.mbzshajib.mining.processor.uncertain.tree.TreeGenerator;
 import com.mbzshajib.utility.common.Constants;
+import com.mbzshajib.utility.file.Utility;
 import com.mbzshajib.utility.log.Logger;
 import com.mbzshajib.utility.model.ProcessingError;
 
@@ -27,6 +29,8 @@ import java.util.List;
  */
 
 public class SimulatorForMushroom {
+    public static String CURR_TIME = Utility.getDateTimeString();
+
     public static void main(String[] args) throws IOException, ProcessingError {
         simulate();
     }
@@ -37,22 +41,27 @@ public class SimulatorForMushroom {
         Logger.log("Simulation", "simulation started for mining in " + miningInputs.size() + "configurations");
         Logger.log(Constants.MULTI_STAR);
         for (MiningInput miningInput : miningInputs) {
-            Logger.log("Simulation ","Simulation start for configuration"+miningInput.toString());
+            Logger.log("Simulation ", "Simulation start for configuration" + miningInput.toString());
             TreeConstructionInput treeConstructionInput = getTreeInput(miningInput);
             TreeGenerator processor = new TreeGenerator();
             TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
             UncertainTree tree = treeConstructionOutput.getUncertainTree();
             Evalutor evalutor = new Evalutor();
-            evalutor.process(getEvalutorInput(miningInput.getMetaDataPath(), miningInput.getMetaDataFile()));
+            EvalutorInput evalutorInput = getEvalutorInput(miningInput);
+            EvalutorOutput process = evalutor.process(evalutorInput);
             treeConstructionInput.getBufferedReader().close();
             Logger.log(Constants.MULTI_STAR);
         }
     }
 
-    private static EvalutorInput getEvalutorInput(String metaDataPath, String metaDataFile) {
+    private static EvalutorInput getEvalutorInput(MiningInput miningInput) {
         EvalutorInput input = new EvalutorInput();
-        input.setMetaDataName(metaDataFile);
-        input.setMiningMetaDataPath(metaDataPath);
+        input.setDataSetName("Mushroom");
+        input.setResultFileName("Mushroom" + CURR_TIME+".result");
+        input.setMetaDataName(miningInput.getMetaDataFile());
+        input.setMiningMetaDataPath(miningInput.getMetaDataPath());
+        input.setMiningDataSetFileName(miningInput.getDataSetName());
+        input.setMiningDataSetPath(miningInput.getDataSetPath());
         return input;
     }
 
