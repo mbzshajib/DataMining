@@ -8,6 +8,7 @@
   "windowStart": 3,
   "windowEnd": 5,
   "windowInterval": 1,
+  "findFalseNegative": false,
   "dataSetName": "mushroom_uncertain.dat",
   "dataSetDir": "Input/DataMining/",
   "metaDataFileName": "meta.json",

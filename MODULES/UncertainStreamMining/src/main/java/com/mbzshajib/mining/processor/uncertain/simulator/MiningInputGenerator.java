@@ -55,6 +55,7 @@ public class MiningInputGenerator {
                     miningInput.setMinSupport(minSup);
                     miningInput.setWindowSize(windowNo);
                     miningInput.setFrameSize(frameNo);
+                    miningInput.setFindFalseNegative(config.isFindFalseNegative());
                     miningInputList.add(miningInput);
                 }
             }

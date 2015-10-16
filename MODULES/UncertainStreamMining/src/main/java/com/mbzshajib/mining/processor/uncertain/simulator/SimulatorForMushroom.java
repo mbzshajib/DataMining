@@ -48,6 +48,7 @@ public class SimulatorForMushroom {
             UncertainTree tree = treeConstructionOutput.getUncertainTree();
             Evalutor evalutor = new Evalutor();
             EvalutorInput evalutorInput = getEvalutorInput(miningInput);
+
             EvalutorOutput process = evalutor.process(evalutorInput);
             treeConstructionInput.getBufferedReader().close();
             Logger.log(Constants.MULTI_STAR);
@@ -60,6 +61,7 @@ public class SimulatorForMushroom {
         input.setResultFileName("Mushroom" + CURR_TIME+".result");
         input.setMetaDataName(miningInput.getMetaDataFile());
         input.setMiningMetaDataPath(miningInput.getMetaDataPath());
+        input.setFindFalseNegative(miningInput.isFindFalseNegative());
         input.setMiningDataSetFileName(miningInput.getDataSetName());
         input.setMiningDataSetPath(miningInput.getDataSetPath());
         return input;

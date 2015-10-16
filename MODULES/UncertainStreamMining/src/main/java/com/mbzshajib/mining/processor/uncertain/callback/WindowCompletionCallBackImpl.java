@@ -84,21 +84,21 @@ public class WindowCompletionCallBackImpl implements WindowCompletionCallback {
     }
 
     private USDMiningOutput getUsdMiningOutput(TreeConstructionOutput treeConstructionOutput, UncertainStreamMineOutput miningResult, String path, String fileName) {
-        USDMiningOutput USDMiningOutput = new USDMiningOutput(new File(path + fileName));
-        USDMiningOutput.setWindowNo(windowNumber);
-        USDMiningOutput.setFrameSize(miningInput.getFrameSize());
-        USDMiningOutput.setWindowSize(miningInput.getWindowSize());
-        USDMiningOutput.setMiningTime(miningResult.getMiningTime());
-        USDMiningOutput.setMinSupport(miningInput.getMinSupport());
-        USDMiningOutput.setDataSetFilePath(miningInput.getDataSetPath() + miningInput.getDataSetName());
+        USDMiningOutput uSDMiningOutput = new USDMiningOutput(new File(path + fileName));
+        uSDMiningOutput.setWindowNo(windowNumber);
+        uSDMiningOutput.setFrameSize(miningInput.getFrameSize());
+        uSDMiningOutput.setWindowSize(miningInput.getWindowSize());
+        uSDMiningOutput.setMiningTime(miningResult.getMiningTime());
+        uSDMiningOutput.setMinSupport(miningInput.getMinSupport());
+        uSDMiningOutput.setDataSetFilePath(miningInput.getDataSetPath() + miningInput.getDataSetName());
+        uSDMiningOutput.setTotalTreeNode(treeConstructionOutput.getUncertainTree().getRootNode().countAllChild());
+        uSDMiningOutput.setFrequentItemSize(miningResult.getFrequentItemList().size());
+        uSDMiningOutput.setFrequentItemFound(miningResult.getFrequentItemList());
 
-        USDMiningOutput.setFrequentItemSize(miningResult.getFrequentItemList().size());
-        USDMiningOutput.setFrequentItemFound(miningResult.getFrequentItemList());
-
-        USDMiningOutput.setMiningTime(miningResult.getMiningTime());
-        USDMiningOutput.setTreeConstructionTime(treeConstructionOutput.getTreeConstructionTime());
-        USDMiningOutput.setScanningTransactionTime(treeConstructionOutput.getScanningTransactionTime());
-        return USDMiningOutput;
+        uSDMiningOutput.setMiningTime(miningResult.getMiningTime());
+        uSDMiningOutput.setTreeConstructionTime(treeConstructionOutput.getTreeConstructionTime());
+        uSDMiningOutput.setScanningTransactionTime(treeConstructionOutput.getScanningTransactionTime());
+        return uSDMiningOutput;
     }
 
     private String makeFileName() {

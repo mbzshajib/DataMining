@@ -18,13 +18,14 @@ import java.io.File;
 
 
 public class MiningInput extends JsonFileConfigModel {
-    double minSupport;
-    int windowSize;
-    int frameSize;
-    String dataSetPath;
-    String dataSetName;
-    String metaDataPath;
-    String metaDataFile;
+   private double minSupport;
+   private int windowSize;
+   private int frameSize;
+   private String dataSetPath;
+   private String dataSetName;
+   private String metaDataPath;
+   private String metaDataFile;
+   private boolean findFalseNegative;
 
     public MiningInput(File file) {
         super(file);
@@ -86,6 +87,13 @@ public class MiningInput extends JsonFileConfigModel {
         this.dataSetName = dataSetName;
     }
 
+    public boolean isFindFalseNegative() {
+        return findFalseNegative;
+    }
+
+    public void setFindFalseNegative(boolean findFalseNegative) {
+        this.findFalseNegative = findFalseNegative;
+    }
 
     @Override
     public String toString() {
@@ -96,7 +104,8 @@ public class MiningInput extends JsonFileConfigModel {
                 ", dataSetPath='" + dataSetPath + '\'' +
                 ", dataSetName='" + dataSetName + '\'' +
                 ", metaDataPath='" + metaDataPath + '\'' +
-                ", metaDAtaFile='" + metaDataFile + '\'' +
+                ", metaDataFile='" + metaDataFile + '\'' +
+                ", findFalseNegative=" + findFalseNegative +
                 '}';
     }
 }

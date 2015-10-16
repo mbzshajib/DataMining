@@ -42,12 +42,14 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
     private long totalMiningTime;
     private int totalFrequentItem;
     private int totalFalsePositiveCount;
+    private int totalTreeNodeCount;
 
     private long treeGenerationTime;
     private long fileReadTime;
     private long miningTime;
     private int frequentItem;
     private int falsePositiveCount;
+    private int treeNodeCount;
 
     private List<Result> resultList;
     List<List<UInputData>> transactionList = new ArrayList<List<UInputData>>();
@@ -66,29 +68,35 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
             for (MetaData metaData : metaDataList) {
                 ConfigurationLoader<USDMiningOutput> loader = new ConfigurationLoader<USDMiningOutput>(USDMiningOutput.class);
                 output = loader.loadConfigDataFromJsonFile(metaData.getFilePath(), metaData.getFileName());
-
-                if (firstScan) {
-                    List<List<UInputData>> transactionList = getTransactionList(bufferedReader, output.getWindowSize() * output.getFrameSize());
-                    this.transactionList.addAll(transactionList);
-                    firstScan = false;
-                } else {
-                    slideTransactionList(transactionList, output.getFrameSize());
-                    List<List<UInputData>> newTransactionList = getTransactionList(bufferedReader, output.getFrameSize());
-                    this.transactionList.addAll(newTransactionList);
+                if (evalutorInput.isFindFalseNegative()) {
+                    if (firstScan) {
+                        List<List<UInputData>> transactionList = getTransactionList(bufferedReader, output.getWindowSize() * output.getFrameSize());
+                        this.transactionList.addAll(transactionList);
+                        firstScan = false;
+                    } else {
+                        slideTransactionList(transactionList, output.getFrameSize());
+                        List<List<UInputData>> newTransactionList = getTransactionList(bufferedReader, output.getFrameSize());
+                        this.transactionList.addAll(newTransactionList);
+                    }
                 }
+                fileReadTime = output.getScanningTransactionTime().getTimeNeeded();
+                totalFileReadTime += output.getScanningTransactionTime().getTimeNeeded();
 
                 treeGenerationTime = output.getTreeConstructionTime().getTimeNeeded();
-                fileReadTime = output.getScanningTransactionTime().getTimeNeeded();
-                miningTime = output.getMiningTime().getTimeNeeded();
-                frequentItem = output.getFrequentItemSize();
-                falsePositiveCount = countFalsePositive(output.getFrequentItemFound(), output.getMinSupport());
-
-
                 totalTreeGenerationTime += output.getTreeConstructionTime().getTimeNeeded();
-                totalFileReadTime += output.getScanningTransactionTime().getTimeNeeded();
+
+                miningTime = output.getMiningTime().getTimeNeeded();
                 totalMiningTime += output.getMiningTime().getTimeNeeded();
+
+                frequentItem = output.getFrequentItemSize();
                 totalFrequentItem += output.getFrequentItemSize();
-                totalFalsePositiveCount += falsePositiveCount;
+
+                if (evalutorInput.isFindFalseNegative()) {
+                    falsePositiveCount = countFalsePositive(output.getFrequentItemFound(), output.getMinSupport());
+                    totalFalsePositiveCount += falsePositiveCount;
+                }
+                treeNodeCount = output.getTotalTreeNode();
+                totalTreeNodeCount += treeNodeCount;
 
 
                 Result result = createResult(evalutorInput.getDataSetName(), output);
@@ -96,7 +104,7 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
 
                 writeResultForWindow(evalutorInput.getDataSetName(), evalutorInput.getResultFileName(), result);
             }
-            writeResultOfEvalutor();
+            writeResultOfEvalutor(evalutorInput.isFindFalseNegative());
             bufferedReader.close();
 
         } catch (IOException e) {
@@ -123,7 +131,7 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
         return transactions;
     }
 
-    private void writeResultOfEvalutor() throws IOException {
+    private void writeResultOfEvalutor(boolean findFalsePositive) throws IOException {
         String path = "Result/";
         String fileName = "result.result";
         StringBuilder message = new StringBuilder();
@@ -143,11 +151,18 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
                 .append("AvgTreeConsTime: ").append(totalTreeGenerationTime / resultList.size()).append(" MS ").append(Constants.TAB)
                 .append("AvgMiningTime : ").append(totalMiningTime / resultList.size()).append(" MS ").append(Constants.TAB)
 
-                .append("TotalFrequentItems : ").append(totalFrequentItem).append(Constants.TAB)
-                .append("TotalFalsePositive : ").append(totalFalsePositiveCount).append(Constants.TAB)
+                .append("TotalTreeNode : ").append(totalTreeNodeCount).append(Constants.TAB)
+                .append("AvgTreeNode : ").append(totalTreeNodeCount / resultList.size()).append(Constants.TAB)
 
-                .append("AvgFrequentItems : ").append(totalFrequentItem / resultList.size()).append(Constants.TAB)
-                .append("AvgFalsePositive : ").append(totalFalsePositiveCount / resultList.size()).append(Constants.TAB)
+                .append("TotalFrequentItems : ").append(totalFrequentItem).append(Constants.TAB)
+                .append("AvgFrequentItems : ").append(totalFrequentItem / resultList.size()).append(Constants.TAB);
+        if (findFalsePositive) {
+            message
+                    .append("TotalFalsePositive : ").append(totalFalsePositiveCount).append(Constants.TAB)
+                    .append("AvgFalsePositive : ").append(totalFalsePositiveCount / resultList.size()).append(Constants.TAB);
+
+        }
+        message
                 .append(Constants.NEW_LINE);
         FileUtility.writeSingleLine(path, fileName, message.toString());
 
@@ -166,6 +181,8 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
         result.setDataSetName(dataSetName);
         result.setMinSupport(output.getMinSupport());
         result.setTotalTransactionInTree(output.getFrameSize() * output.getWindowSize());
+
+        result.setTotalTreeNode(output.getTotalTreeNode());
 
         result.setFrameSize(output.getFrameSize());
         result.setWindowSize(output.getWindowSize());

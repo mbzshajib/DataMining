@@ -17,20 +17,20 @@ import java.io.File;
  */
 
 public class MiningInputGeneratorConfig extends JsonFileConfigModel {
-    double minSupStart;
-    double minSupEnd;
-    double minSupInterval;
-    int frameStart;
-    int frameEnd;
-    int frameInterval;
-    int windowStart;
-    int windowEnd;
-    int windowInterval;
-    String dataSetName;
-    String dataSetDir;
-    String metaDataFileName;
-    String metaDataFileDir;
-
+    private double minSupStart;
+    private double minSupEnd;
+    private double minSupInterval;
+    private int frameStart;
+    private int frameEnd;
+    private int frameInterval;
+    private int windowStart;
+    private int windowEnd;
+    private int windowInterval;
+    private String dataSetName;
+    private String dataSetDir;
+    private String metaDataFileName;
+    private String metaDataFileDir;
+    private boolean findFalseNegative;
 
     public MiningInputGeneratorConfig(File file) {
         super(file);
@@ -138,5 +138,13 @@ public class MiningInputGeneratorConfig extends JsonFileConfigModel {
 
     public void setMetaDataFileDir(String metaDataFileDir) {
         this.metaDataFileDir = metaDataFileDir;
+    }
+
+    public boolean isFindFalseNegative() {
+        return findFalseNegative;
+    }
+
+    public void setFindFalseNegative(boolean findFalseNegative) {
+        this.findFalseNegative = findFalseNegative;
     }
 }

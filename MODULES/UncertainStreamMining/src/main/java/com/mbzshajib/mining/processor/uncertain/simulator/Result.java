@@ -32,6 +32,8 @@ public class Result {
     private int falsePositiveCount;
     private int frequentItemSetCount;
 
+    private int totalTreeNode;
+
     public String getDataSetName() {
         return dataSetName;
     }
@@ -115,32 +117,29 @@ public class Result {
         this.frequentItemSetCount = frequentItemSetCount;
     }
 
+    public int getTotalTreeNode() {
+        return totalTreeNode;
+    }
+
+    public void setTotalTreeNode(int totalTreeNode) {
+        this.totalTreeNode = totalTreeNode;
+    }
+
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("Result{")
-                .append("dataSetName='")
-                .append(dataSetName)
-                .append('\'')
-                .append(", minSupport=")
-                .append(minSupport)
-                .append(", totalTransactionInTree=")
-                .append(totalTransactionInTree)
-                .append(", frameSize=")
-                .append(frameSize)
-                .append(", windowSize=")
-                .append(windowSize)
-                .append(", totalFileReadTime=")
-                .append(totalFileReadTime)
-                .append(", totalTreeGenerationTime=")
-                .append(totalTreeGenerationTime)
-                .append(", totalMiningTime=")
-                .append(totalMiningTime)
-                .append(", falsePositiveCount=")
-                .append(falsePositiveCount)
-                .append(", frequentItemSetCount=")
-                .append(frequentItemSetCount)
-                .append('}').toString();
+        return "Result{" +
+                "dataSetName='" + dataSetName + '\'' +
+                ", minSupport=" + minSupport +
+                ", totalTransactionInTree=" + totalTransactionInTree +
+                ", frameSize=" + frameSize +
+                ", windowSize=" + windowSize +
+                ", totalFileReadTime=" + totalFileReadTime +
+                ", totalTreeGenerationTime=" + totalTreeGenerationTime +
+                ", totalMiningTime=" + totalMiningTime +
+                ", falsePositiveCount=" + falsePositiveCount +
+                ", frequentItemSetCount=" + frequentItemSetCount +
+                ", totalTreeNode=" + totalTreeNode +
+                '}';
     }
 
     public String toResult() {
@@ -165,6 +164,8 @@ public class Result {
                 .append("falsePositiveCount=")
                 .append(falsePositiveCount).append(Constants.TAB)
                 .append("frequentItemSetCount=")
+                .append(frequentItemSetCount).append(Constants.TAB)
+                .append("totalNodeInTree=")
                 .append(frequentItemSetCount)
                 .append(Constants.NEW_LINE)
                 .toString();

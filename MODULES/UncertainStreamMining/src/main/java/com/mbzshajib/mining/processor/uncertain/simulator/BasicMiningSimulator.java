@@ -10,6 +10,7 @@ import com.mbzshajib.mining.processor.uncertain.tree.TreeGenerator;
 import com.mbzshajib.mining.util.Constants;
 import com.mbzshajib.utility.configloader.ConfigurationLoader;
 import com.mbzshajib.utility.exception.DataNotFoundException;
+import com.mbzshajib.utility.file.Utility;
 import com.mbzshajib.utility.model.ProcessingError;
 
 import java.io.*;
@@ -27,6 +28,7 @@ import java.io.*;
  */
 
 public class BasicMiningSimulator {
+    public static String CURR_TIME = Utility.getDateTimeString();
     public static final String TAG = BasicMiningSimulator.class.getCanonicalName();
     private static final double MIN_SUP = .5;
     private static int windowNumber = 1;
@@ -35,24 +37,29 @@ public class BasicMiningSimulator {
         ConfigurationLoader<MiningInput> configurationLoader = new ConfigurationLoader<>(MiningInput.class);
         MiningInput miningInput = configurationLoader.loadConfigDataFromJsonFile(new File(Constants.F_MINING_PATH + Constants.F_MINING_FILE));
 
-        TreeConstructionInput treeConstructionInput = getTreeInput(miningInput);
         double minSup = .5;
         miningInput.setDataSetName("puff_tree_dataset.txt");
         miningInput.setWindowSize(2);
-        miningInput.setFrameSize(1);
+        miningInput.setFrameSize(2);
         miningInput.setMinSupport(minSup);
+        TreeConstructionInput treeConstructionInput = getTreeInput(miningInput);
         TreeGenerator processor = new TreeGenerator();
         TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
         UncertainTree tree = treeConstructionOutput.getUncertainTree();
         Evalutor evalutor = new Evalutor();
-        evalutor.process(getEvalutorInput(miningInput.getMetaDataPath(), miningInput.getMetaDataFile()));
+        evalutor.process(getEvalutorInput(miningInput));
         treeConstructionInput.getBufferedReader().close();
     }
 
-    private static EvalutorInput getEvalutorInput(String metaDataPath, String metaDataFile) {
+    private static EvalutorInput getEvalutorInput(MiningInput miningInput) {
         EvalutorInput input = new EvalutorInput();
-        input.setMetaDataName(metaDataFile);
-        input.setMiningMetaDataPath(metaDataPath);
+        input.setDataSetName("Puff");
+        input.setResultFileName("Puff" + CURR_TIME + ".result");
+        input.setFindFalseNegative(false);
+        input.setMetaDataName(miningInput.getMetaDataFile());
+        input.setMiningMetaDataPath(miningInput.getMetaDataPath());
+        input.setMiningDataSetFileName(miningInput.getDataSetName());
+        input.setMiningDataSetPath(miningInput.getDataSetPath());
         return input;
     }
 

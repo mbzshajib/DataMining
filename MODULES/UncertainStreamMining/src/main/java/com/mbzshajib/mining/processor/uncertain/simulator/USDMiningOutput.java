@@ -28,6 +28,7 @@ public class USDMiningOutput extends JsonFileConfigModel {
 
     private String dataSetFilePath;
 
+    private int totalTreeNode;
     private int frequentItemSize;
     private List<FrequentItem> frequentItemFound;
 
@@ -79,6 +80,13 @@ public class USDMiningOutput extends JsonFileConfigModel {
         this.dataSetFilePath = dataSetFilePath;
     }
 
+    public int getTotalTreeNode() {
+        return totalTreeNode;
+    }
+
+    public void setTotalTreeNode(int totalTreeNode) {
+        this.totalTreeNode = totalTreeNode;
+    }
 
     public int getFrequentItemSize() {
         return frequentItemSize;

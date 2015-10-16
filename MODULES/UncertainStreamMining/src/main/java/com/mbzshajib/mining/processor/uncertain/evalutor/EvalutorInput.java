@@ -21,6 +21,7 @@ public class EvalutorInput implements Input {
     private String miningDataSetFileName;
     private String miningMetaDataPath;
     private String metaDataName;
+    private boolean findFalseNegative;
 
     public String getResultFileName() {
         return resultFileName;
@@ -68,5 +69,13 @@ public class EvalutorInput implements Input {
 
     public void setMetaDataName(String metaDataName) {
         this.metaDataName = metaDataName;
+    }
+
+    public boolean isFindFalseNegative() {
+        return findFalseNegative;
+    }
+
+    public void setFindFalseNegative(boolean findFalseNegative) {
+        this.findFalseNegative = findFalseNegative;
     }
 }
