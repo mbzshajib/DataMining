@@ -52,18 +52,18 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
         UNode rootNode = uncertainTree.getRootNode();
         HeaderTable headerTable = uncertainTree.getHeaderTable();
         int windowSize = headerTable.getWindowSize();
-        List<UNode> infrequentNodes = new ArrayList<UNode>();
+//        List<UNode> infrequentNodes = new ArrayList<UNode>();
         List<UNode> infrequentByPrefix = headerTable.removeAndFindInfrequentNodesByPrefix(minSupport);
-        List<UNode> infrequentByProbability = headerTable.removeAndFindInfrequentNodesByProbability(minSupport);
-        infrequentNodes.addAll(infrequentByPrefix);
-        infrequentNodes.addAll(infrequentByProbability);
+//        List<UNode> infrequentByProbability = headerTable.removeAndFindInfrequentNodesByProbability(minSupport);
+//        infrequentNodes.addAll(infrequentByPrefix);
+//        infrequentNodes.addAll(infrequentByProbability);
 
-        for (int i = 0; i < infrequentNodes.size(); i++) {
-            UNode tmpNode = infrequentNodes.get(i);
+        for (int i = 0; i < infrequentByPrefix.size(); i++) {
+            UNode tmpNode = infrequentByPrefix.get(i);
             UNode parentNode = tmpNode.getParentNode();
             parentNode.removeChildNode(tmpNode);
         }
-//        headerTable.sortByPrefix();
+        headerTable.sortByPrefix();
 //        headerTable.sortByProbability();
         List<HTableItemInfo> listToBeMined = headerTable.getHeaderInfo();
         for (int count = listToBeMined.size() - 1; count >= 0; count--) {
