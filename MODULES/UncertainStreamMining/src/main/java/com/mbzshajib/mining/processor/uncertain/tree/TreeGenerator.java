@@ -27,14 +27,12 @@ import java.util.List;
 public class TreeGenerator implements Processor<TreeConstructionInput, TreeConstructionOutput> {
     private BufferedReader bufferedReader;
     private long timePointer;
-    private long globalStartTime;
     private long fileReadTimeNeeded;
 
     @Override
     public TreeConstructionOutput process(TreeConstructionInput treeConstructionInput) throws ProcessingError {
         this.bufferedReader = treeConstructionInput.getBufferedReader();
         this.timePointer = System.currentTimeMillis();
-        this.globalStartTime = System.currentTimeMillis();
         this.fileReadTimeNeeded = 0;
         UncertainTree uncertainTree = null;
         try {
@@ -47,6 +45,7 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
             }
             treeConstructionInput.getWindowCompletionCallback().sendUpdate(createWindowOutput(uncertainTree));
             uncertainTree.slideWindowAndUpdateTree();
+            timePointer = System.currentTimeMillis();
             List<UInputData> nodes = null;
             int frameCounter = 0;
             while (!(nodes = getTransaction()).isEmpty()) {
@@ -54,6 +53,7 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
                     frameCounter = 0;
                     treeConstructionInput.getWindowCompletionCallback().sendUpdate(createWindowOutput(uncertainTree));
                     uncertainTree.slideWindowAndUpdateTree();
+                    timePointer = System.currentTimeMillis();
                 }
                 uncertainTree.addTransactionToTree(nodes, treeConstructionInput.getWindowSize() - 1);
                 frameCounter++;
