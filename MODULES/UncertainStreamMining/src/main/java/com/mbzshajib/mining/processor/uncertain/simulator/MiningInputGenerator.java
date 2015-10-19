@@ -51,7 +51,7 @@ public class MiningInputGenerator {
                     String dateStringSuffix = Utility.getDateTimeString();
                     String simulationIdSuffix = "f_" + frameNo + "_w_" + windowNo + "_minsup_" + support;
                     miningInput.setMetaDataPath(config.getMetaDataFileDir() + "" + dateStringSuffix + "/" + simulationIdSuffix + "/");
-                    double minSup = support * windowNo * frameNo / 100;
+                    double minSup = support * windowNo * frameNo / 10;
                     miningInput.setMinSupport(minSup);
                     miningInput.setWindowSize(windowNo);
                     miningInput.setFrameSize(frameNo);
@@ -63,7 +63,38 @@ public class MiningInputGenerator {
         Logger.log("Mining input data generated.");
         return miningInputList;
     }
+    public static List<MiningInput> generateMiningInputForKosarakDataSet() throws IOException {
+        Logger.log("generating input data for mining mashroom data set.");
+        List<MiningInput> miningInputList = new ArrayList<MiningInput>();
+        ConfigurationLoader<MiningInputGeneratorConfig> loader = new ConfigurationLoader<MiningInputGeneratorConfig>(MiningInputGeneratorConfig.class);
+        MiningInputGeneratorConfig config = loader.loadConfigDataFromJsonFile("Input/DataMining/", "input_for_kosarak_simulation.json");
 
+        File metaDataPath = new File(config.getMetaDataFileDir());
+        if (!metaDataPath.exists()) {
+            metaDataPath.mkdir();
+        }
+        for (int frameNo = config.getFrameStart(); frameNo < config.getFrameEnd(); frameNo += config.getFrameInterval()) {
+            for (int windowNo = config.getWindowStart(); windowNo < config.getWindowEnd(); windowNo += config.getWindowInterval()) {
+                for (double support = config.getMinSupStart(); support < config.getMinSupEnd(); support += config.getMinSupInterval()) {
+                    MiningInput miningInput = new MiningInput(new File("Generating Mining Input"));
+                    miningInput.setDataSetName(config.getDataSetName());
+                    miningInput.setDataSetPath(config.getDataSetDir());
+                    miningInput.setMetaDataFile(config.getMetaDataFileName());
+                    String dateStringSuffix = Utility.getDateTimeString();
+                    String simulationIdSuffix = "f_" + frameNo + "_w_" + windowNo + "_minsup_" + support;
+                    miningInput.setMetaDataPath(config.getMetaDataFileDir() + "" + dateStringSuffix + "/" + simulationIdSuffix + "/");
+                    double minSup = support * windowNo * frameNo/10;
+                    miningInput.setMinSupport(minSup);
+                    miningInput.setWindowSize(windowNo);
+                    miningInput.setFrameSize(frameNo);
+                    miningInput.setFindFalseNegative(config.isFindFalseNegative());
+                    miningInputList.add(miningInput);
+                }
+            }
+        }
+        Logger.log("Mining input data generated.");
+        return miningInputList;
+    }
 
     public static void main(String[] args) throws IOException {
         generateMiningInputForMashroomDataSet();
