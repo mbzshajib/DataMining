@@ -38,7 +38,7 @@ public class BasicMiningSimulator {
         MiningInput miningInput = configurationLoader.loadConfigDataFromJsonFile(new File(Constants.F_MINING_PATH + Constants.F_MINING_FILE));
 
         double minSup = .5;
-        miningInput.setDataSetName("test.txt");
+        miningInput.setDataSetName("suf-growth.txt");
         miningInput.setWindowSize(2);
         miningInput.setFrameSize(3);
         miningInput.setMinSupport(minSup);
