@@ -3,7 +3,9 @@ rootProject.name = 'DataMining'
 include(':DataSetGenerator')
 include(':UncertainStreamMining')
 include(':Common')
+include(':UncertainStreamSUF')
 
 project(':DataSetGenerator').projectDir = "$rootDir/MODULES/DataSetGenerator" as File
 project(':UncertainStreamMining').projectDir = "$rootDir/MODULES/UncertainStreamMining" as File
 project(':Common').projectDir = "$rootDir/MODULES/Common" as File
+project(':UncertainStreamSUF').projectDir = "$rootDir/MODULES/UncertainStreamSUF" as File
