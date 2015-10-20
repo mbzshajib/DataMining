@@ -1,12 +1,12 @@
 package com.mbzshajib.mining.processor.uncertain.simulator;
 
+import com.mbzshajib.mining.processor.uncertain.SufTreeGenerator;
 import com.mbzshajib.mining.processor.uncertain.callback.WindowCompletionCallBackImpl;
 import com.mbzshajib.mining.processor.uncertain.evalutor.Evalutor;
 import com.mbzshajib.mining.processor.uncertain.evalutor.EvalutorInput;
 import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
 import com.mbzshajib.mining.processor.uncertain.tree.TreeConstructionInput;
 import com.mbzshajib.mining.processor.uncertain.tree.TreeConstructionOutput;
-import com.mbzshajib.mining.processor.uncertain.tree.TreeGenerator;
 import com.mbzshajib.mining.util.Constants;
 import com.mbzshajib.utility.configloader.ConfigurationLoader;
 import com.mbzshajib.utility.exception.DataNotFoundException;
@@ -38,12 +38,12 @@ public class BasicMiningSimulator {
         MiningInput miningInput = configurationLoader.loadConfigDataFromJsonFile(new File(Constants.F_MINING_PATH + Constants.F_MINING_FILE));
 
         double minSup = .5;
-        miningInput.setDataSetName("puff_tree_dataset.txt");
+        miningInput.setDataSetName("test.txt");
         miningInput.setWindowSize(2);
-        miningInput.setFrameSize(2);
+        miningInput.setFrameSize(3);
         miningInput.setMinSupport(minSup);
         TreeConstructionInput treeConstructionInput = getTreeInput(miningInput);
-        TreeGenerator processor = new TreeGenerator();
+        SufTreeGenerator processor = new SufTreeGenerator();
         TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
         UncertainTree tree = treeConstructionOutput.getUncertainTree();
         Evalutor evalutor = new Evalutor();
