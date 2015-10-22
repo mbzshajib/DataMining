@@ -98,4 +98,9 @@ public class SufTree {
                 ", rootNode=" + rootNode +
                 '}';
     }
+
+    public SufTree copy() {
+
+        return null;
+    }
 }

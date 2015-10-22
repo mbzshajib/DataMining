@@ -18,6 +18,7 @@ import java.util.List;
 public class SufHItem {
     private String itemId;
     private double totalSupport;
+    private double miningSupport;
     private List<SufNode> nodeList;
 
     public SufHItem(String id) {
@@ -49,7 +50,36 @@ public class SufHItem {
         this.totalSupport = totalSupport;
     }
 
+    public double getMiningSupport() {
+        return miningSupport;
+    }
+
+    public void setMiningSupport(double miningSupport) {
+        this.miningSupport = miningSupport;
+    }
+
     public void updateSupport(double probability) {
         this.totalSupport = this.totalSupport + probability;
+    }
+
+    public void removeNodesFromTree() {
+        int size = nodeList.size();
+        for (int i = 0; i < size; i++) {
+            SufNode node = nodeList.get(i);
+            SufNode parentNode = node.getParentNode();
+            parentNode.getChildes().remove(node);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "SufHItem{" +
+                "itemId='" + itemId + '\'' +
+                ", totalSupport=" + totalSupport +
+                '}';
+    }
+
+    public void updateMiningSupport(double miningProbability) {
+        this.miningSupport = this.miningSupport + miningProbability;
     }
 }

@@ -1,12 +1,12 @@
 package com.mbzshajib.mining.processor.uncertain.simulator;
 
-import com.mbzshajib.mining.processor.uncertain.callback.WindowCompletionCallBackImpl;
+import com.mbzshajib.mining.processor.uncertain.SufTree;
+import com.mbzshajib.mining.processor.uncertain.SufTreeConstructionInput;
+import com.mbzshajib.mining.processor.uncertain.SufTreeConstructorOutput;
+import com.mbzshajib.mining.processor.uncertain.SufTreeGenerator;
+import com.mbzshajib.mining.processor.uncertain.callback.SufWindowCompletionCallback;
 import com.mbzshajib.mining.processor.uncertain.evalutor.Evalutor;
 import com.mbzshajib.mining.processor.uncertain.evalutor.EvalutorInput;
-import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
-import com.mbzshajib.mining.processor.uncertain.tree.TreeConstructionInput;
-import com.mbzshajib.mining.processor.uncertain.tree.TreeConstructionOutput;
-import com.mbzshajib.mining.processor.uncertain.tree.TreeGenerator;
 import com.mbzshajib.mining.util.Constants;
 import com.mbzshajib.utility.configloader.ConfigurationLoader;
 import com.mbzshajib.utility.exception.DataNotFoundException;
@@ -22,12 +22,12 @@ import java.io.*;
  * @copyright 2015.
  * @email - mbzshajib@gmail.com
  * @gitHub - https://github.com/mbzshajib
- * @date: 10/14/2015
- * @time: 11:54 PM
+ * @date: 10/21/2015
+ * @time: 7:48 PM
  * ****************************************************************
  */
 
-public class BasicMiningSimulator {
+public class SufMiningSimulator {
     public static String CURR_TIME = Utility.getDateTimeString();
     public static final String TAG = BasicMiningSimulator.class.getCanonicalName();
     private static final double MIN_SUP = .5;
@@ -37,15 +37,15 @@ public class BasicMiningSimulator {
         ConfigurationLoader<MiningInput> configurationLoader = new ConfigurationLoader<>(MiningInput.class);
         MiningInput miningInput = configurationLoader.loadConfigDataFromJsonFile(new File(Constants.F_MINING_PATH + Constants.F_MINING_FILE));
 
-        double minSup = .5;
+        double minSup = .9;
         miningInput.setDataSetName("suf-growth.txt");
         miningInput.setWindowSize(2);
         miningInput.setFrameSize(3);
         miningInput.setMinSupport(minSup);
-        TreeConstructionInput treeConstructionInput = getTreeInput(miningInput);
-        TreeGenerator processor = new TreeGenerator();
-        TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
-        UncertainTree tree = treeConstructionOutput.getUncertainTree();
+        SufTreeConstructionInput treeConstructionInput = getTreeInput(miningInput);
+        SufTreeGenerator processor = new SufTreeGenerator();
+        SufTreeConstructorOutput process = processor.process(treeConstructionInput);
+        SufTree tree = process.getSufTree();
         Evalutor evalutor = new Evalutor();
         evalutor.process(getEvalutorInput(miningInput));
         treeConstructionInput.getBufferedReader().close();
@@ -63,15 +63,14 @@ public class BasicMiningSimulator {
         return input;
     }
 
-    private static TreeConstructionInput getTreeInput(MiningInput miningInput) throws FileNotFoundException {
-        final TreeConstructionInput treeConstructionInput = new TreeConstructionInput();
+    private static SufTreeConstructionInput getTreeInput(MiningInput miningInput) throws FileNotFoundException {
+        final SufTreeConstructionInput treeConstructionInput = new SufTreeConstructionInput();
         String inputPath = miningInput.getDataSetPath() + miningInput.getDataSetName();
         BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(inputPath)));
         treeConstructionInput.setBufferedReader(bufferedReader);
         treeConstructionInput.setFrameSize(miningInput.getFrameSize());
         treeConstructionInput.setWindowSize(miningInput.getWindowSize());
-        treeConstructionInput.setWindowCompletionCallback(new WindowCompletionCallBackImpl(miningInput));
+        treeConstructionInput.setSufCompleteCallback(new SufWindowCompletionCallback(miningInput));
         return treeConstructionInput;
     }
-
 }

@@ -23,11 +23,12 @@ public class SufNode {
     private SufNode parentNode;
     private List<SufNode> childes;
     private double probability;
+    private double miningProbability;
     private int windowSize;
     private int batchSize;
     private int[] bucket;
 
-    public SufNode(String id,double probability ,int windowSize, int batchSize) {
+    public SufNode(String id, double probability, int windowSize, int batchSize) {
         this.id = id;
         this.probability = probability;
         this.windowSize = windowSize;
@@ -94,7 +95,7 @@ public class SufNode {
 
 
     public void updateCounter(int batchNo) {
-        this.bucket[batchNo]=this.bucket[batchNo]+1;
+        this.bucket[batchNo] = this.bucket[batchNo] + 1;
     }
 
     public String traverse() {
@@ -112,16 +113,95 @@ public class SufNode {
         return stringBuilder.toString();
     }
 
+    public SufNode copy() {
+        SufNode newRoot = new SufNode(this.id, this.probability, this.windowSize, this.batchSize);
+        copy(this, newRoot);
+
+        return newRoot;
+    }
+
+    private void copy(SufNode originalNode, SufNode copiedNode) {
+        for (SufNode node : originalNode.getChildes()) {
+            SufNode newChild = new SufNode(node.getId(), node.getProbability(), node.getWindowSize(), node.getBatchSize());
+            int[] newBucket = new int[node.getBucket().length];
+            for (int i = 0; i < newBucket.length; i++) {
+                newBucket[i] = node.getBucket()[i];
+            }
+            newChild.setBucket(newBucket);
+            newChild.setParentNode(copiedNode);
+            copiedNode.getChildes().add(newChild);
+            copy(node, newChild);
+        }
+    }
+
     @Override
     public String toString() {
         return "SufNode{" +
                 "id='" + id + '\'' +
-                ", parentNode=" + parentNode +
+                ", parentNode=" + parentNode.getId() +
                 ", childes=" + childes.size() +
                 ", probability=" + probability +
+                ", miningProbability=" + miningProbability+
                 ", windowSize=" + windowSize +
                 ", batchSize=" + batchSize +
                 ", bucket=" + Arrays.toString(bucket) +
                 '}';
     }
+
+    public List<SufNode> getAllDistinctChild(List<SufNode> list) {
+        list.addAll(childes);
+        for (SufNode node : childes) {
+            node.getAllDistinctChild(list);
+        }
+        return list;
+    }
+
+    public double getTotalCount() {
+        int result = 0;
+        for (int count = 0; count < bucket.length; count++) {
+            result = result + bucket[count];
+        }
+        return result;
+    }
+
+    public double getMiningProbability() {
+        return miningProbability;
+    }
+
+    public void setMiningProbability(double miningProbability) {
+        this.miningProbability = miningProbability;
+    }
+
+    public double getSupport() {
+        int count = 0;
+        for (int i = 0; i < bucket.length; i++) {
+            count += bucket[i];
+        }
+        return count * probability;
+
+    }
+
+    public void getLeafNodeList(List<SufNode> list) {
+        if (childes.isEmpty()) {
+            list.add(this);
+            return;
+        } else {
+            for (int i = 0; i < childes.size(); i++) {
+                SufNode child = childes.get(i);
+                child.getLeafNodeList(list);
+            }
+        }
+
+    }
+//    public void getLeafNodeList(List<UNode> list) {
+//        if (childNodeList.isEmpty()) {
+//            list.add(this);
+//            return;
+//        } else {
+//            for (int i = 0; i < childNodeList.size(); i++) {
+//                UNode child = childNodeList.get(i);
+//                child.getLeafNodeList(list);
+//            }
+//        }
+//    }
 }
