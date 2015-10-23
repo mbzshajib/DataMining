@@ -101,18 +101,25 @@ public class SufMiner implements Processor<SufMiningInput, SufMiningOutput> {
     private void updateMiningProbability(List<SufNode> leafNodeList) {
         for (SufNode sufNode : leafNodeList) {
             sufNode.setMiningProbability(sufNode.getSupport());
-            updateMiningData(sufNode);
+            while (sufNode != null && sufNode.getParentNode() != null && !sufNode.getParentNode().getId().equals("0")) {
+                sufNode.getParentNode().setMiningProbability(0);
+                sufNode = sufNode.getParentNode();
+            }
+        }
+        for (SufNode sufNode : leafNodeList) {
+            sufNode.setMiningProbability(sufNode.getSupport());
+            updateMiningData(sufNode, sufNode.getMiningProbability());
         }
     }
 
-    private void updateMiningData(SufNode sufNode) {
+    private void updateMiningData(SufNode sufNode, double value) {
 
         SufNode parentNode = sufNode.getParentNode();
         if (sufNode.getId().equals("0") || parentNode.getId().equals("0")) {
             return;
         } else {
-            parentNode.setMiningProbability(parentNode.getMiningProbability() + sufNode.getMiningProbability() * parentNode.getProbability());
-            updateMiningData(parentNode);
+            parentNode.setMiningProbability(parentNode.getMiningProbability() + value*parentNode.getProbability());
+            updateMiningData(parentNode, value);
         }
 
     }
@@ -120,7 +127,7 @@ public class SufMiner implements Processor<SufMiningInput, SufMiningOutput> {
     private SufNode constructConditionalTreeWithItem(SufNode node, String id) {
         if (id.equals(node.getId())) {
             node.setChildes(new ArrayList<SufNode>());
-//            node.getParentNode().setMiningProbability(node.getSupport());
+            node.setMiningProbability(node.getSupport());
             return node;
         } else {
             if (node.getChildes() == null || node.getChildes().isEmpty()) {
