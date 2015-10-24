@@ -39,8 +39,8 @@ public class BasicMiningSimulator {
 
         double minSup = .5;
         miningInput.setDataSetName("puff_tree_dataset.txt");
-        miningInput.setWindowSize(2);
-        miningInput.setFrameSize(2);
+        miningInput.setWindowSize(4);
+        miningInput.setFrameSize(1);
         miningInput.setMinSupport(minSup);
         TreeConstructionInput treeConstructionInput = getTreeInput(miningInput);
         TreeGenerator processor = new TreeGenerator();

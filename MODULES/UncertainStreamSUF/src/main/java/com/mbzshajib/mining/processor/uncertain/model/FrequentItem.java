@@ -30,6 +30,10 @@ public class FrequentItem {
         }
     }
 
+    public FrequentItem(String[] item) {
+        this.frequentItemSet = item;
+    }
+
     public void addFrequentItem(String itemId) {
         boolean found = false;
         for (String id : frequentItemSet) {
@@ -70,5 +74,24 @@ public class FrequentItem {
         return "FI{" +
                 Arrays.toString(frequentItemSet) +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof FrequentItem)) {
+            return false;
+        }
+        FrequentItem itemToBeTested = (FrequentItem) obj;
+        if (frequentItemSet.length != itemToBeTested.getFrequentItemSet().length) {
+            return false;
+        }
+        boolean result = true;
+        for (int i = 0; i < frequentItemSet.length; i++) {
+            if (!(itemToBeTested.getFrequentItemSet()[i].equals(frequentItemSet[i]))) {
+                result = false;
+                break;
+            }
+        }
+        return result;
     }
 }

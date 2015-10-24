@@ -1,4 +1,4 @@
-package com.mbzshajib.mining.processor.uncertain.patterns;
+package com.mbzshajib.utility.model.fpatterns;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,12 @@ public class FNode {
     public FNode(String id, int depth) {
         this.id = id;
         this.depth = depth;
+        childes = new ArrayList<FNode>();
+    }
+
+    public FNode() {
+        this.id = "0";
+        this.depth = 0;
         childes = new ArrayList<FNode>();
     }
 
@@ -148,5 +154,24 @@ public class FNode {
         }
         return result;
 
+    }
+
+    public List<String[]> getAllFrequentItems() {
+        List<String[]> result = new ArrayList<String[]>();
+        List<FNode> leafNodes = new ArrayList<FNode>();
+        this.getLeafNodes(leafNodes);
+        for (FNode leaf : leafNodes) {
+            FNode tmp = leaf;
+            while (tmp.getDepth() != 0) {
+                List<FNode> allNodesFromRoot = tmp.getAllNodesFromRoot();
+                String[] branchNodeString = new String[allNodesFromRoot.size()];
+                for (int i = 0; i < allNodesFromRoot.size(); i++) {
+                    branchNodeString[i] = allNodesFromRoot.get(i).getId();
+                }
+                result.add(branchNodeString);
+                tmp = tmp.getParent();
+            }
+        }
+        return result;
     }
 }

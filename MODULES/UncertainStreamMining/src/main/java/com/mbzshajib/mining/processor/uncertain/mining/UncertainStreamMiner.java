@@ -52,11 +52,7 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
         UNode rootNode = uncertainTree.getRootNode();
         HeaderTable headerTable = uncertainTree.getHeaderTable();
         int windowSize = headerTable.getWindowSize();
-//        List<UNode> infrequentNodes = new ArrayList<UNode>();
         List<UNode> infrequentByPrefix = headerTable.removeAndFindInfrequentNodesByPrefix(minSupport);
-//        List<UNode> infrequentByProbability = headerTable.removeAndFindInfrequentNodesByProbability(minSupport);
-//        infrequentNodes.addAll(infrequentByPrefix);
-//        infrequentNodes.addAll(infrequentByProbability);
 
         for (int i = 0; i < infrequentByPrefix.size(); i++) {
             UNode tmpNode = infrequentByPrefix.get(i);
@@ -64,7 +60,6 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
             parentNode.removeChildNode(tmpNode);
         }
         headerTable.sortByPrefix();
-//        headerTable.sortByProbability();
         List<HTableItemInfo> listToBeMined = headerTable.getHeaderInfo();
         for (int count = listToBeMined.size() - 1; count >= 0; count--) {
             UNode tmpNode = rootNode.copy();
@@ -84,7 +79,6 @@ public class UncertainStreamMiner implements Processor<UncertainStreamMineInput,
             frequentItemList.add(item);
         }
         item = new FrequentItem(item);
-
         constructConditionalTreeNotRemovingChild(root, id);
         headerTable = headerTable.copy(root);
         headerTable.removeAllNodes(id);

@@ -28,6 +28,7 @@ public class Result {
     private double totalFileReadTime;
     private double totalTreeGenerationTime;
     private double totalMiningTime;
+    private double totalFalsePositiveFindingTime;
 
     private int falsePositiveCount;
     private int frequentItemSetCount;
@@ -123,6 +124,14 @@ public class Result {
 
     public void setTotalTreeNode(int totalTreeNode) {
         this.totalTreeNode = totalTreeNode;
+    }
+
+    public double getTotalFalsePositiveFindingTime() {
+        return totalFalsePositiveFindingTime;
+    }
+
+    public void setTotalFalsePositiveFindingTime(double totalFalsePositiveFindingTime) {
+        this.totalFalsePositiveFindingTime = totalFalsePositiveFindingTime;
     }
 
     @Override

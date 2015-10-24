@@ -30,6 +30,10 @@ public class FrequentItem {
         }
     }
 
+    public FrequentItem(String[] item) {
+        this.frequentItemSet = item;
+    }
+
     public void addFrequentItem(String itemId) {
         boolean found = false;
         for (String id : frequentItemSet) {

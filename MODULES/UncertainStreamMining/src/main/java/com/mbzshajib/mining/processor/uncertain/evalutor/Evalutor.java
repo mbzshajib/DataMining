@@ -40,6 +40,7 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
     private long totalTreeGenerationTime;
     private long totalFileReadTime;
     private long totalMiningTime;
+    private long totalInFrequentFindingTime;
     private int totalFrequentItem;
     private int totalFalsePositiveCount;
     private int totalTreeNodeCount;
@@ -47,6 +48,7 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
     private long treeGenerationTime;
     private long fileReadTime;
     private long miningTime;
+    private long inFrequentFindingTime;
     private int frequentItem;
     private int falsePositiveCount;
     private int treeNodeCount;
@@ -68,17 +70,17 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
             for (MetaData metaData : metaDataList) {
                 ConfigurationLoader<USDMiningOutput> loader = new ConfigurationLoader<USDMiningOutput>(USDMiningOutput.class);
                 output = loader.loadConfigDataFromJsonFile(metaData.getFilePath(), metaData.getFileName());
-                if (evalutorInput.isFindFalseNegative()) {
-                    if (firstScan) {
-                        List<List<UInputData>> transactionList = getTransactionList(bufferedReader, output.getWindowSize() * output.getFrameSize());
-                        this.transactionList.addAll(transactionList);
-                        firstScan = false;
-                    } else {
-                        slideTransactionList(transactionList, output.getFrameSize());
-                        List<List<UInputData>> newTransactionList = getTransactionList(bufferedReader, output.getFrameSize());
-                        this.transactionList.addAll(newTransactionList);
-                    }
-                }
+//                if (evalutorInput.isFindFalseNegative()) {
+//                    if (firstScan) {
+//                        List<List<UInputData>> transactionList = getTransactionList(bufferedReader, output.getWindowSize() * output.getFrameSize());
+//                        this.transactionList.addAll(transactionList);
+//                        firstScan = false;
+//                    } else {
+//                        slideTransactionList(transactionList, output.getFrameSize());
+//                        List<List<UInputData>> newTransactionList = getTransactionList(bufferedReader, output.getFrameSize());
+//                        this.transactionList.addAll(newTransactionList);
+//                    }
+//                }
                 fileReadTime = output.getScanningTransactionTime().getTimeNeeded();
                 totalFileReadTime += output.getScanningTransactionTime().getTimeNeeded();
 
@@ -87,14 +89,19 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
 
                 miningTime = output.getMiningTime().getTimeNeeded();
                 totalMiningTime += output.getMiningTime().getTimeNeeded();
-
+                inFrequentFindingTime = output.getFindinInfrequentItemTime().getTimeNeeded();
+                totalInFrequentFindingTime += output.getFindinInfrequentItemTime().getTimeNeeded();
                 frequentItem = output.getFrequentItemSize();
                 totalFrequentItem += output.getFrequentItemSize();
 
-                if (evalutorInput.isFindFalseNegative()) {
-                    falsePositiveCount = countFalsePositive(output.getFrequentItemFound(), output.getMinSupport());
-                    totalFalsePositiveCount += falsePositiveCount;
-                }
+                falsePositiveCount = output.getInFrequentItemSize();
+                totalFalsePositiveCount += output.getInFrequentItemSize();
+
+
+//                if (evalutorInput.isFindFalseNegative()) {
+//                    falsePositiveCount = countFalsePositive(output.getFrequentItemFound(), output.getMinSupport());
+//                    totalFalsePositiveCount += falsePositiveCount;
+//                }
                 treeNodeCount = output.getTotalTreeNode();
                 totalTreeNodeCount += treeNodeCount;
 
@@ -104,13 +111,11 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
 
                 writeResultForWindow(evalutorInput.getDataSetName(), evalutorInput.getResultFileName(), result);
             }
-            writeResultOfEvalutor(evalutorInput.isFindFalseNegative());
+            writeResultOfEvalutor(true);
             bufferedReader.close();
 
         } catch (IOException e) {
             throw new ProcessingError(e);
-        } catch (DataNotFoundException e) {
-            e.printStackTrace();
         }
         return null;
     }
@@ -146,10 +151,12 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
                 .append("TotalFileReadTime : ").append(totalFileReadTime).append(" MS ").append(Constants.TAB)
                 .append("TotalTreeConsTime: ").append(totalTreeGenerationTime).append(" MS ").append(Constants.TAB)
                 .append("TotalMiningTime : ").append(totalMiningTime).append(" MS ").append(Constants.TAB)
+                .append("TotalInFrequentFindingTime : ").append(totalInFrequentFindingTime).append(" MS ").append(Constants.TAB)
 
                 .append("AvgFileReadTime : ").append(totalFileReadTime / resultList.size()).append(" MS ").append(Constants.TAB)
                 .append("AvgTreeConsTime: ").append(totalTreeGenerationTime / resultList.size()).append(" MS ").append(Constants.TAB)
                 .append("AvgMiningTime : ").append(totalMiningTime / resultList.size()).append(" MS ").append(Constants.TAB)
+                .append("AvgInFrequentFindingTime : ").append(totalInFrequentFindingTime / resultList.size()).append(" MS ").append(Constants.TAB)
 
                 .append("TotalTreeNode : ").append(totalTreeNodeCount).append(Constants.TAB)
                 .append("AvgTreeNode : ").append(totalTreeNodeCount / resultList.size()).append(Constants.TAB)
@@ -190,16 +197,11 @@ public class Evalutor implements Processor<EvalutorInput, EvalutorOutput> {
         result.setTotalFileReadTime(fileReadTime);
         result.setTotalTreeGenerationTime(treeGenerationTime);
         result.setTotalMiningTime(miningTime);
-
+        result.setTotalFalsePositiveFindingTime(inFrequentFindingTime);
         result.setFrequentItemSetCount(frequentItem);
-        result.setFalsePositiveCount(falsePositiveCount);
+        result.setFalsePositiveCount(output.getInFrequentItemSize());
 
         return result;
-    }
-
-    private int countFalsePositive(List<FrequentItem> frequentItemFound, double minimumSupport) {
-        List<FrequentItem> resultList = getFalsePositiveItems(frequentItemFound, minimumSupport);
-        return resultList.size();
     }
 
     private List<FrequentItem> getFalsePositiveItems(List<FrequentItem> frequentItemFound, double minimumSupport) {

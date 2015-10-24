@@ -3,15 +3,17 @@ package com.mbzshajib.mining.processor.uncertain.callback;
 import com.mbzshajib.mining.processor.uncertain.mining.SufMiner;
 import com.mbzshajib.mining.processor.uncertain.mining.SufMiningInput;
 import com.mbzshajib.mining.processor.uncertain.mining.SufMiningOutput;
+import com.mbzshajib.mining.processor.uncertain.model.FrequentItem;
+import com.mbzshajib.mining.processor.uncertain.model.MetaData;
 import com.mbzshajib.mining.processor.uncertain.simulator.MetaDataConfig;
+import com.mbzshajib.mining.processor.uncertain.simulator.MiningInput;
 import com.mbzshajib.mining.processor.uncertain.simulator.USDMiningOutput;
 import com.mbzshajib.mining.processor.uncertain.tree.SufTreeConstructorOutput;
-import com.mbzshajib.mining.processor.uncertain.model.MetaData;
-import com.mbzshajib.mining.processor.uncertain.simulator.MiningInput;
 import com.mbzshajib.utility.common.Constants;
 import com.mbzshajib.utility.configloader.ConfigurationLoader;
 import com.mbzshajib.utility.log.Logger;
 import com.mbzshajib.utility.model.ProcessingError;
+import com.mbzshajib.utility.model.fpatterns.FNode;
 
 import java.io.File;
 import java.io.IOException;
@@ -93,8 +95,11 @@ public class SufWindowCompletionCallback implements SufCompleteCallback {
         uSDMiningOutput.setMinSupport(miningInput.getMinSupport());
         uSDMiningOutput.setDataSetFilePath(miningInput.getDataSetPath() + miningInput.getDataSetName());
         uSDMiningOutput.setTotalTreeNode(treeConstructionOutput.getSufTree().getRootNode().countAllChild());
-        uSDMiningOutput.setFrequentItemSize(miningResult.getFrequentItemList().size());
-        uSDMiningOutput.setFrequentItemFound(miningResult.getFrequentItemList());
+        FNode fNode = new FNode();
+        List<FrequentItem> fList = miningResult.getFrequentItemList();
+
+        uSDMiningOutput.setFrequentItemSize(fList.size());
+        uSDMiningOutput.setFrequentItemFound(fList);
 
         uSDMiningOutput.setMiningTime(miningResult.getMiningTime());
         uSDMiningOutput.setTreeConstructionTime(treeConstructionOutput.getTreeConstructionTime());

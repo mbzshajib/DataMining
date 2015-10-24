@@ -28,7 +28,7 @@ import java.util.List;
  * ****************************************************************
  */
 
-public class SimulatorForMushroom {
+public class USMiningForMushroom {
     public static String CURR_TIME = Utility.getDateTimeString();
 
     public static void main(String[] args) throws IOException, ProcessingError {

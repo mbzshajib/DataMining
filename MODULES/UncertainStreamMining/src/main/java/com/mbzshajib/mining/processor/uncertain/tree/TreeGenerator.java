@@ -28,6 +28,11 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
     private BufferedReader bufferedReader;
     private long timePointer;
     private long fileReadTimeNeeded;
+    private List<List<UInputData>> windowTransactionList;
+
+    public TreeGenerator() {
+        windowTransactionList = new ArrayList<List<UInputData>>();
+    }
 
     @Override
     public TreeConstructionOutput process(TreeConstructionInput treeConstructionInput) throws ProcessingError {
@@ -40,21 +45,30 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
             for (int frameNo = 0; frameNo < treeConstructionInput.getWindowSize(); frameNo++) {
                 for (int i = 0; i < treeConstructionInput.getFrameSize(); i++) {
                     List<UInputData> nodes = getTransaction();
+                    windowTransactionList.add(nodes);
                     uncertainTree.addTransactionToTree(nodes, frameNo);
                 }
             }
+
             treeConstructionInput.getWindowCompletionCallback().sendUpdate(createWindowOutput(uncertainTree));
+            for (int i = 0; i < treeConstructionInput.getFrameSize(); i++) {
+                windowTransactionList.remove(0);
+            }
             uncertainTree.slideWindowAndUpdateTree();
-            timePointer = System.currentTimeMillis();
             List<UInputData> nodes = null;
             int frameCounter = 0;
             while (!(nodes = getTransaction()).isEmpty()) {
                 if (!(frameCounter < treeConstructionInput.getFrameSize())) {
+
                     frameCounter = 0;
                     treeConstructionInput.getWindowCompletionCallback().sendUpdate(createWindowOutput(uncertainTree));
+                    for (int i = 0; i < treeConstructionInput.getFrameSize(); i++) {
+                        windowTransactionList.remove(0);
+                    }
                     uncertainTree.slideWindowAndUpdateTree();
                     timePointer = System.currentTimeMillis();
                 }
+                windowTransactionList.add(nodes);
                 uncertainTree.addTransactionToTree(nodes, treeConstructionInput.getWindowSize() - 1);
                 frameCounter++;
 
@@ -76,6 +90,7 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
         TimeModel tFileRead = new TimeModel(this.fileReadTimeNeeded);
         this.timePointer = System.currentTimeMillis();
         this.fileReadTimeNeeded = 0;
+        treeConstructionOutput.setWindowTransactionList(windowTransactionList);
         treeConstructionOutput.setTreeConstructionTime(tTreeConstruction);
         treeConstructionOutput.setScanningTransactionTime(tFileRead);
         try {

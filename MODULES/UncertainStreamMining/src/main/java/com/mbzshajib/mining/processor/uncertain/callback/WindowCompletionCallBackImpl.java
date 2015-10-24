@@ -1,5 +1,7 @@
 package com.mbzshajib.mining.processor.uncertain.callback;
 
+import com.mbzshajib.mining.processor.uncertain.model.FrequentItem;
+import com.mbzshajib.mining.processor.uncertain.model.TimeModel;
 import com.mbzshajib.mining.processor.uncertain.simulator.MetaDataConfig;
 import com.mbzshajib.mining.processor.uncertain.simulator.MiningInput;
 import com.mbzshajib.mining.processor.uncertain.simulator.USDMiningOutput;
@@ -8,10 +10,12 @@ import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMineOutput
 import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMiner;
 import com.mbzshajib.mining.processor.uncertain.model.MetaData;
 import com.mbzshajib.mining.processor.uncertain.tree.TreeConstructionOutput;
+import com.mbzshajib.mining.util.FrequentItemChecker;
 import com.mbzshajib.utility.common.Constants;
 import com.mbzshajib.utility.configloader.ConfigurationLoader;
 import com.mbzshajib.utility.log.Logger;
 import com.mbzshajib.utility.model.ProcessingError;
+import com.mbzshajib.utility.model.fpatterns.FNode;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +39,7 @@ public class WindowCompletionCallBackImpl implements WindowCompletionCallback {
     private int windowNumber;
     private MiningInput miningInput;
     private List<MetaData> metaDataList;
+    private TimeModel fPatternFinalizingTime;
 
     public WindowCompletionCallBackImpl(MiningInput miningInput) {
         this.windowNumber = 0;
@@ -92,8 +97,37 @@ public class WindowCompletionCallBackImpl implements WindowCompletionCallback {
         uSDMiningOutput.setMinSupport(miningInput.getMinSupport());
         uSDMiningOutput.setDataSetFilePath(miningInput.getDataSetPath() + miningInput.getDataSetName());
         uSDMiningOutput.setTotalTreeNode(treeConstructionOutput.getUncertainTree().getRootNode().countAllChild());
-        uSDMiningOutput.setFrequentItemSize(miningResult.getFrequentItemList().size());
-        uSDMiningOutput.setFrequentItemFound(miningResult.getFrequentItemList());
+
+
+        List<FrequentItem> frequentItemListFinal = new ArrayList<FrequentItem>();
+        List<FrequentItem> inFrequentList = new ArrayList<FrequentItem>();
+
+
+        FNode fNode = new FNode();
+        List<FrequentItem> fList = miningResult.getFrequentItemList();
+        for (FrequentItem frequentItem : fList) {
+            String[] frequentItemSet = frequentItem.getFrequentItemSet();
+//            Arrays.sort(frequentItemSet);
+            fNode.addChildesChain(frequentItemSet);
+        }
+        List<String[]> allFrequentItems = fNode.getAllFrequentItems();
+        long startTime = System.currentTimeMillis();
+        for (String[] item : allFrequentItems) {
+            boolean isFrequent = FrequentItemChecker.findIfItemIsFrequent(treeConstructionOutput.getWindowTransactionList(), item, miningInput.getMinSupport());
+            FrequentItem frequentItem = new FrequentItem(item);
+            if (isFrequent) {
+                frequentItemListFinal.add(frequentItem);
+            } else {
+                inFrequentList.add(frequentItem);
+            }
+        }
+        long endTime = System.currentTimeMillis();
+
+        uSDMiningOutput.setFindinInfrequentItemTime(new TimeModel(startTime, endTime));
+        uSDMiningOutput.setFrequentItemSize(frequentItemListFinal.size());
+        uSDMiningOutput.setFrequentItemFound(frequentItemListFinal);
+        uSDMiningOutput.setInFrequentItemSize(inFrequentList.size());
+        uSDMiningOutput.setInFrequentItemFound(inFrequentList);
 
         uSDMiningOutput.setMiningTime(miningResult.getMiningTime());
         uSDMiningOutput.setTreeConstructionTime(treeConstructionOutput.getTreeConstructionTime());

@@ -32,9 +32,13 @@ public class USDMiningOutput extends JsonFileConfigModel {
     private int frequentItemSize;
     private List<FrequentItem> frequentItemFound;
 
+    private int inFrequentItemSize;
+    private List<FrequentItem> inFrequentItemFound;
+
     private TimeModel treeConstructionTime;
     private TimeModel scanningTransactionTime;
     private TimeModel miningTime;
+    private TimeModel findinInfrequentItemTime;
 
     public USDMiningOutput(File file) {
         super(file);
@@ -126,5 +130,29 @@ public class USDMiningOutput extends JsonFileConfigModel {
 
     public void setMiningTime(TimeModel miningTime) {
         this.miningTime = miningTime;
+    }
+
+    public TimeModel getFindinInfrequentItemTime() {
+        return findinInfrequentItemTime;
+    }
+
+    public void setFindinInfrequentItemTime(TimeModel findinInfrequentItemTime) {
+        this.findinInfrequentItemTime = findinInfrequentItemTime;
+    }
+
+    public int getInFrequentItemSize() {
+        return inFrequentItemSize;
+    }
+
+    public void setInFrequentItemSize(int inFrequentItemSize) {
+        this.inFrequentItemSize = inFrequentItemSize;
+    }
+
+    public List<FrequentItem> getInFrequentItemFound() {
+        return inFrequentItemFound;
+    }
+
+    public void setInFrequentItemFound(List<FrequentItem> inFrequentItemFound) {
+        this.inFrequentItemFound = inFrequentItemFound;
     }
 }

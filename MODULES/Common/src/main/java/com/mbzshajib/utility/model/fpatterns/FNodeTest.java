@@ -1,4 +1,4 @@
-package com.mbzshajib.mining.processor.uncertain.patterns;
+package com.mbzshajib.utility.model.fpatterns;
 
 import java.util.ArrayList;
 import java.util.List;
