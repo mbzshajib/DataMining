@@ -204,4 +204,11 @@ public class SufNode {
         }
     }
 
+    public int countAllChild() {
+        int count = childes.size();
+        for (SufNode node : childes) {
+            count = count + node.countAllChild();
+        }
+        return count;
+    }
 }

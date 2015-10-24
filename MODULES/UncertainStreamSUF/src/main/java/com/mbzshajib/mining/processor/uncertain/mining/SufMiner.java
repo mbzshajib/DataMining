@@ -1,10 +1,6 @@
 package com.mbzshajib.mining.processor.uncertain.mining;
 
-import com.mbzshajib.mining.processor.uncertain.model.SufHItem;
-import com.mbzshajib.mining.processor.uncertain.model.SufHeader;
-import com.mbzshajib.mining.processor.uncertain.model.SufNode;
-import com.mbzshajib.mining.processor.uncertain.model.SufTree;
-import com.mbzshajib.mining.processor.uncertain.model.FrequentItem;
+import com.mbzshajib.mining.processor.uncertain.model.*;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
 
@@ -30,6 +26,7 @@ public class SufMiner implements Processor<SufMiningInput, SufMiningOutput> {
 
     @Override
     public SufMiningOutput process(SufMiningInput sufMiningInput) throws ProcessingError {
+        long startTime = System.currentTimeMillis();
         frequentItemList = new ArrayList<FrequentItem>();
         this.minSupport = sufMiningInput.getMinSupport();
         this.sufTree = sufMiningInput.getSufTree();
@@ -47,7 +44,11 @@ public class SufMiner implements Processor<SufMiningInput, SufMiningOutput> {
             mine(copy, itemList.getItemId(), frequentItem, true);
         }
 //        System.out.println(frequentItemList);
-        return null;
+        SufMiningOutput sufMiningOutput = new SufMiningOutput();
+        sufMiningOutput.setFrequentItemList(this.frequentItemList);
+        TimeModel timeModel = new TimeModel(startTime, System.currentTimeMillis());
+        sufMiningOutput.setMiningTime(timeModel);
+        return sufMiningOutput;
     }
 
     private SufHeader createHeader(SufNode copy) {
@@ -122,7 +123,7 @@ public class SufMiner implements Processor<SufMiningInput, SufMiningOutput> {
         if (sufNode.getId().equals("0") || parentNode.getId().equals("0")) {
             return;
         } else {
-            parentNode.setMiningProbability(parentNode.getMiningProbability() + value*parentNode.getProbability());
+            parentNode.setMiningProbability(parentNode.getMiningProbability() + value * parentNode.getProbability());
             updateMiningData(parentNode, value);
         }
 

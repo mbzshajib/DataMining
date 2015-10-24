@@ -37,7 +37,7 @@ public class SufMiningSimulator {
         ConfigurationLoader<MiningInput> configurationLoader = new ConfigurationLoader<>(MiningInput.class);
         MiningInput miningInput = configurationLoader.loadConfigDataFromJsonFile(new File(Constants.F_MINING_PATH + Constants.F_MINING_FILE));
 
-        double minSup = .5;
+        double minSup = .9;
         miningInput.setDataSetName("suf-growth.txt");
         miningInput.setWindowSize(2);
         miningInput.setFrameSize(3);

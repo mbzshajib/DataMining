@@ -2,6 +2,7 @@ package com.mbzshajib.mining.processor.uncertain.tree;
 
 import com.mbzshajib.mining.processor.uncertain.model.SufInputData;
 import com.mbzshajib.mining.processor.uncertain.model.SufTree;
+import com.mbzshajib.mining.processor.uncertain.model.TimeModel;
 import com.mbzshajib.utility.exception.DataNotFoundException;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
@@ -44,22 +45,15 @@ public class SufTreeGenerator implements Processor<SufTreeConstructionInput, Suf
                     sufTree.addTransactionToTree(nodes, frameNo);
                 }
             }
-            System.out.println(sufTree.traverse());
-            SufTree copy = sufTree.copy();
-            System.out.println(copy.traverse());
-
-            treeConstructionInput.getSufCompleteCallback().sendUpdate(createWindowOutput(copy));
+            treeConstructionInput.getSufCompleteCallback().sendUpdate(createWindowOutput(sufTree.copy()));
             sufTree.slideWindowAndUpdateTree();
-            System.out.println("After Sliding");
-            System.out.println(sufTree.traverse());
             List<SufInputData> nodes = null;
             int frameCounter = 0;
             while (!(nodes = getTransaction()).isEmpty()) {
                 if (!(frameCounter < treeConstructionInput.getFrameSize())) {
                     frameCounter = 0;
-                    treeConstructionInput.getSufCompleteCallback().sendUpdate(createWindowOutput(sufTree));
+                    treeConstructionInput.getSufCompleteCallback().sendUpdate(createWindowOutput(sufTree.copy()));
                     sufTree.slideWindowAndUpdateTree();
-                    timePointer = System.currentTimeMillis();
                 }
                 sufTree.addTransactionToTree(nodes, treeConstructionInput.getWindowSize() - 1);
                 frameCounter++;
@@ -73,12 +67,19 @@ public class SufTreeGenerator implements Processor<SufTreeConstructionInput, Suf
             e.printStackTrace();
         }
 
-        return createWindowOutput(null);
+        return createWindowOutput(sufTree);
     }
 
     private SufTreeConstructorOutput createWindowOutput(SufTree sufTree) {
         SufTreeConstructorOutput treeConstructionOutput = new SufTreeConstructorOutput();
         treeConstructionOutput.setSufTree(sufTree);
+        TimeModel tTreeConstruction = new TimeModel(this.timePointer, System.currentTimeMillis());
+        TimeModel tFileRead = new TimeModel(this.fileReadTimeNeeded);
+        this.timePointer = System.currentTimeMillis();
+        this.fileReadTimeNeeded = 0;
+        treeConstructionOutput.setTreeConstructionTime(tTreeConstruction);
+        treeConstructionOutput.setScanningTransactionTime(tFileRead);
+        treeConstructionOutput.setSufTree(sufTree.copy());
         return treeConstructionOutput;
     }
 

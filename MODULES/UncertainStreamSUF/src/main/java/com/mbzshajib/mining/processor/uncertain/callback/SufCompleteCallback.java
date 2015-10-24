@@ -16,5 +16,5 @@ import com.mbzshajib.utility.model.ProcessingError;
  */
 
 public interface SufCompleteCallback {
-    public void sendUpdate(SufTreeConstructorOutput treeConstructionOutput) throws ProcessingError;
+    void sendUpdate(SufTreeConstructorOutput treeConstructionOutput) throws ProcessingError;
 }
