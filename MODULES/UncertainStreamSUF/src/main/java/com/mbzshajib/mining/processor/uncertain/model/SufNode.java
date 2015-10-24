@@ -1,4 +1,4 @@
-package com.mbzshajib.mining.processor.uncertain;
+package com.mbzshajib.mining.processor.uncertain.model;
 
 import com.mbzshajib.utility.common.Constants;
 
@@ -141,7 +141,7 @@ public class SufNode {
                 ", parentNode=" + parentNode.getId() +
                 ", childes=" + childes.size() +
                 ", probability=" + probability +
-                ", miningProbability=" + miningProbability+
+                ", miningProbability=" + miningProbability +
                 ", windowSize=" + windowSize +
                 ", batchSize=" + batchSize +
                 ", bucket=" + Arrays.toString(bucket) +
@@ -193,15 +193,15 @@ public class SufNode {
         }
 
     }
-//    public void getLeafNodeList(List<UNode> list) {
-//        if (childNodeList.isEmpty()) {
-//            list.add(this);
-//            return;
-//        } else {
-//            for (int i = 0; i < childNodeList.size(); i++) {
-//                UNode child = childNodeList.get(i);
-//                child.getLeafNodeList(list);
-//            }
-//        }
-//    }
+
+    public void slide() {
+        for (int i = 1; i < windowSize; i++) {
+            bucket[i - 1] = bucket[i];
+        }
+        bucket[windowSize - 1] = 0;
+        for (SufNode child : childes) {
+            child.slide();
+        }
+    }
+
 }

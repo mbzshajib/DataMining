@@ -1,9 +1,9 @@
 package com.mbzshajib.mining.processor.uncertain.callback;
 
-import com.mbzshajib.mining.processor.uncertain.SufMiner;
-import com.mbzshajib.mining.processor.uncertain.SufMiningInput;
-import com.mbzshajib.mining.processor.uncertain.SufMiningOutput;
-import com.mbzshajib.mining.processor.uncertain.SufTreeConstructorOutput;
+import com.mbzshajib.mining.processor.uncertain.mining.SufMiner;
+import com.mbzshajib.mining.processor.uncertain.mining.SufMiningInput;
+import com.mbzshajib.mining.processor.uncertain.mining.SufMiningOutput;
+import com.mbzshajib.mining.processor.uncertain.tree.SufTreeConstructorOutput;
 import com.mbzshajib.mining.processor.uncertain.model.MetaData;
 import com.mbzshajib.mining.processor.uncertain.simulator.MiningInput;
 import com.mbzshajib.utility.model.ProcessingError;
@@ -42,5 +42,7 @@ public class SufWindowCompletionCallback implements SufCompleteCallback {
         sufMiningInput.setSufTree(treeConstructionOutput.getSufTree());
         SufMiner sufMiner = new SufMiner();
         SufMiningOutput process = sufMiner.process(sufMiningInput);
+
+
     }
 }

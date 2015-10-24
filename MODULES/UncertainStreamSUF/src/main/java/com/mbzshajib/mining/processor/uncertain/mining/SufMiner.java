@@ -1,5 +1,9 @@
-package com.mbzshajib.mining.processor.uncertain;
+package com.mbzshajib.mining.processor.uncertain.mining;
 
+import com.mbzshajib.mining.processor.uncertain.model.SufHItem;
+import com.mbzshajib.mining.processor.uncertain.model.SufHeader;
+import com.mbzshajib.mining.processor.uncertain.model.SufNode;
+import com.mbzshajib.mining.processor.uncertain.model.SufTree;
 import com.mbzshajib.mining.processor.uncertain.model.FrequentItem;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
@@ -42,7 +46,7 @@ public class SufMiner implements Processor<SufMiningInput, SufMiningOutput> {
             frequentItemList.add(frequentItem);
             mine(copy, itemList.getItemId(), frequentItem, true);
         }
-        System.out.println(frequentItemList);
+//        System.out.println(frequentItemList);
         return null;
     }
 

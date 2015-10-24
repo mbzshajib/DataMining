@@ -1,32 +1,32 @@
 package com.mbzshajib.mining.processor.uncertain.tree;
 
+import com.mbzshajib.mining.processor.uncertain.model.SufTree;
 import com.mbzshajib.mining.processor.uncertain.model.TimeModel;
-import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
 import com.mbzshajib.utility.model.Output;
 
 /**
  * *****************************************************************
- * Copyright  2015.
  *
  * @author - Md. Badi-Uz-Zaman Shajib
+ * @copyright 2015.
  * @email - mbzshajib@gmail.com
  * @gitHub - https://github.com/mbzshajib
- * @date: 9/20/2015
- * @time: 11:03 PM
+ * @date: 10/21/2015
+ * @time: 7:45 PM
  * ****************************************************************
  */
 
-public class TreeConstructionOutput implements Output {
-    private UncertainTree uncertainTree;
+public class SufTreeConstructorOutput implements Output {
+    private SufTree sufTree;
     private TimeModel treeConstructionTime;
     private TimeModel scanningTransactionTime;
 
-    public UncertainTree getUncertainTree() {
-        return uncertainTree;
+    public SufTree getSufTree() {
+        return sufTree;
     }
 
-    public void setUncertainTree(UncertainTree uncertainTree) {
-        this.uncertainTree = uncertainTree;
+    public void setSufTree(SufTree sufTree) {
+        this.sufTree = sufTree;
     }
 
     public TimeModel getTreeConstructionTime() {
@@ -43,14 +43,5 @@ public class TreeConstructionOutput implements Output {
 
     public void setScanningTransactionTime(TimeModel scanningTransactionTime) {
         this.scanningTransactionTime = scanningTransactionTime;
-    }
-
-    @Override
-    public String toString() {
-        return "TreeConstructionOutput{" +
-                "uncertainTree=" + uncertainTree +
-                ", treeConstructionTime=" + treeConstructionTime +
-                ", scanningTransactionTime=" + scanningTransactionTime +
-                '}';
     }
 }

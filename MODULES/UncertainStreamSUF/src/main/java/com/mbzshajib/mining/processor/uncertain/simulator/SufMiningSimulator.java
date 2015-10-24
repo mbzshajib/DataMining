@@ -1,9 +1,9 @@
 package com.mbzshajib.mining.processor.uncertain.simulator;
 
-import com.mbzshajib.mining.processor.uncertain.SufTree;
-import com.mbzshajib.mining.processor.uncertain.SufTreeConstructionInput;
-import com.mbzshajib.mining.processor.uncertain.SufTreeConstructorOutput;
-import com.mbzshajib.mining.processor.uncertain.SufTreeGenerator;
+import com.mbzshajib.mining.processor.uncertain.model.SufTree;
+import com.mbzshajib.mining.processor.uncertain.tree.SufTreeConstructionInput;
+import com.mbzshajib.mining.processor.uncertain.tree.SufTreeConstructorOutput;
+import com.mbzshajib.mining.processor.uncertain.tree.SufTreeGenerator;
 import com.mbzshajib.mining.processor.uncertain.callback.SufWindowCompletionCallback;
 import com.mbzshajib.mining.processor.uncertain.evalutor.Evalutor;
 import com.mbzshajib.mining.processor.uncertain.evalutor.EvalutorInput;
@@ -29,7 +29,7 @@ import java.io.*;
 
 public class SufMiningSimulator {
     public static String CURR_TIME = Utility.getDateTimeString();
-    public static final String TAG = BasicMiningSimulator.class.getCanonicalName();
+    public static final String TAG = SufMiningSimulator.class.getCanonicalName();
     private static final double MIN_SUP = .5;
     private static int windowNumber = 1;
 
@@ -37,7 +37,7 @@ public class SufMiningSimulator {
         ConfigurationLoader<MiningInput> configurationLoader = new ConfigurationLoader<>(MiningInput.class);
         MiningInput miningInput = configurationLoader.loadConfigDataFromJsonFile(new File(Constants.F_MINING_PATH + Constants.F_MINING_FILE));
 
-        double minSup = .9;
+        double minSup = .5;
         miningInput.setDataSetName("suf-growth.txt");
         miningInput.setWindowSize(2);
         miningInput.setFrameSize(3);

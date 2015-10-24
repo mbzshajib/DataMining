@@ -1,6 +1,7 @@
-package com.mbzshajib.mining.processor.uncertain;
+package com.mbzshajib.mining.processor.uncertain.tree;
 
-import com.mbzshajib.mining.processor.uncertain.model.UInputData;
+import com.mbzshajib.mining.processor.uncertain.model.SufInputData;
+import com.mbzshajib.mining.processor.uncertain.model.SufTree;
 import com.mbzshajib.utility.exception.DataNotFoundException;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
@@ -44,22 +45,26 @@ public class SufTreeGenerator implements Processor<SufTreeConstructionInput, Suf
                 }
             }
             System.out.println(sufTree.traverse());
-            treeConstructionInput.getSufCompleteCallback().sendUpdate(createWindowOutput(sufTree));
-//            sufTree.slideWindowAndUpdateTree();
-            timePointer = System.currentTimeMillis();
-            List<UInputData> nodes = null;
+            SufTree copy = sufTree.copy();
+            System.out.println(copy.traverse());
+
+            treeConstructionInput.getSufCompleteCallback().sendUpdate(createWindowOutput(copy));
+            sufTree.slideWindowAndUpdateTree();
+            System.out.println("After Sliding");
+            System.out.println(sufTree.traverse());
+            List<SufInputData> nodes = null;
             int frameCounter = 0;
-//            while (!(nodes = getTransaction()).isEmpty()) {
-//                if (!(frameCounter < treeConstructionInput.getFrameSize())) {
-//                    frameCounter = 0;
-////                    treeConstructionInput.getWindowCompletionCallback().sendUpdate(createWindowOutput(sufTree));
-////                    sufTree.slideWindowAndUpdateTree();
-//                    timePointer = System.currentTimeMillis();
-//                }
-//                sufTree.addTransactionToTree(nodes, treeConstructionInput.getWindowSize() - 1);
-//                frameCounter++;
-//
-//            }
+            while (!(nodes = getTransaction()).isEmpty()) {
+                if (!(frameCounter < treeConstructionInput.getFrameSize())) {
+                    frameCounter = 0;
+                    treeConstructionInput.getSufCompleteCallback().sendUpdate(createWindowOutput(sufTree));
+                    sufTree.slideWindowAndUpdateTree();
+                    timePointer = System.currentTimeMillis();
+                }
+                sufTree.addTransactionToTree(nodes, treeConstructionInput.getWindowSize() - 1);
+                frameCounter++;
+
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (DataNotFoundException e) {

@@ -1,4 +1,4 @@
-package com.mbzshajib.mining.processor.uncertain;
+package com.mbzshajib.mining.processor.uncertain.model;
 
 import java.util.*;
 

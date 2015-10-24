@@ -1,5 +1,6 @@
-package com.mbzshajib.mining.processor.uncertain;
+package com.mbzshajib.mining.processor.uncertain.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -100,7 +101,42 @@ public class SufTree {
     }
 
     public SufTree copy() {
+        SufNode newRoot = rootNode.copy();
+        SufHeader header = createHeader(newRoot);
+        SufTree sufTree = new SufTree(this.windowSize, this.batchSize);
+        sufTree.setRootNode(newRoot);
+        sufTree.setHeader(header);
+        return sufTree;
+    }
 
-        return null;
+    private SufHeader createHeader(SufNode copy) {
+        SufHeader sufHeader = new SufHeader();
+        List<SufNode> distinctList = copy.getAllDistinctChild(new ArrayList<SufNode>());
+
+        sufHeader.updateFromAllNodes(distinctList);
+        return sufHeader;
+    }
+
+    public void slideWindowAndUpdateTree() {
+        for (SufNode node : rootNode.getChildes()) {
+            node.slide();
+        }
+        removeEmptyChildNodes(rootNode);
+    }
+
+    private void removeEmptyChildNodes(SufNode rootNode) {
+        int counter = rootNode.getChildes().size();
+        for (int i = 0; i < counter; i++) {
+            SufNode node = rootNode.getChildes().get(i);
+            boolean isDeleted = (node.getSupport() <= 0);
+            if (isDeleted) {
+                node.getParentNode().getChildes().remove(node);
+                node.setParentNode(null);
+                counter = counter - 1;
+                i = i - 1;
+            } else {
+                removeEmptyChildNodes(node);
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.mbzshajib.mining.processor.uncertain;
+package com.mbzshajib.mining.processor.uncertain.tree;
 
 import com.mbzshajib.mining.processor.uncertain.callback.SufCompleteCallback;
 import com.mbzshajib.utility.model.Input;
