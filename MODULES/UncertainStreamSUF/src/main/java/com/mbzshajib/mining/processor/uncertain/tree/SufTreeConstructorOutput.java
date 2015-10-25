@@ -1,8 +1,11 @@
 package com.mbzshajib.mining.processor.uncertain.tree;
 
+import com.mbzshajib.mining.processor.uncertain.model.SufInputData;
 import com.mbzshajib.mining.processor.uncertain.model.SufTree;
 import com.mbzshajib.mining.processor.uncertain.model.TimeModel;
 import com.mbzshajib.utility.model.Output;
+
+import java.util.List;
 
 /**
  * *****************************************************************
@@ -20,6 +23,7 @@ public class SufTreeConstructorOutput implements Output {
     private SufTree sufTree;
     private TimeModel treeConstructionTime;
     private TimeModel scanningTransactionTime;
+    private List<List<SufInputData>> windowTransactionList;
 
     public SufTree getSufTree() {
         return sufTree;
@@ -43,5 +47,13 @@ public class SufTreeConstructorOutput implements Output {
 
     public void setScanningTransactionTime(TimeModel scanningTransactionTime) {
         this.scanningTransactionTime = scanningTransactionTime;
+    }
+
+    public List<List<SufInputData>> getWindowTransactionList() {
+        return windowTransactionList;
+    }
+
+    public void setWindowTransactionList(List<List<SufInputData>> windowTransactionList) {
+        this.windowTransactionList = windowTransactionList;
     }
 }

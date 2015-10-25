@@ -30,6 +30,11 @@ public class SufTreeGenerator implements Processor<SufTreeConstructionInput, Suf
     private BufferedReader bufferedReader;
     private long timePointer;
     private long fileReadTimeNeeded;
+    private List<List<SufInputData>> windowTransactionList;
+
+    public SufTreeGenerator() {
+        windowTransactionList = new ArrayList<List<SufInputData>>();
+    }
 
     @Override
     public SufTreeConstructorOutput process(SufTreeConstructionInput treeConstructionInput) throws ProcessingError {
@@ -42,10 +47,14 @@ public class SufTreeGenerator implements Processor<SufTreeConstructionInput, Suf
             for (int frameNo = 0; frameNo < treeConstructionInput.getWindowSize(); frameNo++) {
                 for (int i = 0; i < treeConstructionInput.getFrameSize(); i++) {
                     List<SufInputData> nodes = getTransaction();
+                    windowTransactionList.add(nodes);
                     sufTree.addTransactionToTree(nodes, frameNo);
                 }
             }
             treeConstructionInput.getSufCompleteCallback().sendUpdate(createWindowOutput(sufTree.copy()));
+            for (int i = 0; i < treeConstructionInput.getFrameSize(); i++) {
+                windowTransactionList.remove(0);
+            }
             sufTree.slideWindowAndUpdateTree();
             List<SufInputData> nodes = null;
             int frameCounter = 0;
@@ -53,8 +62,12 @@ public class SufTreeGenerator implements Processor<SufTreeConstructionInput, Suf
                 if (!(frameCounter < treeConstructionInput.getFrameSize())) {
                     frameCounter = 0;
                     treeConstructionInput.getSufCompleteCallback().sendUpdate(createWindowOutput(sufTree.copy()));
+                    for (int i = 0; i < treeConstructionInput.getFrameSize(); i++) {
+                        windowTransactionList.remove(0);
+                    }
                     sufTree.slideWindowAndUpdateTree();
                 }
+                windowTransactionList.add(nodes);
                 sufTree.addTransactionToTree(nodes, treeConstructionInput.getWindowSize() - 1);
                 frameCounter++;
 
@@ -77,6 +90,7 @@ public class SufTreeGenerator implements Processor<SufTreeConstructionInput, Suf
         TimeModel tFileRead = new TimeModel(this.fileReadTimeNeeded);
         this.timePointer = System.currentTimeMillis();
         this.fileReadTimeNeeded = 0;
+        treeConstructionOutput.setWindowTransactionList(windowTransactionList);
         treeConstructionOutput.setTreeConstructionTime(tTreeConstruction);
         treeConstructionOutput.setScanningTransactionTime(tFileRead);
         treeConstructionOutput.setSufTree(sufTree.copy());

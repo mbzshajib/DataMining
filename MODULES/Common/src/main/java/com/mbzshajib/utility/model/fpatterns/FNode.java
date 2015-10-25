@@ -27,6 +27,7 @@ public class FNode {
     private List<FNode> childes;
     private FNode parent;
     private int depth;
+    private boolean isContainsItem;
 
     public FNode(String id, int depth) {
         this.id = id;
@@ -79,10 +80,15 @@ public class FNode {
 
     public void addChildesChain(String[] childesChain) {
         FNode parentPointer = this;
-        for (String nodeId : childesChain) {
+        int count = childesChain.length;
+        for (int i = 0; i < count; i++) {
+            String nodeId = childesChain[i];
             int index = findInChild(nodeId, parentPointer);
             if (index == -1) {
                 FNode node = new FNode(nodeId, (parentPointer.getDepth() + 1));
+                if ((i + 1) == childesChain.length) {
+                    node.setIsContainsItem(true);
+                }
                 parentPointer = parentPointer.addChild(node);
             } else {
                 parentPointer = parentPointer.getChildes().get(index);
@@ -148,7 +154,9 @@ public class FNode {
             if (pointer == null || pointer.getId().equals("0")) {
                 break;
             } else {
-                result.add(pointer);
+                if (pointer.isContainsItem()) {
+                    result.add(pointer);
+                }
                 pointer = pointer.getParent();
             }
         }
@@ -173,5 +181,13 @@ public class FNode {
             }
         }
         return result;
+    }
+
+    public boolean isContainsItem() {
+        return isContainsItem;
+    }
+
+    public void setIsContainsItem(boolean isContainsItem) {
+        this.isContainsItem = isContainsItem;
     }
 }
