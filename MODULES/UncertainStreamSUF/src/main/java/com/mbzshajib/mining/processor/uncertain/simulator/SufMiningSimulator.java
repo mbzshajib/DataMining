@@ -37,10 +37,10 @@ public class SufMiningSimulator {
         ConfigurationLoader<MiningInput> configurationLoader = new ConfigurationLoader<>(MiningInput.class);
         MiningInput miningInput = configurationLoader.loadConfigDataFromJsonFile(new File(Constants.F_MINING_PATH + Constants.F_MINING_FILE));
 
-        double minSup = .5;
-        miningInput.setDataSetName("puff_tree_dataset.txt");
-        miningInput.setWindowSize(4);
-        miningInput.setFrameSize(1);
+        double minSup = .9;
+        miningInput.setDataSetName("suf-growth.txt");
+        miningInput.setWindowSize(2);
+        miningInput.setFrameSize(3);
         miningInput.setMinSupport(minSup);
         SufTreeConstructionInput treeConstructionInput = getTreeInput(miningInput);
         SufTreeGenerator processor = new SufTreeGenerator();

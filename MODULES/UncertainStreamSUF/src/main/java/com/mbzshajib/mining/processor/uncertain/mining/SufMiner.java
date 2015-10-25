@@ -36,20 +36,55 @@ public class SufMiner implements Processor<SufMiningInput, SufMiningOutput> {
         header.sortByProbabilityValueDesc();
         for (SufHItem itemList : header.getItemList()) {
             SufNode copy = rootNode.copy();
-            SufHeader table = createHeader(copy);
-            table.sortByProbabilityValueDesc();
             FrequentItem frequentItem = new FrequentItem();
             frequentItem.addFrequentItem(itemList.getItemId());
             frequentItemList.add(frequentItem);
+
+            constructConditionalTreeWithItem(copy, itemList.getItemId());
+            List<SufNode> leafNodeList = new ArrayList<SufNode>();
+            copy.getLeafNodeList(leafNodeList);
+//            updateMiningProbability(leafNodeList);
+            for (SufNode leaf : leafNodeList) {
+                updateMiningData(leaf, leaf.getMiningProbability());
+            }
+            SufHeader newHeader = createHeaderForMining(copy);
+            newHeader.removeItemById(itemList.getItemId());
+
             mine(copy, itemList.getItemId(), frequentItem, true);
         }
-//        System.out.println(frequentItemList);
         SufMiningOutput sufMiningOutput = new SufMiningOutput();
         sufMiningOutput.setFrequentItemList(this.frequentItemList);
         TimeModel timeModel = new TimeModel(startTime, System.currentTimeMillis());
         sufMiningOutput.setMiningTime(timeModel);
         return sufMiningOutput;
     }
+
+    private void mine(SufNode rootNode, String id, FrequentItem frequentItem, boolean isFirstItaration) {
+        frequentItem.addFrequentItem(id);
+        if (!isFirstItaration) {
+            frequentItemList.add(frequentItem);
+        }
+        frequentItem = new FrequentItem(frequentItem);
+        SufHeader header = createHeaderForMining(rootNode);
+        updateFrequentItem(header, frequentItem);
+        header.removeInfrequentItemsForMining(minSupport);
+        for (SufHItem item : header.getItemList()) {
+            frequentItem = new FrequentItem(frequentItem);
+            frequentItem.addFrequentItem(item.getItemId());
+            List<SufNode> leafList = new ArrayList<SufNode>();
+            rootNode.getLeafNodeList(leafList);
+            for (SufNode leaf : leafList) {
+                updateMiningDataForProjectedDb(leaf, leaf.getMiningProbability());
+            }
+            SufNode copy = rootNode.copy();
+            SufHeader headerForMining = createHeaderForMining(copy);
+            headerForMining.removeInfrequentItems(minSupport);
+            mine(copy, item.getItemId(), frequentItem, true);
+        }
+
+
+    }
+
 
     private SufHeader createHeader(SufNode copy) {
         SufHeader sufHeader = new SufHeader();
@@ -67,53 +102,30 @@ public class SufMiner implements Processor<SufMiningInput, SufMiningOutput> {
         return sufHeader;
     }
 
-    private void mine(SufNode rootNode, String id, FrequentItem frequentItem, boolean isFirstItaration) {
-        frequentItem.addFrequentItem(id);
-        if (!isFirstItaration) {
-            frequentItemList.add(frequentItem);
-        }
-        frequentItem = new FrequentItem(frequentItem);
-        constructConditionalTreeWithItem(rootNode, id);
-        List<SufNode> leafNodeList = new ArrayList<SufNode>();
-        rootNode.getLeafNodeList(leafNodeList);
-        updateMiningProbability(leafNodeList);
-        SufHeader header = createHeaderForMining(rootNode);
-        header.removeItemById(id);
-//        createHeader(rootNode);
-        header = createHeaderForMining(rootNode);
-        header.removeInfrequentItemsForMining(minSupport);
-        updateFrequentItem(rootNode, frequentItem);
+
+    private void updateFrequentItem(SufHeader header, FrequentItem frequentItem) {
         for (SufHItem item : header.getItemList()) {
-            frequentItem = new FrequentItem(frequentItem);
-            mine(rootNode, item.getItemId(), frequentItem, false);
-        }
+            if (item.getMiningSupport() < minSupport) {
 
-
-    }
-
-    private void updateFrequentItem(SufNode rootNode, FrequentItem item) {
-        for (int i = 0; i < rootNode.getChildes().size(); i++) {
-            SufNode child = rootNode.getChildes().get(i);
-            FrequentItem tmpItem = new FrequentItem(item);
-            tmpItem.addFrequentItem(child.getId());
-            if (child.getMiningProbability() > minSupport) {
-                frequentItemList.add(tmpItem);
+            } else {
+                FrequentItem itemToBeInsert = new FrequentItem(frequentItem);
+                itemToBeInsert.addFrequentItem(item.getItemId());
+                frequentItemList.add(itemToBeInsert);
             }
-            updateFrequentItem(child, item);
         }
     }
 
-    private void updateMiningProbability(List<SufNode> leafNodeList) {
-        for (SufNode sufNode : leafNodeList) {
-            sufNode.setMiningProbability(sufNode.getSupport());
-            while (sufNode != null && sufNode.getParentNode() != null && !sufNode.getParentNode().getId().equals("0")) {
-                sufNode.getParentNode().setMiningProbability(0);
-                sufNode = sufNode.getParentNode();
-            }
+    private void updateMiningDataForProjectedDb(SufNode leaf, double miningProbability) {
+        SufNode pointerNode = leaf;
+        while (!(pointerNode.getId().equals("0") || pointerNode.getParentNode().getId().equals(""))) {
+            pointerNode.getParentNode().setMiningProbability(0);
+            pointerNode = pointerNode.getParentNode();
         }
-        for (SufNode sufNode : leafNodeList) {
-            sufNode.setMiningProbability(sufNode.getSupport());
-            updateMiningData(sufNode, sufNode.getMiningProbability());
+        SufNode parentNode = leaf.getParentNode();
+        if (leaf.getId().equals("0") || parentNode.getId().equals("0")) {
+            return;
+        } else {
+            parentNode.setMiningProbability(parentNode.getMiningProbability() + miningProbability * parentNode.getProbability());
         }
     }
 

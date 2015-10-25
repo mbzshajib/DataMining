@@ -9,15 +9,16 @@ import com.mbzshajib.mining.processor.uncertain.simulator.MetaDataConfig;
 import com.mbzshajib.mining.processor.uncertain.simulator.MiningInput;
 import com.mbzshajib.mining.processor.uncertain.simulator.USDMiningOutput;
 import com.mbzshajib.mining.processor.uncertain.tree.SufTreeConstructorOutput;
+import com.mbzshajib.mining.util.FrequentItemChecker;
 import com.mbzshajib.utility.common.Constants;
 import com.mbzshajib.utility.configloader.ConfigurationLoader;
 import com.mbzshajib.utility.log.Logger;
 import com.mbzshajib.utility.model.ProcessingError;
-import com.mbzshajib.utility.model.fpatterns.FNode;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -46,7 +47,6 @@ public class SufWindowCompletionCallback implements SufCompleteCallback {
     @Override
     public void sendUpdate(SufTreeConstructorOutput treeConstructionOutput) throws ProcessingError {
         windowNumber++;
-        treeConstructionOutput.toString();
         SufMiningInput sufMiningInput = getSufMiningInput(treeConstructionOutput);
         SufMiner sufMiner = new SufMiner();
         SufMiningOutput miningResult = sufMiner.process(sufMiningInput);
@@ -95,8 +95,15 @@ public class SufWindowCompletionCallback implements SufCompleteCallback {
         uSDMiningOutput.setMinSupport(miningInput.getMinSupport());
         uSDMiningOutput.setDataSetFilePath(miningInput.getDataSetPath() + miningInput.getDataSetName());
         uSDMiningOutput.setTotalTreeNode(treeConstructionOutput.getSufTree().getRootNode().countAllChild());
-        FNode fNode = new FNode();
         List<FrequentItem> fList = miningResult.getFrequentItemList();
+
+        for (FrequentItem item : fList) {
+            boolean ifItemIsFrequent = FrequentItemChecker.findIfItemIsFrequent(treeConstructionOutput.getWindowTransactionList(), item.getFrequentItemSet(), miningInput.getMinSupport());
+            if (!ifItemIsFrequent) {
+                System.out.println("Not Frequent Found" + Arrays.toString(item.getFrequentItemSet()));
+                throw new IllegalArgumentException("This is exac mining algorithm and must contains not no infrequent items.");
+            }
+        }
 
         uSDMiningOutput.setFrequentItemSize(fList.size());
         uSDMiningOutput.setFrequentItemFound(fList);
