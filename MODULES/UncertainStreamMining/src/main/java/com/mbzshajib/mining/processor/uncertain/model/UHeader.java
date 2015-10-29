@@ -131,4 +131,22 @@ public class UHeader {
         itemList.remove(item);
     }
 
+    public void removeItemByIdWithNode(String itemId) {
+        UHItem uHItem = getHeaderItem(itemId);
+        if (uHItem == null) {
+            return;
+        }
+        List<UNode> list = uHItem.getNodeList();
+        for (int i = 0; i < list.size(); i++) {
+            UNode child = list.get(i);
+            if (child.getParentNode() != null) {
+                UNode parent = child.getParentNode();
+                parent.getChildNodeList().remove(child);
+                parent.setMiningProbability(child.getMiningProbability());
+                child.setParentNode(null);
+
+            }
+        }
+        itemList.remove(uHItem);
+    }
 }

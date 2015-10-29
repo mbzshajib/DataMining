@@ -137,6 +137,7 @@ public class UNode {
         }
         return stringBuilder.toString();
     }
+
     public String traverseMin() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(Constants.NEW_LINE)
@@ -208,31 +209,34 @@ public class UNode {
     }
 
     public UNode copy() {
-        UNode nodeToBeCopied = this;
-        UNode rootNode = new UNode(new String(nodeToBeCopied.getId()), nodeToBeCopied.getFrameSize());
-        rootNode.setParentNode(null);
-        for (int i = 0; i < nodeToBeCopied.getChildNodeList().size(); i++) {
-            UNode node = nodeToBeCopied.getChildNodeList().get(i);
-            UNode copiedNode = copyNodes(node, rootNode);
-            rootNode.setChildNode(copiedNode);
+        UNode originParent = this;
+        UNode copyParent = new UNode(new String(originParent.getId()), originParent.getFrameSize());
+        copyParent.setParentNode(null);
+        for (int i = 0; i < originParent.getChildNodeList().size(); i++) {
+            UNode originChild = originParent.getChildNodeList().get(i);
+            UNode copiedChild = copyNodes(originChild, copyParent);
+            copyParent.setChildNode(copiedChild);
         }
-        return rootNode;
+        return copyParent;
     }
 
-    private UNode copyNodes(UNode nodeToBeCopied, UNode parentNode) {
-        UNode resultNode = new UNode(new String(nodeToBeCopied.getId()), nodeToBeCopied.getFrameSize());
-        resultNode.setParentNode(parentNode);
+    private UNode copyNodes(UNode originChild, UNode copyParent) {
+        UNode copyChild = new UNode(new String(originChild.getId()), originChild.getFrameSize());
+        copyChild.setTotalSupport(originChild.getTotalSupport());
+        copyChild.setTotalPrefix(originChild.getTotalPrefix());
+        copyChild.setMiningProbability(originChild.getTotalPrefix());
+        copyChild.setParentNode(copyParent);
         List<UData> uDataList = new ArrayList<UData>();
-        for (UData uData : nodeToBeCopied.getUncertainDataList()) {
+        for (UData uData : originChild.getUncertainDataList()) {
             uDataList.add(uData.copy());
         }
-        resultNode.setUncertainDataList(uDataList);
-        for (int i = 0; i < nodeToBeCopied.getChildNodeList().size(); i++) {
-            UNode node = nodeToBeCopied.getChildNodeList().get(i);
-            UNode copiedNode = copyNodes(node, resultNode);
-            resultNode.setChildNode(copiedNode);
+        copyChild.setUncertainDataList(uDataList);
+        for (int i = 0; i < originChild.getChildNodeList().size(); i++) {
+            UNode node = originChild.getChildNodeList().get(i);
+            UNode copiedNode = copyNodes(node, copyChild);
+            copyChild.setChildNode(copiedNode);
         }
-        return resultNode;
+        return copyChild;
     }
 
     private void setChildNode(UNode childNode) {

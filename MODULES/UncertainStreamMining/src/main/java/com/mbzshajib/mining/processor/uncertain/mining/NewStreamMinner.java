@@ -64,7 +64,7 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
             System.out.println(conditionalRoot.traverseMin());
             List<UNode> leafNodeList = new ArrayList<UNode>();
             conditionalRoot.getLeafNodeList(leafNodeList);
-            updateMiningProbability(leafNodeList);
+            updateMiningProbability(leafNodeList, true);
             for (UNode leaf : leafNodeList) {
                 if (leaf.getParentNode() != null) {
                     UNode parent = leaf.getParentNode();
@@ -86,7 +86,9 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
         //  TODO: Update probability
         //  TODO: Remove Leaf List
         //  TODO: MINE(root,minSup,CandidateItemSet)
-
+        System.out.println();
+        System.out.println();
+        System.out.println(fRootNode.traverse());
         return null;
     }
 
@@ -107,15 +109,41 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
             }
 
         }
+        updateFrequentItem(header, frequentItem);
+        for (UHItem item : header.getItemList()) {
+            UNode copy = rootNode.copy();
+            UHeader copyHeader = new UHeader();
+            List<UNode> copyDistinctNodes = copy.getDistinctNodes();
+            for (UNode distinct : copyDistinctNodes) {
+                copyHeader.addNodeToHeader(distinct);
+            }
+            copyHeader.removeItemByIdWithNode(item.getItemId());
 
+            List<UNode> leafList = new ArrayList<UNode>();
+            copy.getLeafNodeList(leafList);
+            updateMiningProbability(leafList, false);
+            FrequentItem copyFrequent = new FrequentItem(frequentItem);
+            copyFrequent.addFrequentItem(item.getItemId());
+            mine(copy, minSup, copyFrequent);
+
+        }
         //TODO: Create Header With Mining Probability Only
         //TODO: Remove Item Less Than min_sup by mining Value
         //TODO: ADD PATTERNS TO ROOT_F_PATTERNS
         //TODO: LOOP(EACH ITEM IN HEADER)
         //  TODO: COPY ROOT
-        //  TODO: REMOVE ITEM FROM COPY TREE
+        //  TODO: REMOVE ITEM FROM COPY TREE HEADER ACTUALLY
         //  TODO: ADD ITEM TO EXISTING frequentItem
         //  TODO: MINE(COPY, minsup, created frequentItem).
+    }
+
+    private void updateFrequentItem(UHeader header, FrequentItem fItem) {
+        for (UHItem hItem : header.getItemList()) {
+            FrequentItem frequentItem = new FrequentItem(fItem);
+            frequentItem.addFrequentItem(hItem.getItemId());
+            String[] frequentItemSet = frequentItem.getFrequentItemSet();
+            fRootNode.addChildesChain(frequentItemSet);
+        }
     }
 
     private UNode constructConditionalTreeNotRemovingChild(UNode node, String id) {
@@ -145,9 +173,13 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
         }
     }
 
-    private void updateMiningProbability(List<UNode> leafNodeList) {
+    private void updateMiningProbability(List<UNode> leafNodeList, boolean isForCondTree) {
         for (UNode leafNode : leafNodeList) {
-            leafNode.setMiningProbability(leafNode.getTotalPrefix());
+            if (isForCondTree) {
+                leafNode.setMiningProbability(leafNode.getTotalPrefix());
+            } else {
+                leafNode.setMiningProbability(leafNode.getMiningProbability());
+            }
             updateParentMiningData(leafNode);
         }
 
