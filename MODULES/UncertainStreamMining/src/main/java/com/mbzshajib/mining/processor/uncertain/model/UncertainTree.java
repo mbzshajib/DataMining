@@ -19,14 +19,14 @@ import java.util.List;
 
 public class UncertainTree {
     private UNode rootNode;
-    private HeaderTable headerTable;
+    //    private HeaderTable headerTable;
     private int frameSize;
     private int windowSize;
 
     public UncertainTree(int frameSize, int windowSize) throws DataNotFoundException {
         this.frameSize = frameSize;
         this.windowSize = windowSize;
-        this.headerTable = new HeaderTable(windowSize);
+//        this.headerTable = new HeaderTable(windowSize);
         this.rootNode = new UNode("0", windowSize);
         this.rootNode.setParentNode(null);
     }
@@ -38,12 +38,6 @@ public class UncertainTree {
                 .append(Constants.NEW_LINE);
         builder.append(rootNode.traverse());
         builder.append(Constants.NEW_LINE);
-
-        builder.append("HEADER TABLE")
-                .append(Constants.NEW_LINE)
-                .append(Constants.NEW_LINE);
-        builder.append(headerTable.traverse());
-        builder.append(Constants.NEW_LINE);
         return builder.toString();
     }
 
@@ -51,9 +45,9 @@ public class UncertainTree {
         return rootNode;
     }
 
-    public HeaderTable getHeaderTable() {
-        return headerTable;
-    }
+//    public HeaderTable getHeaderTable() {
+//        return headerTable;
+//    }
 
     public void addTransactionToTree(List<UInputData> uInputData, int frameNo) throws DataNotFoundException {
         UNode parentNode = rootNode;
@@ -64,7 +58,7 @@ public class UncertainTree {
 
     public void slideWindowAndUpdateTree() {
         removeOneFrameOldestData(rootNode);
-        headerTable.slideHeaderTable();
+//        headerTable.slideHeaderTable();
     }
 
     private void removeOneFrameOldestData(UNode node) {
@@ -100,14 +94,14 @@ public class UncertainTree {
         if (foundIndex == -1) {
             UNode node = new UNode(uInputData.getId(), windowSize);
             parentNode.addChild(node);
-            headerTable.updateHeaderTable(node, uInputData.getItemPValue(), uInputData.getPrefixValue());
+//            headerTable.updateHeaderTable(node, uInputData.getItemPValue(), uInputData.getPrefixValue());
             UData uData = new UData(uInputData.getItemPValue(), uInputData.getPrefixValue());
             node.addUData(frameNo, uData);
             return node;
         } else {
             UNode tmpNode = parentNode.getChildNodeList().get(foundIndex);
             UData uData = new UData(uInputData.getItemPValue(), uInputData.getPrefixValue());
-            headerTable.updateHeaderTable(uInputData.getId(), uInputData.getItemPValue(), uInputData.getPrefixValue());
+//            headerTable.updateHeaderTable(uInputData.getId(), uInputData.getItemPValue(), uInputData.getPrefixValue());
             tmpNode.addUData(frameNo, uData);
             return tmpNode;
         }
@@ -117,9 +111,9 @@ public class UncertainTree {
         this.rootNode = rootNode;
     }
 
-    public void setHeaderTable(HeaderTable headerTable) {
-        this.headerTable = headerTable;
-    }
+//    public void setHeaderTable(HeaderTable headerTable) {
+//        this.headerTable = headerTable;
+//    }
 
     public int getFrameSize() {
         return frameSize;
@@ -140,26 +134,26 @@ public class UncertainTree {
     public UncertainTree copy() throws DataNotFoundException {
         UncertainTree uncertainTree = new UncertainTree(frameSize, windowSize);
         UNode copiedNode = rootNode.copy();
-        HeaderTable newTable = this.headerTable.copy(copiedNode);
+//        HeaderTable newTable = this.headerTable.copy(copiedNode);
         uncertainTree.setRootNode(copiedNode);
-        uncertainTree.setHeaderTable(newTable);
+//        uncertainTree.setHeaderTable(newTable);
         return uncertainTree;
     }
 
-    private HeaderTable copyHeaderTable(HeaderTable mainTable, HeaderTable clonedTable, UNode mainNode, UNode clonedNode) {
-        for (int i = 0; i < mainNode.getChildNodeList().size(); i++) {
-            UNode nodeOriginal = mainNode.getChildNodeList().get(i);
-            UNode nodeCopied = clonedNode.getChildNodeList().get(i);
-
-            int index = mainTable.findNode(nodeOriginal);
-            if (index == -1) {
-                continue;
-            } else {
-
-                clonedTable.addNode(nodeCopied, index);
-            }
-            copyHeaderTable(mainTable, clonedTable, nodeOriginal, nodeCopied);
-        }
-        return clonedTable;
-    }
+//    private HeaderTable copyHeaderTable(HeaderTable mainTable, HeaderTable clonedTable, UNode mainNode, UNode clonedNode) {
+//        for (int i = 0; i < mainNode.getChildNodeList().size(); i++) {
+//            UNode nodeOriginal = mainNode.getChildNodeList().get(i);
+//            UNode nodeCopied = clonedNode.getChildNodeList().get(i);
+//
+//            int index = mainTable.findNode(nodeOriginal);
+//            if (index == -1) {
+//                continue;
+//            } else {
+//
+//                clonedTable.addNode(nodeCopied, index);
+//            }
+//            copyHeaderTable(mainTable, clonedTable, nodeOriginal, nodeCopied);
+//        }
+//        return clonedTable;
+//    }
 }

@@ -26,6 +26,34 @@ public class UNode {
     private List<UNode> childNodeList;
     private List<UData> uncertainDataList;
     private double miningProbability;
+    private double totalSupport;
+    private double totalPrefix;
+
+    public double getTotalSupport() {
+        if (totalSupport == 0) {
+            for (UData data : uncertainDataList) {
+                totalSupport += data.getItemProbability();
+            }
+        }
+        return totalSupport;
+    }
+
+    public void setTotalSupport(double totalSupport) {
+        this.totalSupport = totalSupport;
+    }
+
+    public double getTotalPrefix() {
+        if (totalPrefix == 0) {
+            for (UData data : uncertainDataList) {
+                totalPrefix += data.getPrefixValue();
+            }
+        }
+        return totalPrefix;
+    }
+
+    public void setTotalPrefix(double totalPrefix) {
+        this.totalPrefix = totalPrefix;
+    }
 
     private UNode() {
 

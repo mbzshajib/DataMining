@@ -1,7 +1,6 @@
 package com.mbzshajib.mining.processor.uncertain.simulator;
 
 import com.mbzshajib.mining.processor.uncertain.callback.WindowCompletionCallBackImpl;
-import com.mbzshajib.mining.processor.uncertain.evalutor.Evalutor;
 import com.mbzshajib.mining.processor.uncertain.evalutor.EvalutorInput;
 import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
 import com.mbzshajib.mining.processor.uncertain.tree.TreeConstructionInput;
@@ -37,7 +36,7 @@ public class BasicMiningSimulator {
         ConfigurationLoader<MiningInput> configurationLoader = new ConfigurationLoader<>(MiningInput.class);
         MiningInput miningInput = configurationLoader.loadConfigDataFromJsonFile(new File(Constants.F_MINING_PATH + Constants.F_MINING_FILE));
 
-        double minSup = .3;
+        double minSup = .9;
         miningInput.setDataSetName("suf-growth.txt");
         miningInput.setWindowSize(2);
         miningInput.setFrameSize(3);
@@ -46,9 +45,9 @@ public class BasicMiningSimulator {
         TreeGenerator processor = new TreeGenerator();
         TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
         UncertainTree tree = treeConstructionOutput.getUncertainTree();
-        Evalutor evalutor = new Evalutor();
-        evalutor.process(getEvalutorInput(miningInput));
-        treeConstructionInput.getBufferedReader().close();
+//        Evalutor evalutor = new Evalutor();
+//        evalutor.process(getEvalutorInput(miningInput));
+//        treeConstructionInput.getBufferedReader().close();
     }
 
     private static EvalutorInput getEvalutorInput(MiningInput miningInput) {

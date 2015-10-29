@@ -1,14 +1,14 @@
 package com.mbzshajib.mining.processor.uncertain.callback;
 
+import com.mbzshajib.mining.processor.uncertain.mining.NewStreamMinner;
+import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMineInput;
+import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMineOutput;
 import com.mbzshajib.mining.processor.uncertain.model.FrequentItem;
+import com.mbzshajib.mining.processor.uncertain.model.MetaData;
 import com.mbzshajib.mining.processor.uncertain.model.TimeModel;
 import com.mbzshajib.mining.processor.uncertain.simulator.MetaDataConfig;
 import com.mbzshajib.mining.processor.uncertain.simulator.MiningInput;
 import com.mbzshajib.mining.processor.uncertain.simulator.USDMiningOutput;
-import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMineInput;
-import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMineOutput;
-import com.mbzshajib.mining.processor.uncertain.mining.UncertainStreamMiner;
-import com.mbzshajib.mining.processor.uncertain.model.MetaData;
 import com.mbzshajib.mining.processor.uncertain.tree.TreeConstructionOutput;
 import com.mbzshajib.mining.util.FrequentItemChecker;
 import com.mbzshajib.utility.common.Constants;
@@ -51,20 +51,21 @@ public class WindowCompletionCallBackImpl implements WindowCompletionCallback {
     public void sendUpdate(TreeConstructionOutput treeConstructionOutput) throws ProcessingError {
         windowNumber++;
         UncertainStreamMineInput uncertainStreamMineInput = getMiningInput(treeConstructionOutput);
-        UncertainStreamMiner uncertainStreamMiner = new UncertainStreamMiner();
-        UncertainStreamMineOutput miningResult = uncertainStreamMiner.process(uncertainStreamMineInput);
-
-        String path = miningInput.getMetaDataPath();
-        String fileName = makeFileName();
-        USDMiningOutput uSDMiningOutput = getUsdMiningOutput(treeConstructionOutput, miningResult, path, fileName);
-
-        try {
-            writeOutputToFile(uSDMiningOutput, path, fileName);
-            updateMetaData(path, fileName);
-        } catch (IOException e) {
-            throw new ProcessingError(e);
-        }
-        printMessage(treeConstructionOutput, miningResult);
+//        UncertainStreamMiner uncertainStreamMiner = new UncertainStreamMiner();
+//        UncertainStreamMineOutput miningResult = uncertainStreamMiner.process(uncertainStreamMineInput);
+        NewStreamMinner streamMinner = new NewStreamMinner();
+        UncertainStreamMineOutput miningResult = streamMinner.process(uncertainStreamMineInput);
+//        String path = miningInput.getMetaDataPath();
+//        String fileName = makeFileName();
+//        USDMiningOutput uSDMiningOutput = getUsdMiningOutput(treeConstructionOutput, miningResult, path, fileName);
+//
+//        try {
+//            writeOutputToFile(uSDMiningOutput, path, fileName);
+//            updateMetaData(path, fileName);
+//        } catch (IOException e) {
+//            throw new ProcessingError(e);
+//        }
+//        printMessage(treeConstructionOutput, miningResult);
     }
 
     private void writeOutputToFile(USDMiningOutput uSDMiningOutput, String path, String fileName) throws IOException {

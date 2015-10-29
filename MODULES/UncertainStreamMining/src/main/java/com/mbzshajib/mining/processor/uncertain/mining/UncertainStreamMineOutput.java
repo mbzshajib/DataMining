@@ -3,6 +3,7 @@ package com.mbzshajib.mining.processor.uncertain.mining;
 import com.mbzshajib.mining.processor.uncertain.model.FrequentItem;
 import com.mbzshajib.mining.processor.uncertain.model.TimeModel;
 import com.mbzshajib.utility.model.Output;
+import com.mbzshajib.utility.model.fpatterns.FNode;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
 public class UncertainStreamMineOutput implements Output {
     private TimeModel miningTime;
     private List<FrequentItem> frequentItemList;
+    private FNode frequentNodesRoot;
 
     public TimeModel getMiningTime() {
         return miningTime;
@@ -36,6 +38,14 @@ public class UncertainStreamMineOutput implements Output {
 
     public void setFrequentItemList(List<FrequentItem> frequentItemList) {
         this.frequentItemList = frequentItemList;
+    }
+
+    public FNode getFrequentNodesRoot() {
+        return frequentNodesRoot;
+    }
+
+    public void setFrequentNodesRoot(FNode frequentNodesRoot) {
+        this.frequentNodesRoot = frequentNodesRoot;
     }
 
     @Override
