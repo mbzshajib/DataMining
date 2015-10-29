@@ -92,4 +92,15 @@ public class UHItem {
         return stringBuilder.toString();
 
     }
+
+    @Override
+    public String toString() {
+        return "UHItem{" +
+                "itemId='" + itemId + '\'' +
+                ", totalSupport=" + totalSupport +
+                ", totalPrefix=" + totalPrefix +
+                ", totalMiningVal=" + totalMiningVal +
+                ", nodeList=" + nodeList +
+                '}';
+    }
 }

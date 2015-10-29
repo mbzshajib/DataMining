@@ -26,15 +26,25 @@ public class UHeader {
         this.itemList = new ArrayList<UHItem>();
     }
 
+    public List<UHItem> getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(List<UHItem> itemList) {
+        this.itemList = itemList;
+    }
+
     public void addNodeToHeader(UNode node) {
         UHItem headerItem = getHeaderItem(node.getId());
         if (headerItem == null) {
             headerItem = new UHItem(node.getId());
             headerItem.setInitialValue(node.getTotalSupport(), node.getTotalPrefix(), node.getMiningProbability());
             itemList.add(headerItem);
+
         } else {
             headerItem.updateValues(node.getTotalSupport(), node.getTotalPrefix(), node.getMiningProbability());
         }
+        headerItem.addNode(node);
 
 
     }
@@ -106,4 +116,19 @@ public class UHeader {
 
         return stringBuilder.toString();
     }
+
+    public void removeItemFromListWithNodes(UHItem item) {
+        List<UNode> nodeList = item.getNodeList();
+        for (int i = 0; i < nodeList.size(); i++) {
+            UNode child = nodeList.get(i);
+            if (child.getParentNode() != null) {
+                UNode parent = child.getParentNode();
+                parent.getChildNodeList().remove(child);
+                child.setParentNode(null);
+
+            }
+        }
+        itemList.remove(item);
+    }
+
 }

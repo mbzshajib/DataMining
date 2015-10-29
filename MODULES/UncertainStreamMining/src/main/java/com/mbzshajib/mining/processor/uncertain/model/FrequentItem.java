@@ -22,6 +22,11 @@ public class FrequentItem {
         frequentItemSet = new String[]{};
     }
 
+    public FrequentItem(String id) {
+        frequentItemSet = new String[]{id};
+
+    }
+
     public FrequentItem(FrequentItem frequentItem) {
         this.frequentItemSet = new String[frequentItem.getFrequentItemSet().length];
         for (int i = 0; i < frequentItem.getFrequentItemSet().length; i++) {

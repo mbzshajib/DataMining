@@ -137,6 +137,28 @@ public class UNode {
         }
         return stringBuilder.toString();
     }
+    public String traverseMin() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(Constants.NEW_LINE)
+                .append(Constants.HASH)
+                .append("Parent ")
+                .append("ID:").append(Constants.HASH).append(id);
+        stringBuilder.append(Constants.TABBED_HASH)
+                .append(Constants.HASH)
+                .append("Child ").append(childNodeList.size())
+                .append(Constants.TABBED_HASH)
+                .append("[ ");
+        for (UNode node : childNodeList) {
+            stringBuilder
+                    .append(Constants.TABBED_HASH)
+                    .append(node.getId());
+        }
+        stringBuilder.append(" ]");
+        for (UNode node : childNodeList) {
+            stringBuilder.append(node.traverseMin());
+        }
+        return stringBuilder.toString();
+    }
 
     public boolean isSameId(String id) {
         return id.equalsIgnoreCase(this.id);
