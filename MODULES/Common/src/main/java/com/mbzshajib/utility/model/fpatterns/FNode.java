@@ -28,6 +28,7 @@ public class FNode {
     private FNode parent;
     private int depth;
     private boolean isContainsItem;
+    private double support;
 
     public FNode(String id, int depth) {
         this.id = id;
@@ -189,5 +190,13 @@ public class FNode {
 
     public void setIsContainsItem(boolean isContainsItem) {
         this.isContainsItem = isContainsItem;
+    }
+
+    public double getSupport() {
+        return support;
+    }
+
+    public void setSupport(double support) {
+        this.support += support;
     }
 }

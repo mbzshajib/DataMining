@@ -30,11 +30,35 @@ public class InfrequentRemoverProcessor implements Processor<InfrequentRemovarIn
         for (List<UInputData> transaction : transactionList) {
             removeInfrequentItemFromTransaction(transaction, childes);
         }
-
+        for (List<UInputData> transaction : transactionList) {
+            updateFNodeWithProbability(node, transaction);
+        }
         System.out.println();
 
 
         return null;
+    }
+
+    private void updateFNodeWithProbability(FNode node, List<UInputData> transaction) {
+        List<FNode> childes = node.getChildes();
+        for (UInputData data : transaction) {
+            updateData(data, childes, 1);
+
+        }
+        for (FNode child : childes) {
+            List<FNode> newChilds = child.getChildes();
+            for (FNode newNode : newChilds) {
+
+            }
+        }
+    }
+
+    private void updateData(UInputData data, List<FNode> childes, int prevValue) {
+        for (FNode node : childes) {
+            if (node.getId().equals(data.getId())) {
+                node.setSupport(prevValue * data.getItemPValue());
+            }
+        }
     }
 
     private void removeInfrequentItemFromTransaction(List<UInputData> transaction, List<FNode> childes) {
