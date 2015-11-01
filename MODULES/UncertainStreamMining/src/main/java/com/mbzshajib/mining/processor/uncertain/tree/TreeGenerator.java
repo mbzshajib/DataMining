@@ -94,7 +94,8 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
         treeConstructionOutput.setTreeConstructionTime(tTreeConstruction);
         treeConstructionOutput.setScanningTransactionTime(tFileRead);
         try {
-            treeConstructionOutput.setUncertainTree(uncertainTree.copy());
+            UncertainTree copy = uncertainTree.copy();
+            treeConstructionOutput.setUncertainTree(copy);
         } catch (DataNotFoundException e) {
             e.printStackTrace();
         }

@@ -51,21 +51,27 @@ public class WindowCompletionCallBackImpl implements WindowCompletionCallback {
     public void sendUpdate(TreeConstructionOutput treeConstructionOutput) throws ProcessingError {
         windowNumber++;
         UncertainStreamMineInput uncertainStreamMineInput = getMiningInput(treeConstructionOutput);
+        System.out.println("Tree Nodes : "+treeConstructionOutput.getUncertainTree().getRootNode().countAllChild());
 //        UncertainStreamMiner uncertainStreamMiner = new UncertainStreamMiner();
 //        UncertainStreamMineOutput miningResult = uncertainStreamMiner.process(uncertainStreamMineInput);
         NewStreamMinner streamMinner = new NewStreamMinner();
         UncertainStreamMineOutput miningResult = streamMinner.process(uncertainStreamMineInput);
-//        String path = miningInput.getMetaDataPath();
-//        String fileName = makeFileName();
-//        USDMiningOutput uSDMiningOutput = getUsdMiningOutput(treeConstructionOutput, miningResult, path, fileName);
+        String path = miningInput.getMetaDataPath();
+        String fileName = makeFileName();
+//        System.out.println("mining completed.");
+        USDMiningOutput uSDMiningOutput = getUsdMiningOutput(treeConstructionOutput, miningResult, path, fileName);
 //
-//        try {
-//            writeOutputToFile(uSDMiningOutput, path, fileName);
-//            updateMetaData(path, fileName);
-//        } catch (IOException e) {
-//            throw new ProcessingError(e);
-//        }
-//        printMessage(treeConstructionOutput, miningResult);
+        try {
+            writeOutputToFile(uSDMiningOutput, path, fileName);
+            updateMetaData(path, fileName);
+        } catch (IOException e) {
+            throw new ProcessingError(e);
+        }
+        printMessage(uSDMiningOutput);
+    }
+
+    private void printMessage(USDMiningOutput uSDMiningOutput) {
+        System.out.println(uSDMiningOutput.toString());
     }
 
     private void writeOutputToFile(USDMiningOutput uSDMiningOutput, String path, String fileName) throws IOException {
@@ -104,13 +110,13 @@ public class WindowCompletionCallBackImpl implements WindowCompletionCallback {
         List<FrequentItem> inFrequentList = new ArrayList<FrequentItem>();
 
 
-        FNode fNode = new FNode();
-        List<FrequentItem> fList = miningResult.getFrequentItemList();
-        for (FrequentItem frequentItem : fList) {
-            String[] frequentItemSet = frequentItem.getFrequentItemSet();
+        FNode fNode = miningResult.getFrequentNodesRoot();
+//        List<FrequentItem> fList = miningResult.getFrequentItemList();
+//        for (FrequentItem frequentItem : fList) {
+//            String[] frequentItemSet = frequentItem.getFrequentItemSet();
 //            Arrays.sort(frequentItemSet);
-            fNode.addChildesChain(frequentItemSet);
-        }
+//            fNode.addChildesChain(frequentItemSet);
+//        }
         List<String[]> allFrequentItems = fNode.getAllFrequentItems();
         long startTime = System.currentTimeMillis();
         for (String[] item : allFrequentItems) {
@@ -165,10 +171,10 @@ public class WindowCompletionCallBackImpl implements WindowCompletionCallback {
                 .append(miningInput.getMinSupport())
                 .append(Constants.TABBED_HASH)
                 .append("Found Frequent ItemSets Count ->")
-                .append(miningOutput.getFrequentItemList().size())
+//                .append(miningOutput.getFrequentItemList().size())
                 .append(Constants.TABBED_HASH)
-                .append("Items are -> ")
-                .append(miningOutput.getFrequentItemList().toString());
+                .append("Items are -> ");
+//                .append(miningOutput.getFrequentItemList().toString());
         Logger.log("Window " + windowNumber, builder.toString());
     }
 

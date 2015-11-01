@@ -155,4 +155,24 @@ public class USDMiningOutput extends JsonFileConfigModel {
     public void setInFrequentItemFound(List<FrequentItem> inFrequentItemFound) {
         this.inFrequentItemFound = inFrequentItemFound;
     }
+
+    @Override
+    public String toString() {
+        return "USDMiningOutput{" +
+                "minSupport=" + minSupport +
+                ", windowNo=" + windowNo +
+                ", windowSize=" + windowSize +
+                ", frameSize=" + frameSize +
+                ", dataSetFilePath='" + dataSetFilePath + '\'' +
+                ", totalTreeNode=" + totalTreeNode +
+                ", frequentItemSize=" + frequentItemSize +
+                ", frequentItemFound=" + frequentItemFound +
+                ", inFrequentItemSize=" + inFrequentItemSize +
+                ", inFrequentItemFound=" + inFrequentItemFound +
+                ", treeConstructionTime=" + treeConstructionTime +
+                ", scanningTransactionTime=" + scanningTransactionTime +
+                ", miningTime=" + miningTime +
+                ", findinInfrequentItemTime=" + findinInfrequentItemTime +
+                '}';
+    }
 }

@@ -1,6 +1,7 @@
 package com.mbzshajib.mining.processor.uncertain.simulator;
 
 import com.mbzshajib.mining.processor.uncertain.callback.WindowCompletionCallBackImpl;
+import com.mbzshajib.mining.processor.uncertain.evalutor.Evalutor;
 import com.mbzshajib.mining.processor.uncertain.evalutor.EvalutorInput;
 import com.mbzshajib.mining.processor.uncertain.model.UncertainTree;
 import com.mbzshajib.mining.processor.uncertain.tree.TreeConstructionInput;
@@ -45,9 +46,9 @@ public class BasicMiningSimulator {
         TreeGenerator processor = new TreeGenerator();
         TreeConstructionOutput treeConstructionOutput = processor.process(treeConstructionInput);
         UncertainTree tree = treeConstructionOutput.getUncertainTree();
-//        Evalutor evalutor = new Evalutor();
-//        evalutor.process(getEvalutorInput(miningInput));
-//        treeConstructionInput.getBufferedReader().close();
+        Evalutor evalutor = new Evalutor();
+        evalutor.process(getEvalutorInput(miningInput));
+        treeConstructionInput.getBufferedReader().close();
     }
 
     private static EvalutorInput getEvalutorInput(MiningInput miningInput) {

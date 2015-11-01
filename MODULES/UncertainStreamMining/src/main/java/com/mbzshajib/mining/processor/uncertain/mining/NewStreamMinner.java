@@ -1,9 +1,6 @@
 package com.mbzshajib.mining.processor.uncertain.mining;
 
-import com.mbzshajib.mining.processor.uncertain.model.FrequentItem;
-import com.mbzshajib.mining.processor.uncertain.model.UHItem;
-import com.mbzshajib.mining.processor.uncertain.model.UHeader;
-import com.mbzshajib.mining.processor.uncertain.model.UNode;
+import com.mbzshajib.mining.processor.uncertain.model.*;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
 import com.mbzshajib.utility.model.fpatterns.FNode;
@@ -25,15 +22,17 @@ import java.util.List;
 
 public class NewStreamMinner implements Processor<UncertainStreamMineInput, UncertainStreamMineOutput> {
     private FNode fRootNode;
+    private int mine = 0;
 
     @Override
     public UncertainStreamMineOutput process(UncertainStreamMineInput uncertainStreamMineInput) throws ProcessingError {
+        long startTime = System.currentTimeMillis();
         fRootNode = new FNode();
         double minSup = uncertainStreamMineInput.getMinSupport();
         UNode rootNode = uncertainStreamMineInput.getUncertainTree().getRootNode();
-        System.out.println("Minimum Support = " + minSup);
-        System.out.println("Before Mining Start.");
-        System.out.println(rootNode.traverseMin());
+//        System.out.println("Minimum Support = " + minSup);
+//        System.out.println("Before Mining Start.");
+//        System.out.println(rootNode.traverseMin());
         List<UNode> distinctNodes = rootNode.getDistinctNodes();
         UHeader header = new UHeader();
         for (UNode distinct : distinctNodes) {
@@ -41,30 +40,45 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
         }
         header.sortBySupportDsc();
         List<UHItem> itemList = header.getItemList();
-        for (int i = 0; i < itemList.size(); i++) {
+        int counter = itemList.size();
+        for (int i = 0; i < counter; i++) {
+
             UHItem item = itemList.get(i);
+            double sup = item.getTotalSupport();
             if (item.getTotalSupport() < minSup) {
                 header.removeItemFromListWithNodes(item);
+                counter = counter - 1;
+                i = i - 1;
             } else {
                 break;
             }
         }
-        System.out.println("After removing One Item Infrequent");
-        System.out.println(rootNode.traverseMin());
+//        System.out.println("After removing One Item Infrequent");
+//        System.out.println(rootNode.traverseMin());
         for (UHItem item : header.getItemList()) {
             fRootNode.addChildesChain(new String[]{item.getItemId()});
         }
 //        System.out.println(header.traverse());
+//        header.sortByPrefixDsc();
+//        itemList = header.getItemList();
+//        for (int i = 0; i < itemList.size(); i++) {
+//            UHItem item = itemList.get(i);
+//            if (item.getTotalSupport() < minSup) {
+//                header.removeItemFromListWithNodes(item);
+//            } else {
+//                break;
+//            }
+//        }
         header.sortByPrefixDsc();
         for (UHItem item : header.getItemList()) {
             UNode conditionalRoot = rootNode.copy();
             String id = item.getItemId();
             constructConditionalTreeNotRemovingChild(conditionalRoot, id);
-            System.out.println("Generated Conditional Tree Step 1 for ID : " + id);
-            System.out.println(conditionalRoot.traverseMin());
+//            System.out.println("Generated Conditional Tree Step 1 for ID : " + id);
+//            System.out.println(conditionalRoot.traverseMin());
             List<UNode> leafNodeList = new ArrayList<UNode>();
             conditionalRoot.getLeafNodeList(leafNodeList);
-            updateMiningProbability(leafNodeList, true);
+            updateMiningProbabilityForCondTree(leafNodeList);
             for (UNode leaf : leafNodeList) {
                 if (leaf.getParentNode() != null) {
                     UNode parent = leaf.getParentNode();
@@ -72,8 +86,8 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
                     leaf.setParentNode(null);
                 }
             }
-            System.out.println("Generated Conditional Tree Step 2 for ID : " + id);
-            System.out.println(conditionalRoot.traverseMin());
+//            System.out.println("Generated Conditional Tree Step 2 for ID : " + id);
+//            System.out.println(conditionalRoot.traverseMin());
             mine(conditionalRoot, minSup, new FrequentItem(id));
         }
         //TODO: Create Header Table
@@ -86,24 +100,33 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
         //  TODO: Update probability
         //  TODO: Remove Leaf List
         //  TODO: MINE(root,minSup,CandidateItemSet)
-        System.out.println();
-        System.out.println();
-        System.out.println(fRootNode.traverse());
-        return null;
+//        System.out.println();
+//        System.out.println();
+//        System.out.println(fRootNode.traverse());
+        UncertainStreamMineOutput output = new UncertainStreamMineOutput();
+        output.setFrequentItemList(null);
+        output.setFrequentNodesRoot(this.fRootNode);
+        TimeModel timeModel = new TimeModel(startTime, System.currentTimeMillis());
+        output.setMiningTime(timeModel);
+        return output;
     }
 
     public void mine(UNode rootNode, double minSup, FrequentItem frequentItem) {
+//        System.out.println(mine++);
         UHeader header = new UHeader();
         List<UNode> distinctNodes = rootNode.getDistinctNodes();
         for (UNode distinct : distinctNodes) {
             header.addNodeToHeader(distinct);
         }
-        header.sortByPrefixDsc();
+        header.sortByMiningValueDsc();
         List<UHItem> itemList = header.getItemList();
-        for (int i = 0; i < itemList.size(); i++) {
+        int count = itemList.size();
+        for (int i = 0; i < count; i++) {
             UHItem item = itemList.get(i);
             if (item.getTotalMiningVal() < minSup) {
                 header.removeItemFromListWithNodes(item);
+                i--;
+                count--;
             } else {
                 break;
             }
@@ -121,7 +144,7 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
 
             List<UNode> leafList = new ArrayList<UNode>();
             copy.getLeafNodeList(leafList);
-            updateMiningProbability(leafList, false);
+            updateMiningProbability(leafList);
             FrequentItem copyFrequent = new FrequentItem(frequentItem);
             copyFrequent.addFrequentItem(item.getItemId());
             mine(copy, minSup, copyFrequent);
@@ -135,6 +158,21 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
         //  TODO: REMOVE ITEM FROM COPY TREE HEADER ACTUALLY
         //  TODO: ADD ITEM TO EXISTING frequentItem
         //  TODO: MINE(COPY, minsup, created frequentItem).
+    }
+
+    private void updateMiningProbability(List<UNode> leafList) {
+        for (UNode leaf : leafList) {
+            if (!leaf.getId().equals("0")) {
+                UNode parent = leaf.getParentNode();
+                while (!parent.getId().equals("0")) {
+                    parent.setMiningProbability(0);
+                    parent = parent.getParentNode();
+                }
+
+            }
+            updateParentMiningData(leaf);
+
+        }
     }
 
     private void updateFrequentItem(UHeader header, FrequentItem fItem) {
@@ -173,13 +211,9 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
         }
     }
 
-    private void updateMiningProbability(List<UNode> leafNodeList, boolean isForCondTree) {
+    private void updateMiningProbabilityForCondTree(List<UNode> leafNodeList) {
         for (UNode leafNode : leafNodeList) {
-            if (isForCondTree) {
-                leafNode.setMiningProbability(leafNode.getTotalPrefix());
-            } else {
-                leafNode.setMiningProbability(leafNode.getMiningProbability());
-            }
+            leafNode.setMiningProbability(leafNode.getTotalPrefix());
             updateParentMiningData(leafNode);
         }
 

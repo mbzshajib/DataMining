@@ -30,11 +30,11 @@ public class UNode {
     private double totalPrefix;
 
     public double getTotalSupport() {
-        if (totalSupport == 0) {
-            for (UData data : uncertainDataList) {
-                totalSupport += data.getItemProbability();
-            }
+        totalSupport = 0;
+        for (UData data : uncertainDataList) {
+            totalSupport += data.getItemProbability();
         }
+
         return totalSupport;
     }
 
@@ -43,11 +43,11 @@ public class UNode {
     }
 
     public double getTotalPrefix() {
-        if (totalPrefix == 0) {
-            for (UData data : uncertainDataList) {
-                totalPrefix += data.getPrefixValue();
-            }
+        totalPrefix = 0;
+        for (UData data : uncertainDataList) {
+            totalPrefix += data.getPrefixValue();
         }
+
         return totalPrefix;
     }
 
@@ -224,7 +224,7 @@ public class UNode {
         UNode copyChild = new UNode(new String(originChild.getId()), originChild.getFrameSize());
         copyChild.setTotalSupport(originChild.getTotalSupport());
         copyChild.setTotalPrefix(originChild.getTotalPrefix());
-        copyChild.setMiningProbability(originChild.getTotalPrefix());
+        copyChild.setMiningProbability(originChild.getMiningProbability());
         copyChild.setParentNode(copyParent);
         List<UData> uDataList = new ArrayList<UData>();
         for (UData uData : originChild.getUncertainDataList()) {
