@@ -1,6 +1,7 @@
 package com.mbzshajib.mining.processor.uncertain.mining;
 
 import com.mbzshajib.mining.processor.uncertain.model.*;
+import com.mbzshajib.utility.collection.PowerSetGenerator;
 import com.mbzshajib.utility.model.ProcessingError;
 import com.mbzshajib.utility.model.Processor;
 import com.mbzshajib.utility.model.fpatterns.FNode;
@@ -58,17 +59,6 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
         for (UHItem item : header.getItemList()) {
             fRootNode.addChildesChain(new String[]{item.getItemId()});
         }
-//        System.out.println(header.traverse());
-//        header.sortByPrefixDsc();
-//        itemList = header.getItemList();
-//        for (int i = 0; i < itemList.size(); i++) {
-//            UHItem item = itemList.get(i);
-//            if (item.getTotalSupport() < minSup) {
-//                header.removeItemFromListWithNodes(item);
-//            } else {
-//                break;
-//            }
-//        }
         header.sortByPrefixDsc();
         for (UHItem item : header.getItemList()) {
             UNode conditionalRoot = rootNode.copy();
@@ -86,9 +76,16 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
                     leaf.setParentNode(null);
                 }
             }
+            if (leafNodeList.size() == 0) {
+
+            }
+            if (leafNodeList.size() == 1) {
+                updateFrequentItemForOneBranch(conditionalRoot, new FrequentItem(id));
+            } else {
+                mine(conditionalRoot, minSup, new FrequentItem(id));
+            }
 //            System.out.println("Generated Conditional Tree Step 2 for ID : " + id);
 //            System.out.println(conditionalRoot.traverseMin());
-            mine(conditionalRoot, minSup, new FrequentItem(id));
         }
         //TODO: Create Header Table
         //TODO: Remove 1 ItemSet Infrequent
@@ -109,6 +106,29 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
         TimeModel timeModel = new TimeModel(startTime, System.currentTimeMillis());
         output.setMiningTime(timeModel);
         return output;
+    }
+
+    private void updateFrequentItemForOneBranch(UNode root, FrequentItem frequentItem) {
+        List<UNode> nodeList = new ArrayList<UNode>();
+        UNode child;
+        UNode parent = root;
+        while (parent.getChildNodeList().size() == 1) {
+            child = parent.getChildNodeList().get(0);
+            nodeList.add(child);
+            parent = child;
+        }
+        PowerSetGenerator<UNode> generator = new PowerSetGenerator<UNode>();
+        List<List<UNode>> powerSet = generator.generatePowerSet(nodeList);
+        if (powerSet.size() > 1) {
+            for (List<UNode> set : powerSet) {
+                for (UNode item : set) {
+                    frequentItem.addFrequentItem(item.getId());
+                }
+            }
+            String[] frequentItemSet = frequentItem.getFrequentItemSet();
+            fRootNode.addChildesChain(frequentItemSet);
+        }
+
     }
 
     public void mine(UNode rootNode, double minSup, FrequentItem frequentItem) {
@@ -145,9 +165,14 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
             List<UNode> leafList = new ArrayList<UNode>();
             copy.getLeafNodeList(leafList);
             updateMiningProbability(leafList);
+
             FrequentItem copyFrequent = new FrequentItem(frequentItem);
             copyFrequent.addFrequentItem(item.getItemId());
-            mine(copy, minSup, copyFrequent);
+            if (leafList.size() == 1) {
+                updateFrequentItemForOneBranch(copy, frequentItem);
+            } else {
+                mine(copy, minSup, copyFrequent);
+            }
 
         }
         //TODO: Create Header With Mining Probability Only
