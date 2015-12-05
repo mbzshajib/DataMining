@@ -21,8 +21,8 @@ public class FrequentItemChecker {
     public static boolean findIfItemIsFrequent(List<List<SufInputData>> transactionList, String[] itemToBeTested, double minSupport) {
         double probability = 0;
         for (List<SufInputData> transaction : transactionList) {
-            double prev = getItemProbability(transaction, itemToBeTested);;
-            probability = probability +                                    prev;
+            double prev = getItemProbability(transaction, itemToBeTested);
+            probability = probability + prev;
         }
         if (probability < minSupport) {
             return false;
