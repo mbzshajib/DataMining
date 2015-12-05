@@ -1,0 +1,19 @@
+{
+  "minSupStart": 30,
+  "minSupEnd": 31,
+  "minSupInterval": 1,
+  "frameStart": 300,
+  "frameEnd": 1000,
+  "frameInterval": 100,
+  "windowStart": 2,
+  "windowEnd": 3,
+  "windowInterval": 1,
+  "findFalseNegative": false,
+  "dataSetName": "chess_uncertain.dat",
+  "dataSetDir": "Input/DataMining/",
+  "metaDataFileName": "meta.json",
+  "metaDataFileDir": "Tmp/usm/chess/",
+  "file": {
+    "path": "Input\\DataMining\\mining_input_generatorConfig"
+  }
+}

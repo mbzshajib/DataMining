@@ -1,0 +1,19 @@
+{
+  "minSupStart": 7.5,
+  "minSupEnd": 8,
+  "minSupInterval": 0.5,
+  "frameStart": 8000,
+  "frameEnd": 9000,
+  "frameInterval": 1000,
+  "windowStart": 1,
+  "windowEnd": 7,
+  "windowInterval": 1,
+  "findFalseNegative": false,
+  "dataSetName": "T40I10D100K_uncertain.dat",
+  "dataSetDir": "Input/DataMining/",
+  "metaDataFileName": "meta_t10.json",
+  "metaDataFileDir": "Tmp/usm/t10/",
+  "file": {
+    "path": "Input\\DataMining\\mining_input_generatorConfig"
+  }
+}
