@@ -69,14 +69,15 @@ public class SufMiner implements Processor<SufMiningInput, SufMiningOutput> {
         updateFrequentItem(header, frequentItem);
         header.removeInfrequentItemsForMining(minSupport);
         for (SufHItem item : header.getItemList()) {
+            SufNode copy = rootNode.copy();
             frequentItem = new FrequentItem(frequentItem);
             frequentItem.addFrequentItem(item.getItemId());
             List<SufNode> leafList = new ArrayList<SufNode>();
-            rootNode.getLeafNodeList(leafList);
+            copy.getLeafNodeList(leafList);
             for (SufNode leaf : leafList) {
                 updateMiningDataForProjectedDb(leaf, leaf.getMiningProbability());
             }
-            SufNode copy = rootNode.copy();
+
             SufHeader headerForMining = createHeaderForMining(copy);
             headerForMining.removeInfrequentItems(minSupport);
             mine(copy, item.getItemId(), frequentItem, true);

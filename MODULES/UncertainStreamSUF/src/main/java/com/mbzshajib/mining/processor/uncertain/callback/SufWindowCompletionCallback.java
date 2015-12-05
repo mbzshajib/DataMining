@@ -37,7 +37,7 @@ public class SufWindowCompletionCallback implements SufCompleteCallback {
     private int windowNumber;
     private MiningInput miningInput;
     private List<MetaData> metaDataList;
-
+    private int totalTreeNodes;
     public SufWindowCompletionCallback(MiningInput miningInput) {
         this.windowNumber = 0;
         this.miningInput = miningInput;
@@ -47,6 +47,7 @@ public class SufWindowCompletionCallback implements SufCompleteCallback {
     @Override
     public void sendUpdate(SufTreeConstructorOutput treeConstructionOutput) throws ProcessingError {
         windowNumber++;
+        totalTreeNodes = treeConstructionOutput.getSufTree().getRootNode().countAllChild();
         SufMiningInput sufMiningInput = getSufMiningInput(treeConstructionOutput);
         SufMiner sufMiner = new SufMiner();
         SufMiningOutput miningResult = sufMiner.process(sufMiningInput);
@@ -94,7 +95,7 @@ public class SufWindowCompletionCallback implements SufCompleteCallback {
         uSDMiningOutput.setMiningTime(miningResult.getMiningTime());
         uSDMiningOutput.setMinSupport(miningInput.getMinSupport());
         uSDMiningOutput.setDataSetFilePath(miningInput.getDataSetPath() + miningInput.getDataSetName());
-        uSDMiningOutput.setTotalTreeNode(treeConstructionOutput.getSufTree().getRootNode().countAllChild());
+        uSDMiningOutput.setTotalTreeNode(totalTreeNodes);
         List<FrequentItem> fList = miningResult.getFrequentItemList();
 
         for (FrequentItem item : fList) {

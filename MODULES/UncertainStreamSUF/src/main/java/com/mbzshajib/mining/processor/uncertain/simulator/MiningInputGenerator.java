@@ -30,6 +30,71 @@ public class MiningInputGenerator {
         MiningInput miningInput = configurationLoader.loadConfigDataFromJsonFile(new File(MINING_INPUT_FILE));
         return miningInput;
     }
+    public static List<MiningInput> generateMiningInputForT10DataSet() throws IOException {
+        Logger.log("generating input data for mining T10 data set.");
+        List<MiningInput> miningInputList = new ArrayList<MiningInput>();
+        ConfigurationLoader<MiningInputGeneratorConfig> loader = new ConfigurationLoader<MiningInputGeneratorConfig>(MiningInputGeneratorConfig.class);
+        MiningInputGeneratorConfig config = loader.loadConfigDataFromJsonFile("Input/DataMining/", "input_for_t10_simulation.json");
+
+        File metaDataPath = new File(config.getMetaDataFileDir());
+        if (!metaDataPath.exists()) {
+            metaDataPath.mkdir();
+        }
+        for (int frameNo = config.getFrameStart(); frameNo < config.getFrameEnd(); frameNo += config.getFrameInterval()) {
+            for (int windowNo = config.getWindowStart(); windowNo < config.getWindowEnd(); windowNo += config.getWindowInterval()) {
+                for (double support = config.getMinSupStart(); support < config.getMinSupEnd(); support += config.getMinSupInterval()) {
+                    MiningInput miningInput = new MiningInput(new File("Generating Mining Input"));
+                    miningInput.setDataSetName(config.getDataSetName());
+                    miningInput.setDataSetPath(config.getDataSetDir());
+                    miningInput.setMetaDataFile(config.getMetaDataFileName());
+                    String dateStringSuffix = Utility.getDateTimeString();
+                    String simulationIdSuffix = "f_" + frameNo + "_w_" + windowNo + "_minsup_" + support;
+                    miningInput.setMetaDataPath(config.getMetaDataFileDir() + "" + dateStringSuffix + "/" + simulationIdSuffix + "/");
+                    double minSup = support * windowNo * frameNo / 100;
+                    miningInput.setMinSupport(minSup);
+                    miningInput.setWindowSize(windowNo);
+                    miningInput.setFrameSize(frameNo);
+                    miningInput.setFindFalseNegative(config.isFindFalseNegative());
+                    miningInputList.add(miningInput);
+                }
+            }
+        }
+        Logger.log("Mining input data generated.");
+        return miningInputList;
+    }
+
+    public static List<MiningInput> generateMiningInputForChessDataSet() throws IOException {
+        Logger.log("generating input data for mining Chess data set.");
+        List<MiningInput> miningInputList = new ArrayList<MiningInput>();
+        ConfigurationLoader<MiningInputGeneratorConfig> loader = new ConfigurationLoader<MiningInputGeneratorConfig>(MiningInputGeneratorConfig.class);
+        MiningInputGeneratorConfig config = loader.loadConfigDataFromJsonFile("Input/DataMining/", "input_for_chess_simulation.json");
+
+        File metaDataPath = new File(config.getMetaDataFileDir());
+        if (!metaDataPath.exists()) {
+            metaDataPath.mkdir();
+        }
+        for (int frameNo = config.getFrameStart(); frameNo < config.getFrameEnd(); frameNo += config.getFrameInterval()) {
+            for (int windowNo = config.getWindowStart(); windowNo < config.getWindowEnd(); windowNo += config.getWindowInterval()) {
+                for (double support = config.getMinSupStart(); support < config.getMinSupEnd(); support += config.getMinSupInterval()) {
+                    MiningInput miningInput = new MiningInput(new File("Generating Mining Input"));
+                    miningInput.setDataSetName(config.getDataSetName());
+                    miningInput.setDataSetPath(config.getDataSetDir());
+                    miningInput.setMetaDataFile(config.getMetaDataFileName());
+                    String dateStringSuffix = Utility.getDateTimeString();
+                    String simulationIdSuffix = "f_" + frameNo + "_w_" + windowNo + "_minsup_" + support;
+                    miningInput.setMetaDataPath(config.getMetaDataFileDir() + "" + dateStringSuffix + "/" + simulationIdSuffix + "/");
+                    double minSup = support * windowNo * frameNo / 100;
+                    miningInput.setMinSupport(minSup);
+                    miningInput.setWindowSize(windowNo);
+                    miningInput.setFrameSize(frameNo);
+                    miningInput.setFindFalseNegative(config.isFindFalseNegative());
+                    miningInputList.add(miningInput);
+                }
+            }
+        }
+        Logger.log("Mining input data generated.");
+        return miningInputList;
+    }
 
     public static List<MiningInput> generateMiningInputForMashroomDataSet() throws IOException {
         Logger.log("generating input data for mining mashroom data set.");
