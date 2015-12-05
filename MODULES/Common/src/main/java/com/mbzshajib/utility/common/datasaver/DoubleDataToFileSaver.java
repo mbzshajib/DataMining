@@ -40,6 +40,7 @@ public class DoubleDataToFileSaver implements DataSaver {
         String fileName = (String) input[1];
         List<Double> doubles=null;
         try {
+            //noinspection unchecked
             doubles = (List<Double>) input[2];
         } catch (ClassCastException e) {
             throw new IllegalArgumentException("Input[2] must be of type List<Double>");

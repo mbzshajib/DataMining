@@ -27,7 +27,7 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
 
     @Override
     public UncertainStreamMineOutput process(UncertainStreamMineInput uncertainStreamMineInput) throws ProcessingError {
-        long startTime = System.currentTimeMillis();
+
         fRootNode = new FNode();
         double minSup = uncertainStreamMineInput.getMinSupport();
         UNode rootNode = uncertainStreamMineInput.getUncertainTree().getRootNode();
@@ -40,12 +40,12 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
             header.addNodeToHeader(distinct);
         }
         header.sortBySupportDsc();
+        long startTime = System.currentTimeMillis();
         List<UHItem> itemList = header.getItemList();
         int counter = itemList.size();
         for (int i = 0; i < counter; i++) {
 
             UHItem item = itemList.get(i);
-            double sup = item.getTotalSupport();
             if (item.getTotalSupport() < minSup) {
                 header.removeItemFromListWithNodes(item);
                 counter = counter - 1;
@@ -60,6 +60,18 @@ public class NewStreamMinner implements Processor<UncertainStreamMineInput, Unce
             fRootNode.addChildesChain(new String[]{item.getItemId()});
         }
         header.sortByPrefixDsc();
+        counter = header.getItemList().size();
+        for (int i = 0; i < counter; i++) {
+
+            UHItem item = header.getItemList().get(i);
+            if (item.getTotalPrefix() < minSup) {
+                header.removeItemFromListWithNodes(item);
+                counter = counter - 1;
+                i = i - 1;
+            } else {
+                break;
+            }
+        }
         for (UHItem item : header.getItemList()) {
             UNode conditionalRoot = rootNode.copy();
             String id = item.getItemId();

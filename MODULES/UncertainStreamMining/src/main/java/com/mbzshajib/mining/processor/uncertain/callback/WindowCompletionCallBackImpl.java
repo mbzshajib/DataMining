@@ -40,6 +40,7 @@ public class WindowCompletionCallBackImpl implements WindowCompletionCallback {
     private MiningInput miningInput;
     private List<MetaData> metaDataList;
     private TimeModel fPatternFinalizingTime;
+    private int totalNodesInTree;
 
     public WindowCompletionCallBackImpl(MiningInput miningInput) {
         this.windowNumber = 0;
@@ -51,7 +52,7 @@ public class WindowCompletionCallBackImpl implements WindowCompletionCallback {
     public void sendUpdate(TreeConstructionOutput treeConstructionOutput) throws ProcessingError {
         windowNumber++;
         UncertainStreamMineInput uncertainStreamMineInput = getMiningInput(treeConstructionOutput);
-        System.out.println("Tree Nodes : "+treeConstructionOutput.getUncertainTree().getRootNode().countAllChild());
+        totalNodesInTree =treeConstructionOutput.getUncertainTree().getRootNode().countAllChild();
 //        UncertainStreamMiner uncertainStreamMiner = new UncertainStreamMiner();
 //        UncertainStreamMineOutput miningResult = uncertainStreamMiner.process(uncertainStreamMineInput);
         NewStreamMinner streamMinner = new NewStreamMinner();
@@ -103,7 +104,7 @@ public class WindowCompletionCallBackImpl implements WindowCompletionCallback {
         uSDMiningOutput.setMiningTime(miningResult.getMiningTime());
         uSDMiningOutput.setMinSupport(miningInput.getMinSupport());
         uSDMiningOutput.setDataSetFilePath(miningInput.getDataSetPath() + miningInput.getDataSetName());
-        uSDMiningOutput.setTotalTreeNode(treeConstructionOutput.getUncertainTree().getRootNode().countAllChild());
+        uSDMiningOutput.setTotalTreeNode(totalNodesInTree);
 
 
         List<FrequentItem> frequentItemListFinal = new ArrayList<FrequentItem>();

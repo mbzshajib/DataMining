@@ -43,6 +43,7 @@ public class TreeGenerator implements Processor<TreeConstructionInput, TreeConst
         try {
             uncertainTree = new UncertainTree(treeConstructionInput.getFrameSize(), treeConstructionInput.getWindowSize());
             for (int frameNo = 0; frameNo < treeConstructionInput.getWindowSize(); frameNo++) {
+                System.out.println(frameNo);
                 for (int i = 0; i < treeConstructionInput.getFrameSize(); i++) {
                     List<UInputData> nodes = getTransaction();
                     windowTransactionList.add(nodes);
